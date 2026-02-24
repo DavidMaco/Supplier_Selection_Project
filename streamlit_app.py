@@ -40,6 +40,13 @@ st.sidebar.image("https://via.placeholder.com/250x80/1a1a2e/e0e0e0?text=AEGIS",
 st.sidebar.markdown("---")
 st.sidebar.markdown("### Navigation")
 
+# Data freshness indicator
+try:
+    from utils.freshness import freshness_badge
+    st.sidebar.markdown(f"**Data:** {freshness_badge()}")
+except Exception:
+    pass
+
 # Version
 st.sidebar.markdown("---")
 if st.sidebar.button("🔒 Logout"):

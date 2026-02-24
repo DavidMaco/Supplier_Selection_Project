@@ -11,6 +11,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from sqlalchemy import create_engine, text
 import config
 from utils.logging_config import get_logger, DataQualityLogger
+from utils.freshness import record_start, record_finish
 
 log = get_logger("pipeline")
 dq = DataQualityLogger()
@@ -298,6 +299,7 @@ def main():
         log.info("  External Data: %s", os.path.abspath(args.external))
 
     start = time.time()
+    run_id = record_start()
 
     # Use a connection URL without database for schema creation
     base_url = config.DATABASE_URL.rsplit("/", 1)[0]
@@ -328,6 +330,7 @@ def main():
     step_verify(engine)
 
     elapsed = time.time() - start
+    record_finish(run_id, status="success", duration=elapsed)
     banner(f"Pipeline Complete — {elapsed:.1f}s")
     log.info("  Launch dashboard:  streamlit run streamlit_app.py")
 
