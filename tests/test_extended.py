@@ -145,7 +145,6 @@ class TestScenarioPlannerMath:
     def test_hedge_savings_formula(self):
         """If hedge covers 60% of exposure and worst-case loss is 15%,
         then hedged worst-case loss ≈ unhedged × (1 - hedge_pct)."""
-        exposure = 1_000_000
         hedge_pct = 0.60
         unhedged_loss = 150_000
         hedged_loss = unhedged_loss * (1 - hedge_pct)

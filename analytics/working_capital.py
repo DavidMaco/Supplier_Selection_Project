@@ -135,7 +135,6 @@ def optimize_payment_timing(budget_constraint_usd: float = 500_000,
         pending["discount_pct"] / 100 * 365 / pending["days_early"].clip(lower=1))
 
     # Select invoices where annualized return > cost of capital
-    daily_rate = discount_rate_annual / 365
     pending["roi_vs_capital"] = pending["annualized_return"] - discount_rate_annual
     eligible = pending[pending["roi_vs_capital"] > 0].sort_values(
         "annualized_return", ascending=False)

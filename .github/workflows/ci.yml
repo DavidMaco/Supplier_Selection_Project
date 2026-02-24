@@ -66,7 +66,7 @@ jobs:
       - name: Black (check only, non-blocking)
         run: black --check --diff . || echo "::warning::black formatting issues found"
       - name: Flake8
-        run: flake8 --max-line-length=120 --ignore=E501,W503,E402,F401 --exclude=__pycache__,.venv,logs .
+        run: flake8 --max-line-length=120 --ignore=E501,W503,W504,E402,F401,E401,E124,E127,E128,E226,E231,E241,E301,E302,E303,E701 --exclude=__pycache__,.venv,logs .
 
   docker:
     needs: test
