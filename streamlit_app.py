@@ -12,6 +12,14 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# ─── Authentication Gate ─────────────────────────────────────────────
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from utils.auth import login_gate
+
+if not login_gate():
+    st.stop()
+
 # ─── Custom CSS ──────────────────────────────────────────────────────
 st.markdown("""
 <style>
@@ -34,6 +42,9 @@ st.sidebar.markdown("### Navigation")
 
 # Version
 st.sidebar.markdown("---")
+if st.sidebar.button("🔒 Logout"):
+    st.session_state["authenticated"] = False
+    st.rerun()
 st.sidebar.caption("AEGIS v1.0.0 · © 2025")
 
 
