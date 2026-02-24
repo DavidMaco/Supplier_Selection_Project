@@ -101,6 +101,27 @@ with tab_fx:
     c2.number_input("Default Horizon (days)", value=config.MC_DEFAULT_HORIZON_DAYS,
                    min_value=7, max_value=365, step=7, key="mc_horizon")
 
+    st.markdown("---")
+    st.markdown("#### 🔄 Live FX Refresh")
+    if st.button("Fetch Live FX Rates", type="primary"):
+        with st.spinner("Fetching from public APIs..."):
+            try:
+                from data_ingestion.live_data_fetcher import refresh_live_data
+                result = refresh_live_data()
+                if result.get("fx_updated", 0) > 0:
+                    st.success(f"Updated {result['fx_updated']} FX rates")
+                    if "fx_rates" in result:
+                        import pandas as pd
+                        df = pd.DataFrame(
+                            list(result["fx_rates"].items()),
+                            columns=["Currency", "Rate to USD"],
+                        )
+                        st.dataframe(df, use_container_width=True)
+                else:
+                    st.warning("No rates updated. Live FX may be disabled in config.")
+            except Exception as e:
+                st.error(f"Fetch failed: {e}")
+
 # ── Tab 4: Import Data ──────────────────────────────────────────────
 with tab_upload:
     st.subheader("Import External CSV Data")
