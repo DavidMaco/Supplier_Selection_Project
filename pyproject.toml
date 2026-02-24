@@ -1,0 +1,35 @@
+[project]
+name = "aegis-procurement"
+version = "1.1.0"
+description = "AEGIS — Adaptive Engine for Global Intelligent Sourcing"
+requires-python = ">=3.10"
+
+[tool.black]
+line-length = 120
+target-version = ["py311"]
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | __pycache__
+  | logs
+  | \.pytest_cache
+)/
+'''
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501", "E402", "F401", "W503"]
+exclude = ["__pycache__", ".venv", "logs"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["analytics", "data_ingestion", "utils"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"
