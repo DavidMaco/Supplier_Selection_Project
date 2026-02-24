@@ -1,17 +1,20 @@
 """
 AEGIS — Page 12: Settings & Configuration
-Manage weights, thresholds, feature flags.
+Manage weights, thresholds, feature flags, external data upload.
 """
 
 import streamlit as st
 import json
+import tempfile
+import os
 import config
 
 st.set_page_config(page_title="AEGIS · Settings", layout="wide")
 st.title("⚙️ Settings & Configuration")
 
-tab_mcda, tab_risk, tab_fx, tab_sys = st.tabs([
-    "🏅 MCDA Weights", "🛡️ Risk Config", "💱 FX Config", "🖥️ System"])
+tab_mcda, tab_risk, tab_fx, tab_upload, tab_sys = st.tabs([
+    "🏅 MCDA Weights", "🛡️ Risk Config", "💱 FX Config",
+    "📤 Import Data", "🖥️ System"])
 
 # ── Tab 1: MCDA Weights ─────────────────────────────────────────────
 with tab_mcda:
@@ -98,7 +101,98 @@ with tab_fx:
     c2.number_input("Default Horizon (days)", value=config.MC_DEFAULT_HORIZON_DAYS,
                    min_value=7, max_value=365, step=7, key="mc_horizon")
 
-# ── Tab 4: System ───────────────────────────────────────────────────
+# ── Tab 4: Import Data ──────────────────────────────────────────────
+with tab_upload:
+    st.subheader("Import External CSV Data")
+    st.markdown(
+        "Upload your own **CSV files** to replace demo seed data. "
+        "Accepted types: `suppliers`, `purchase_orders`, `purchase_order_items`, "
+        "`materials`, `quality_records`, `delivery_records`, `contracts`."
+    )
+
+    CSV_TYPES = [
+        "suppliers", "purchase_orders", "purchase_order_items",
+        "materials", "quality_records", "delivery_records", "contracts",
+    ]
+
+    uploaded_files = st.file_uploader(
+        "Drag & drop CSV files (one per type)",
+        type=["csv"],
+        accept_multiple_files=True,
+        key="csv_upload",
+    )
+
+    if uploaded_files:
+        st.markdown("##### Uploaded files")
+        file_map: dict[str, bytes] = {}
+        for uf in uploaded_files:
+            stem = os.path.splitext(uf.name)[0].lower()
+            matched = None
+            for ct in CSV_TYPES:
+                if ct in stem:
+                    matched = ct
+                    break
+            if matched:
+                file_map[matched] = uf.getvalue()
+                st.success(f"✅ **{uf.name}** → `{matched}`")
+            else:
+                st.warning(f"⚠️ **{uf.name}** — could not match to a known type. Skipping.")
+
+        if file_map:
+            import pandas as pd
+
+            with st.expander("Preview first 5 rows of each file", expanded=False):
+                for ftype, raw in file_map.items():
+                    try:
+                        df_preview = pd.read_csv(
+                            __import__("io").BytesIO(raw), nrows=5
+                        )
+                        st.markdown(f"**{ftype}** — {len(df_preview.columns)} columns")
+                        st.dataframe(df_preview, use_container_width=True)
+                    except Exception as exc:
+                        st.error(f"Cannot preview {ftype}: {exc}")
+
+            if st.button("🚀 Import into Database", type="primary"):
+                progress = st.progress(0, text="Preparing import…")
+                try:
+                    # Write uploaded files to a temp directory
+                    with tempfile.TemporaryDirectory() as tmp_dir:
+                        for ftype, raw in file_map.items():
+                            dest = os.path.join(tmp_dir, f"{ftype}.csv")
+                            with open(dest, "wb") as fh:
+                                fh.write(raw)
+
+                        progress.progress(20, text="Loading CSV files…")
+
+                        from data_ingestion.external_data_loader import ExternalDataLoader
+                        loader = ExternalDataLoader(tmp_dir)
+                        loader.load_all_files()
+
+                        progress.progress(40, text="Validating data…")
+                        errors = loader.validate()
+                        if errors:
+                            for err in errors:
+                                st.warning(err)
+
+                        progress.progress(60, text="Importing into database…")
+                        loader.import_data()
+
+                        progress.progress(80, text="Running warehouse ETL…")
+                        from data_ingestion.populate_warehouse import populate_warehouse
+                        populate_warehouse()
+
+                        progress.progress(100, text="✅ Import complete!")
+                        st.success(
+                            f"Successfully imported **{len(file_map)}** file(s): "
+                            f"{', '.join(file_map.keys())}"
+                        )
+                        st.balloons()
+                except Exception as exc:
+                    st.error(f"Import failed: {exc}")
+    else:
+        st.info("Upload one or more CSV files above to get started.")
+
+# ── Tab 5: System ───────────────────────────────────────────────────
 with tab_sys:
     st.subheader("System Configuration")
 
