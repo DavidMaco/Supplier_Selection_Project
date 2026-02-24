@@ -27,24 +27,26 @@ try:
     from analytics.should_cost import build_should_cost, get_leakage_summary
 
     with st.spinner("Building should-cost model..."):
-        items = build_should_cost(year)
+        df = build_should_cost(year=year)
 
-    if not items:
-        st.info("No should-cost data for the selected year.")
+    if df is None or (hasattr(df, 'empty') and df.empty):
+        st.info("No should-cost data for the selected year. "
+                "Ensure `supplier_material_catalog` is populated.")
         st.stop()
 
-    df = pd.DataFrame(items)
+    if isinstance(df, list):
+        df = pd.DataFrame(df)
 
     # ── KPI row ─────────────────────────────────────────────────────
-    total_actual = df["actual_unit_price"].sum()
-    total_should = df["should_cost_total"].sum()
-    leakage_usd = total_actual - total_should
+    total_quoted = df["quoted_usd"].sum()
+    total_should = df["should_cost_usd"].sum()
+    leakage_usd = total_quoted - total_should
     leakage_pct = (leakage_usd / total_should * 100) if total_should else 0
-    flags = df["flag"].value_counts().to_dict()
+    flags = df["leakage_flag"].value_counts().to_dict()
 
     c1, c2, c3, c4, c5 = st.columns(5)
     c1.metric("Items Analysed", f"{len(df):,}")
-    c2.metric("Total Actual", f"${total_actual:,.0f}")
+    c2.metric("Total Quoted", f"${total_quoted:,.0f}")
     c3.metric("Total Should-Cost", f"${total_should:,.0f}")
     c4.metric("Total Leakage", f"${leakage_usd:,.0f}")
     c5.metric("Leakage %", f"{leakage_pct:+.1f}%")
@@ -78,18 +80,18 @@ try:
 
     # ── Cost breakdown waterfall (sample item) ──────────────────────
     st.subheader("Cost Decomposition — Worst Leakage Item")
-    worst = df.sort_values("variance_pct", ascending=False).iloc[0]
+    worst = df.sort_values("cost_variance_pct", ascending=False).iloc[0]
 
     fig = go.Figure(go.Waterfall(
         name="Should-Cost",
         orientation="v",
         x=["Material", "Freight", "Customs", "Overhead",
-           "Margin", "Should-Cost", "Actual", "Variance"],
+           "Margin", "Should-Cost", "Quoted", "Variance"],
         y=[worst["material_cost"], worst["freight_cost"],
            worst["customs_cost"], worst["overhead_cost"],
            worst["margin_cost"], 0,
-           worst["actual_unit_price"],
-           worst["actual_unit_price"] - worst["should_cost_total"]],
+           worst["quoted_usd"],
+           worst["quoted_usd"] - worst["should_cost_usd"]],
         measure=["relative", "relative", "relative", "relative",
                  "relative", "total", "total", "relative"],
         connector={"line": {"color": "rgb(63, 63, 63)"}},
@@ -104,16 +106,16 @@ try:
 
     # ── Leakage detail table ────────────────────────────────────────
     st.subheader("Leakage Detail")
-    filtered = df[df["flag"].isin(flag_filter)] if flag_filter else df
-    display_cols = ["material_name", "supplier_name", "actual_unit_price",
-                    "should_cost_total", "variance_pct", "flag"]
+    filtered = df[df["leakage_flag"].isin(flag_filter)] if flag_filter else df
+    display_cols = ["material_name", "supplier_name", "quoted_usd",
+                    "should_cost_usd", "cost_variance_pct", "leakage_flag"]
     available_cols = [c for c in display_cols if c in filtered.columns]
     if available_cols:
         st.dataframe(
-            filtered[available_cols].sort_values("variance_pct", ascending=False)
-            .style.format({"actual_unit_price": "${:,.2f}",
-                          "should_cost_total": "${:,.2f}",
-                          "variance_pct": "{:+.1f}%"}),
+            filtered[available_cols].sort_values("cost_variance_pct", ascending=False)
+            .style.format({"quoted_usd": "${:,.2f}",
+                          "should_cost_usd": "${:,.2f}",
+                          "cost_variance_pct": "{:+.1f}%"}),
             use_container_width=True, height=400)
 
 except Exception as e:

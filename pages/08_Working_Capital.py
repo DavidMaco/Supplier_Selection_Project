@@ -26,13 +26,14 @@ with tab_overview:
 
         c1, c2, c3, c4 = st.columns(4)
         c1.metric("Avg DPO", f"{wc['avg_dpo']:.0f} days")
-        c2.metric("Total Outstanding", f"${wc['total_outstanding']:,.0f}")
-        c3.metric("Overdue Invoices", f"{wc['overdue_count']:,}")
-        c4.metric("Overdue Amount", f"${wc['overdue_amount']:,.0f}")
+        c2.metric("Total Spend", f"${wc['total_spend']:,.0f}")
+        c3.metric("Overdue %", f"{wc['overdue_pct']:.1f}%")
+        c4.metric("Overdue Amount", f"${wc['total_overdue']:,.0f}")
 
         # DPO trend
-        if wc.get("dpo_trend"):
-            dpo_df = pd.DataFrame(wc["dpo_trend"])
+        dpo_trend = wc.get("dpo_trend")
+        if dpo_trend is not None and not dpo_trend.empty:
+            dpo_df = dpo_trend if isinstance(dpo_trend, pd.DataFrame) else pd.DataFrame(dpo_trend)
             fig = px.line(dpo_df, x="month", y="avg_dpo",
                          title="Average DPO Trend (Monthly)")
             fig.update_layout(height=350)
@@ -42,20 +43,19 @@ with tab_overview:
         st.subheader("Top Suppliers by Outstanding Balance")
         with ENGINE.connect() as conn:
             outstanding_df = pd.DataFrame(conn.execute(text("""
-                SELECT s.company_name,
+                SELECT s.supplier_name,
                        COUNT(*) AS pending_invoices,
-                       SUM(i.total_amount_usd) AS outstanding_usd,
+                       SUM(i.amount_usd) AS outstanding_usd,
                        AVG(DATEDIFF(CURDATE(), i.invoice_date)) AS avg_age_days
                 FROM invoices i
-                JOIN purchase_orders po ON po.po_id = i.po_id
-                JOIN suppliers s ON s.supplier_id = po.supplier_id
-                WHERE i.payment_status IN ('Pending', 'Overdue')
-                GROUP BY s.company_name
+                JOIN suppliers s ON s.supplier_id = i.supplier_id
+                WHERE i.status IN ('Pending', 'Approved')
+                GROUP BY s.supplier_name
                 ORDER BY outstanding_usd DESC LIMIT 15
             """)).mappings().fetchall())
 
         if not outstanding_df.empty:
-            fig = px.bar(outstanding_df, x="company_name", y="outstanding_usd",
+            fig = px.bar(outstanding_df, x="supplier_name", y="outstanding_usd",
                         color="avg_age_days",
                         color_continuous_scale="RdYlGn_r",
                         title="Outstanding by Supplier (coloured by age)")
@@ -77,9 +77,9 @@ with tab_aging:
                         WHEN DATEDIFF(CURDATE(), invoice_date) <= 90 THEN '61-90 days'
                         ELSE '90+ days'
                     END AS aging_bucket,
-                    payment_status,
+                    status AS payment_status,
                     COUNT(*) AS invoice_count,
-                    SUM(total_amount_usd) AS total_usd
+                    SUM(amount_usd) AS total_usd
                 FROM invoices
                 GROUP BY aging_bucket, payment_status
                 ORDER BY aging_bucket
@@ -113,19 +113,24 @@ with tab_epd:
     if st.button("▶️ Optimize Payments"):
         try:
             from analytics.working_capital import optimize_payment_timing
-            result = optimize_payment_timing(float(budget), cost_of_capital)
+            result_df = optimize_payment_timing(float(budget), cost_of_capital)
 
-            c1, c2, c3 = st.columns(3)
-            c1.metric("Invoices Selected", f"{result['selected_count']:,}")
-            c2.metric("Total Investment", f"${result['total_investment']:,.0f}")
-            c3.metric("Net Savings", f"${result['net_savings']:,.0f}")
+            if result_df is not None and not result_df.empty:
+                c1, c2, c3 = st.columns(3)
+                c1.metric("Invoices Selected", f"{len(result_df):,}")
+                c2.metric("Total Investment", f"${result_df['amount_usd'].sum():,.0f}")
+                c3.metric("Net Savings", f"${result_df['savings_usd'].sum():,.0f}")
 
-            if result.get("details"):
-                det_df = pd.DataFrame(result["details"])
-                st.dataframe(det_df.style.format({
-                    "invoice_amount": "${:,.0f}",
-                    "discount_earned": "${:,.0f}",
-                    "annualized_return_pct": "{:.1f}%"
-                }), use_container_width=True)
+                display_cols = ["supplier_name", "amount_usd", "savings_usd",
+                                "annualized_return"]
+                available = [c for c in display_cols if c in result_df.columns]
+                if available:
+                    st.dataframe(result_df[available].style.format({
+                        "amount_usd": "${:,.0f}",
+                        "savings_usd": "${:,.0f}",
+                        "annualized_return": "{:.1%}"
+                    }), use_container_width=True)
+            else:
+                st.info("No eligible invoices found for early payment.")
         except Exception as e:
             st.error(f"Error: {e}")

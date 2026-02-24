@@ -25,7 +25,7 @@ with tab_switch:
     try:
         with ENGINE.connect() as conn:
             suppliers = pd.DataFrame(conn.execute(text(
-                "SELECT supplier_id, company_name FROM suppliers ORDER BY company_name"
+                "SELECT supplier_id, supplier_name FROM suppliers ORDER BY supplier_name"
             )).mappings().fetchall())
 
         if suppliers.empty:
@@ -36,12 +36,12 @@ with tab_switch:
                 from_sup = st.selectbox(
                     "Current Supplier",
                     suppliers["supplier_id"].tolist(),
-                    format_func=lambda x: suppliers.loc[suppliers["supplier_id"] == x, "company_name"].iloc[0])
+                    format_func=lambda x: suppliers.loc[suppliers["supplier_id"] == x, "supplier_name"].iloc[0])
             with col2:
                 to_sup = st.selectbox(
                     "Alternative Supplier",
                     [s for s in suppliers["supplier_id"].tolist() if s != from_sup],
-                    format_func=lambda x: suppliers.loc[suppliers["supplier_id"] == x, "company_name"].iloc[0])
+                    format_func=lambda x: suppliers.loc[suppliers["supplier_id"] == x, "supplier_name"].iloc[0])
 
             if st.button("▶️ Analyse Switch", key="switch_btn"):
                 from analytics.scenario_planner import scenario_supplier_switch
@@ -49,36 +49,28 @@ with tab_switch:
 
                 st.markdown("---")
                 c1, c2, c3, c4 = st.columns(4)
-                c1.metric("Current Avg Cost",
-                         f"${result.get('current_avg_cost', 0):,.2f}")
-                c2.metric("Alternative Avg Cost",
-                         f"${result.get('alt_avg_cost', 0):,.2f}")
-                c3.metric("Cost Delta",
-                         f"{result.get('cost_delta_pct', 0):+.1f}%")
-                c4.metric("Lead-Time Delta",
-                         f"{result.get('leadtime_delta_days', 0):+.1f} days")
+                c1.metric("Current Spend",
+                         f"${result.get('current_spend', 0):,.2f}")
+                c2.metric("Estimated New Spend",
+                         f"${result.get('estimated_new_spend', 0):,.2f}")
+                c3.metric("Cost Impact",
+                         f"{result.get('cost_impact_pct', 0):+.1f}%")
+                c4.metric("Delay Change",
+                         f"{result.get('delay_change', 0):+.1f} days")
 
                 # Comparison radar
-                categories = ["Cost", "Lead Time", "Quality", "ESG"]
-                current_vals = [
-                    result.get("current_avg_cost", 0),
-                    result.get("current_avg_leadtime", 0),
-                    result.get("current_defect_rate", 0),
-                    result.get("current_esg", 0)]
-                alt_vals = [
-                    result.get("alt_avg_cost", 0),
-                    result.get("alt_avg_leadtime", 0),
-                    result.get("alt_defect_rate", 0),
-                    result.get("alt_esg", 0)]
+                categories = ["Cost Impact %", "Delay Change", "Quality Change", "ESG Change"]
+                vals = [
+                    result.get("cost_impact_pct", 0),
+                    result.get("delay_change", 0),
+                    result.get("quality_change", 0),
+                    result.get("esg_change", 0)]
 
                 fig = go.Figure()
                 fig.add_trace(go.Scatterpolar(
-                    r=current_vals, theta=categories, fill="toself",
-                    name="Current"))
-                fig.add_trace(go.Scatterpolar(
-                    r=alt_vals, theta=categories, fill="toself",
-                    name="Alternative"))
-                fig.update_layout(title="Supplier Comparison", height=400)
+                    r=vals, theta=categories, fill="toself",
+                    name="Impact"))
+                fig.update_layout(title="Switch Impact Analysis", height=400)
                 st.plotly_chart(fig, use_container_width=True)
 
     except Exception as e:
@@ -103,35 +95,21 @@ with tab_hedge:
         try:
             from analytics.scenario_planner import scenario_currency_hedge
             result = scenario_currency_hedge(
-                hedge_ccy, float(exposure), forward_premium)
+                hedge_ccy, float(exposure) / 1e6 if exposure > 1 else 0.80,
+                float(forward_premium) * 100)
 
             c1, c2, c3, c4 = st.columns(4)
-            c1.metric("Current Rate", f"{result.get('current_rate', 0):,.4f}")
-            c2.metric("Forward Rate",
-                     f"{result.get('forward_rate', 0):,.4f}")
-            c3.metric("Unhedged VaR (95%)",
-                     f"${result.get('unhedged_var', 0):,.0f}")
-            c4.metric("Hedged VaR (95%)",
-                     f"${result.get('hedged_var', 0):,.0f}")
+            c1.metric("Exposure (USD)", f"${result.get('exposure_usd', 0):,.0f}")
+            c2.metric("Hedge %",
+                     f"{result.get('hedge_pct', 0) * 100:.0f}%")
+            c3.metric("Unhedged VaR (P95)",
+                     f"${result.get('unhedged_worst_case_p95', 0):,.0f}")
+            c4.metric("Hedged VaR (P95)",
+                     f"${result.get('hedged_worst_case_p95', 0):,.0f}")
 
-            # Distribution comparison
-            sim = result.get("simulation", {})
-            if sim.get("terminal_rates"):
-                import numpy as np
-                rates = np.array(sim["terminal_rates"])
-                unhedged_costs = exposure * rates
-                hedged_costs = exposure * result.get("forward_rate", rates.mean())
-
-                fig = go.Figure()
-                fig.add_trace(go.Histogram(
-                    x=unhedged_costs, name="Unhedged",
-                    marker_color="#e15759", opacity=0.6))
-                fig.add_vline(x=hedged_costs, line_dash="dash",
-                             line_color="blue", annotation_text="Hedged Cost")
-                fig.update_layout(
-                    title=f"Unhedged Cost Distribution ({hedge_ccy})",
-                    xaxis_title="Cost (USD)", height=400)
-                st.plotly_chart(fig, use_container_width=True)
+            savings = result.get('savings_at_p95', 0)
+            if savings:
+                st.success(f"Hedge saves **${savings:,.0f}** at P95 vs unhedged")
 
         except Exception as e:
             st.error(f"Error: {e}")
@@ -142,47 +120,37 @@ with tab_near:
 
     col1, col2 = st.columns(2)
     with col1:
-        current_country = st.text_input("Current Country", "China")
+        target_region = st.selectbox("Target Region",
+            ["Africa", "Europe", "Asia", "Americas", "Oceania"], key="near_region")
     with col2:
-        near_country = st.text_input("Nearshore Country", "Turkey")
-
-    col1, col2 = st.columns(2)
-    with col1:
-        cost_premium = st.number_input("Cost Premium (%)", -20.0, 50.0, 10.0,
-                                      step=1.0) / 100
-    with col2:
-        freight_saving = st.number_input("Freight Saving (%)", 0.0, 80.0, 40.0,
-                                        step=5.0) / 100
+        realloc_pct = st.slider("Reallocation %", 5, 80, 30, step=5,
+                                key="near_pct") / 100
 
     if st.button("▶️ Analyse Nearshoring", key="near_btn"):
         try:
             from analytics.scenario_planner import scenario_nearshoring
-            result = scenario_nearshoring(
-                current_country, near_country,
-                cost_premium, freight_saving)
+            result = scenario_nearshoring(target_region, realloc_pct)
 
             c1, c2, c3, c4 = st.columns(4)
-            c1.metric("Current Spend",
-                     f"${result.get('current_spend', 0):,.0f}")
-            c2.metric("Nearshore Est.",
-                     f"${result.get('nearshore_spend', 0):,.0f}")
-            c3.metric("Lead-Time Savings",
-                     f"{result.get('leadtime_saving_days', 0):.0f} days")
-            c4.metric("Carbon Reduction",
-                     f"{result.get('carbon_reduction_pct', 0):.0f}%")
+            c1.metric("Reallocation Amount",
+                     f"${result.get('reallocation_amount', 0):,.0f}")
+            c2.metric("Cost Premium Impact",
+                     f"${result.get('cost_premium_impact', 0):,.0f}")
+            c3.metric("Freight Savings",
+                     f"${result.get('freight_savings', 0):,.0f}")
+            c4.metric("Net Cost Impact",
+                     f"${result.get('net_cost_impact', 0):,.0f}")
 
-            # Cost comparison bar
-            comp_data = pd.DataFrame([
-                {"Category": "Material Cost", "Current": result.get("current_spend", 0),
-                 "Nearshore": result.get("nearshore_spend", 0)},
-                {"Category": "Freight", "Current": result.get("current_freight", 0),
-                 "Nearshore": result.get("nearshore_freight", 0)},
-            ])
-            fig = px.bar(comp_data.melt(id_vars="Category"),
-                        x="Category", y="value", color="variable",
-                        barmode="group", title="Cost Comparison")
-            fig.update_layout(height=350)
-            st.plotly_chart(fig, use_container_width=True)
+            st.markdown(f"**Lead-time improvement:** {result.get('lead_time_improvement_pct', 0):.0f}%")
+            st.markdown(f"**Carbon reduction (est.):** {result.get('carbon_reduction_pct', 0):.0f}%")
+
+            # Regional spend breakdown if available
+            by_region = result.get("by_region")
+            if by_region is not None and not by_region.empty:
+                fig = px.pie(by_region, names="region", values="spend",
+                            title="Current Spend by Region")
+                fig.update_layout(height=350)
+                st.plotly_chart(fig, use_container_width=True)
 
         except Exception as e:
             st.error(f"Error: {e}")
