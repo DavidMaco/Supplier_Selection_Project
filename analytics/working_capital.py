@@ -53,7 +53,7 @@ def analyze_working_capital(year: int = 2024) -> dict:
                     THEN 1 ELSE 0 END) AS overdue_count
             FROM invoices i
             WHERE YEAR(i.invoice_date) = :year AND i.payment_date IS NOT NULL
-            GROUP BY YEAR(i.invoice_date), MONTH(i.invoice_date)
+            GROUP BY month
             ORDER BY month
         """), conn, params={"year": year})
 

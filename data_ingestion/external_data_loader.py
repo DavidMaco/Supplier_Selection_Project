@@ -325,6 +325,9 @@ class ExternalDataLoader:
             if "esg_assessments" in self.data:
                 self._import_esg_assessments()
 
+            # Seed FX rates and commodity prices (needed by analytics)
+            self._seed_market_data()
+
             with ENGINE.begin() as conn:
                 conn.execute(text("SET FOREIGN_KEY_CHECKS = 1"))
 
@@ -337,6 +340,23 @@ class ExternalDataLoader:
             import traceback
             traceback.print_exc()
             return False
+
+    # ------------------------------------------------------------------
+    #  Seed FX + commodity data for analytics
+    # ------------------------------------------------------------------
+    def _seed_market_data(self):
+        """Generate FX rates + commodity prices so analytics work."""
+        try:
+            from data_ingestion.generate_seed_data import seed_fx_rates, seed_commodity_prices
+            with ENGINE.begin() as conn:
+                # Clear existing market data
+                conn.execute(text("DELETE FROM fx_rates"))
+                conn.execute(text("DELETE FROM commodity_prices"))
+                seed_fx_rates(conn)
+                seed_commodity_prices(conn)
+            print("  [OK] FX rates & commodity prices seeded")
+        except Exception as e:
+            print(f"  [WARN] Market data seeding failed: {e}")
 
     # ------------------------------------------------------------------
     #  Table clearing
