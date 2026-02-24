@@ -5,8 +5,8 @@ services:
     image: mysql:8.0
     container_name: aegis-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: Maconoelle86
-      MYSQL_DATABASE: aegis_procurement
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-changeme}
+      MYSQL_DATABASE: ${DB_NAME:-aegis_procurement}
     ports:
       - "3307:3306"
     volumes:
@@ -24,7 +24,7 @@ services:
     ports:
       - "8501:8501"
     environment:
-      DATABASE_URL: "mysql+pymysql://root:Maconoelle86@mysql:3306/aegis_procurement"
+      DATABASE_URL: "mysql+pymysql://root:${DB_PASSWORD:-changeme}@mysql:3306/${DB_NAME:-aegis_procurement}"
     depends_on:
       mysql:
         condition: service_healthy
