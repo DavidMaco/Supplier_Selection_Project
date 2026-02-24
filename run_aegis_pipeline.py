@@ -173,6 +173,29 @@ def step_run_analytics():
     from analytics.carbon_engine import calculate_emissions
     calculate_emissions()
 
+    print("  Running should-cost analysis...")
+    from analytics.should_cost import get_leakage_summary
+    summary = get_leakage_summary()
+    if summary:
+        print(f"    Leakage: ${summary.get('total_leakage_usd', 0):,.0f} "
+              f"({summary.get('leakage_pct', 0):.1f}%)")
+
+    print("  Running working capital analysis...")
+    from analytics.working_capital import analyze_working_capital
+    wc = analyze_working_capital()
+    if wc:
+        print(f"    Avg DPO: {wc.get('avg_dpo', 0):.1f} days, "
+              f"Total Spend: ${wc.get('total_spend', 0):,.0f}")
+
+    print("  Running scenario planner (baseline)...")
+    from analytics.scenario_planner import scenario_nearshoring
+    try:
+        near = scenario_nearshoring()
+        if near and "error" not in near:
+            print(f"    Nearshoring net impact: ${near.get('net_cost_impact', 0):,.0f}")
+    except Exception:
+        print("    Skipped (insufficient data)")
+
     print("  Analytics engines complete.")
 
 
