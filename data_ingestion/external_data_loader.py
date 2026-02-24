@@ -326,6 +326,9 @@ class ExternalDataLoader:
             self._import_purchase_orders()
             self._import_po_line_items()
 
+            # Auto-generate supplier_material_catalog from PO line items
+            self._generate_catalog()
+
             if "shipments" in self.data:
                 self._import_shipments()
             if "invoices" in self.data:
@@ -364,6 +367,42 @@ class ExternalDataLoader:
             log.info("FX rates & commodity prices seeded")
         except Exception as e:
             log.warning(f"Market data seeding failed: {e}")
+
+    # ------------------------------------------------------------------
+    #  Auto-generate supplier_material_catalog from PO line items
+    # ------------------------------------------------------------------
+    def _generate_catalog(self):
+        """
+        Derive supplier_material_catalog rows from imported PO line items.
+        Each unique (supplier, material) pair gets a catalog entry using
+        the latest unit price and the supplier's default lead time.
+        """
+        try:
+            with ENGINE.begin() as conn:
+                rows = conn.execute(text("""
+                    INSERT INTO supplier_material_catalog
+                        (supplier_id, material_id, quoted_unit_price, currency_id,
+                         lead_time_days, is_primary_source, valid_from)
+                    SELECT
+                        po.supplier_id,
+                        li.material_id,
+                        AVG(li.unit_price),
+                        s.currency_id,
+                        COALESCE(s.lead_time_days, 14),
+                        TRUE,
+                        CURDATE()
+                    FROM po_line_items li
+                    JOIN purchase_orders po ON po.po_id = li.po_id
+                    JOIN suppliers s        ON s.supplier_id = po.supplier_id
+                    WHERE li.material_id IS NOT NULL
+                    GROUP BY po.supplier_id, li.material_id, s.currency_id, s.lead_time_days
+                    ON DUPLICATE KEY UPDATE
+                        quoted_unit_price = VALUES(quoted_unit_price)
+                """))
+                inserted = rows.rowcount
+            log.info("Generated %d supplier_material_catalog entries", inserted)
+        except Exception as e:
+            log.warning(f"Catalog generation failed: {e}")
 
     # ------------------------------------------------------------------
     #  Table clearing
