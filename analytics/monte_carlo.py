@@ -13,6 +13,9 @@ from sqlalchemy import create_engine, text
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
+from utils.logging_config import get_logger
+
+log = get_logger("montecarlo")
 
 ENGINE = create_engine(config.DATABASE_URL, echo=False)
 
@@ -284,24 +287,24 @@ def save_simulation(scenario_type: str, scenario_label: str,
             }),
         })
 
-    print(f"[OK] Simulation saved: {scenario_type} -- {scenario_label}")
+    log.info(f"Simulation saved: {scenario_type} -- {scenario_label}")
 
 
 if __name__ == "__main__":
-    print("=== FX Simulation: NGN ===")
+    log.info("=== FX Simulation: NGN ===")
     fx = simulate_fx("NGN", n_paths=5000, horizon_days=90)
-    print(f"  Current: {fx['current_rate']}")
-    print(f"  Mean: {fx['mean']:.2f}, P5: {fx['p5']:.2f}, P95: {fx['p95']:.2f}")
-    print(f"  VaR(95): {fx['var_95']:.2f}, CVaR(95): {fx['cvar_95']:.2f}")
+    log.info(f"  Current: {fx['current_rate']}")
+    log.info(f"  Mean: {fx['mean']:.2f}, P5: {fx['p5']:.2f}, P95: {fx['p95']:.2f}")
+    log.info(f"  VaR(95): {fx['var_95']:.2f}, CVaR(95): {fx['cvar_95']:.2f}")
     save_simulation("FX", "NGN 90-day", fx, 5000)
 
-    print("\n=== Lead Time Simulation ===")
+    log.info("=== Lead Time Simulation ===")
     lt = simulate_lead_time()
-    print(f"  Mean: {lt['mean']:.1f} days, P95: {lt['p95']:.1f} days")
+    log.info(f"  Mean: {lt['mean']:.1f} days, P95: {lt['p95']:.1f} days")
     save_simulation("LeadTime", "All Suppliers 90-day", lt)
 
-    print("\n=== Disruption: Port Closure ===")
+    log.info("=== Disruption: Port Closure ===")
     dis = simulate_disruption("port_closure", "Lagos", 30)
-    print(f"  Cost Impact Mean: ${dis['cost_impact_mean']:,.0f}")
-    print(f"  Cost Impact P95: ${dis['cost_impact_p95']:,.0f}")
+    log.info(f"  Cost Impact Mean: ${dis['cost_impact_mean']:,.0f}")
+    log.info(f"  Cost Impact P95: ${dis['cost_impact_p95']:,.0f}")
     save_simulation("Disruption", "Lagos Port Closure 30d", dis)

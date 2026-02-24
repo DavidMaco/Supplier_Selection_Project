@@ -14,6 +14,9 @@ from sqlalchemy import create_engine, text
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
+from utils.logging_config import get_logger
+
+log = get_logger("scenario")
 
 ENGINE = create_engine(config.DATABASE_URL, echo=False)
 
@@ -212,13 +215,13 @@ def scenario_nearshoring(target_region: str = "Africa",
 
 
 if __name__ == "__main__":
-    print("=== Supplier Switch Scenario ===")
+    log.info("=== Supplier Switch Scenario ===")
     switch = scenario_supplier_switch(1, 5)
     for k, v in switch.items():
-        print(f"  {k}: {v}")
+        log.info(f"  {k}: {v}")
 
-    print("\n=== Nearshoring Scenario ===")
+    log.info("=== Nearshoring Scenario ===")
     near = scenario_nearshoring("Africa", 0.30)
     for k, v in near.items():
         if not isinstance(v, pd.DataFrame):
-            print(f"  {k}: {v}")
+            log.info(f"  {k}: {v}")

@@ -11,6 +11,9 @@ from sqlalchemy import create_engine, text
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
+from utils.logging_config import get_logger
+
+log = get_logger("carbon")
 
 ENGINE = create_engine(config.DATABASE_URL, echo=False)
 
@@ -167,7 +170,7 @@ def get_reduction_opportunities(year: int = 2024) -> pd.DataFrame:
 if __name__ == "__main__":
     summary = get_carbon_summary(2024)
     if summary:
-        print(f"Total CO2e: {summary['total_co2e_tonnes']:,.1f} tonnes")
-        print(f"Shipments: {summary['shipment_count']}")
-        print(f"\nBy Mode:")
-        print(summary["by_mode"].to_string(index=False))
+        log.info(f"Total CO2e: {summary['total_co2e_tonnes']:,.1f} tonnes")
+        log.info(f"Shipments: {summary['shipment_count']}")
+        log.info("By Mode:")
+        log.debug(summary["by_mode"].to_string(index=False))

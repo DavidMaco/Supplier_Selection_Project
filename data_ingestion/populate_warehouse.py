@@ -12,6 +12,9 @@ sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
+from utils.logging_config import get_logger
+
+log = get_logger("warehouse")
 
 ENGINE = create_engine(config.DATABASE_URL, echo=False)
 
@@ -58,7 +61,7 @@ def populate_dim_date(conn):
                 :is_weekend, :is_month_end, :fiscal_year, :fiscal_quarter)
         """), rows[i:i + chunk])
 
-    print(f"  ✓ dim_date: {len(rows)} rows")
+    log.info(f"dim_date: {len(rows)} rows")
 
 
 # ═════════════════════════════════════════════════════════════════════
@@ -102,7 +105,7 @@ def populate_dim_supplier(conn):
         ) ra ON s.supplier_id = ra.supplier_id AND ra.rn = 1
     """))
     count = conn.execute(text("SELECT COUNT(*) FROM dim_supplier")).scalar()
-    print(f"  ✓ dim_supplier: {count} rows")
+    log.info(f"dim_supplier: {count} rows")
 
 
 # ═════════════════════════════════════════════════════════════════════
@@ -119,7 +122,7 @@ def populate_dim_material(conn):
         FROM materials
     """))
     count = conn.execute(text("SELECT COUNT(*) FROM dim_material")).scalar()
-    print(f"  ✓ dim_material: {count} rows")
+    log.info(f"dim_material: {count} rows")
 
 
 # ═════════════════════════════════════════════════════════════════════
@@ -136,7 +139,7 @@ def populate_dim_geography(conn):
         FROM countries
     """))
     count = conn.execute(text("SELECT COUNT(*) FROM dim_geography")).scalar()
-    print(f"  ✓ dim_geography: {count} rows")
+    log.info(f"dim_geography: {count} rows")
 
 
 # ═════════════════════════════════════════════════════════════════════
@@ -196,7 +199,7 @@ def populate_fact_procurement(conn):
             AND fx.rate_date = po.order_date
     """))
     count = conn.execute(text("SELECT COUNT(*) FROM fact_procurement")).scalar()
-    print(f"  ✓ fact_procurement: {count} rows")
+    log.info(f"fact_procurement: {count} rows")
 
 
 # ═════════════════════════════════════════════════════════════════════
@@ -228,37 +231,37 @@ def populate_fact_esg(conn):
         ) cc ON ea.supplier_id = cc.supplier_id
     """))
     count = conn.execute(text("SELECT COUNT(*) FROM fact_esg")).scalar()
-    print(f"  ✓ fact_esg: {count} rows")
+    log.info(f"fact_esg: {count} rows")
 
 
 # ═════════════════════════════════════════════════════════════════════
 #  ORCHESTRATOR
 # ═════════════════════════════════════════════════════════════════════
 def run_etl():
-    print("=" * 60)
-    print("AEGIS — Warehouse ETL")
-    print("=" * 60)
+    log.info("=" * 60)
+    log.info("AEGIS — Warehouse ETL")
+    log.info("=" * 60)
 
     with ENGINE.begin() as conn:
-        print("\n[1/6] dim_date...")
+        log.info("[1/6] dim_date...")
         populate_dim_date(conn)
 
-        print("[2/6] dim_supplier (SCD-2 initial)...")
+        log.info("[2/6] dim_supplier (SCD-2 initial)...")
         populate_dim_supplier(conn)
 
-        print("[3/6] dim_material...")
+        log.info("[3/6] dim_material...")
         populate_dim_material(conn)
 
-        print("[4/6] dim_geography...")
+        log.info("[4/6] dim_geography...")
         populate_dim_geography(conn)
 
-        print("[5/6] fact_procurement...")
+        log.info("[5/6] fact_procurement...")
         populate_fact_procurement(conn)
 
-        print("[6/6] fact_esg...")
+        log.info("[6/6] fact_esg...")
         populate_fact_esg(conn)
 
-    print("\n✓ Warehouse ETL complete!")
+    log.info("Warehouse ETL complete!")
 
 
 if __name__ == "__main__":

@@ -23,6 +23,9 @@ sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
+from utils.logging_config import get_logger
+
+log = get_logger("seed_data")
 
 # ─── Reproducibility ─────────────────────────────────────────────────
 np.random.seed(config.RANDOM_SEED)
@@ -161,7 +164,7 @@ def seed_suppliers(conn):
             :is_iso9001_certified, :is_iso14001_certified, :is_iso45001_certified,
             :is_sa8000_certified, :modern_slavery_declaration, :onboarding_date, :status)
     """), suppliers)
-    print(f"  ✓ {len(suppliers)} suppliers inserted")
+    log.info(f"{len(suppliers)} suppliers inserted")
     return fetch_ids(conn, "suppliers", "supplier_id")
 
 
@@ -268,7 +271,7 @@ def seed_materials(conn):
         VALUES (:material_code, :material_name, :category, :sub_category,
             :commodity_group, :hs_code, :unit_of_measure, :standard_cost_usd, :is_critical)
     """), materials)
-    print(f"  ✓ {len(materials)} materials inserted")
+    log.info(f"{len(materials)} materials inserted")
     return fetch_ids(conn, "materials", "material_id")
 
 
@@ -304,7 +307,7 @@ def seed_catalog(conn, supplier_ids, material_ids):
         VALUES (:supplier_id, :material_id, :quoted_unit_price, :currency_id,
                 :lead_time_days, :min_order_qty, :valid_from, :valid_to)
     """), catalog)
-    print(f"  ✓ {len(catalog)} catalog entries inserted")
+    log.info(f"{len(catalog)} catalog entries inserted")
     return catalog
 
 
@@ -347,7 +350,7 @@ def seed_contracts(conn, supplier_ids):
             :start_date, :end_date, :total_value_usd, :currency_id, :incoterm_id,
             :payment_terms_days, :fx_clause, :early_payment_discount_pct, :status)
     """), contracts)
-    print(f"  ✓ {len(contracts)} contracts inserted")
+    log.info(f"{len(contracts)} contracts inserted")
     return fetch_ids(conn, "contracts", "contract_id")
 
 
@@ -421,7 +424,7 @@ def seed_purchase_orders(conn, supplier_ids, material_ids, contract_ids):
             VALUES (:po_id, :material_id, :quantity, :unit_price)
         """), items[i:i + chunk])
 
-    print(f"  ✓ {len(pos)} POs, {len(items)} line items inserted")
+    log.info(f"{len(pos)} POs, {len(items)} line items inserted")
     return po_ids
 
 
@@ -477,7 +480,7 @@ def seed_shipments(conn, po_ids):
                 :dispatch_date, :eta_date, :actual_arrival, :status)
         """), shipments[i:i + chunk])
 
-    print(f"  ✓ {len(shipments)} shipments inserted")
+    log.info(f"{len(shipments)} shipments inserted")
     return fetch_ids(conn, "shipments", "shipment_id")
 
 
@@ -551,7 +554,7 @@ def seed_quality(conn, shipment_ids, supplier_ids):
             :category, :description, :root_cause, :capa_status, :financial_impact_usd)
     """), incidents)
 
-    print(f"  ✓ {len(inspections)} inspections, {len(incidents)} incidents inserted")
+    log.info(f"{len(inspections)} inspections, {len(incidents)} incidents inserted")
 
 
 # ═════════════════════════════════════════════════════════════════════
@@ -606,7 +609,7 @@ def seed_invoices(conn, po_ids, supplier_ids):
                 :payment_date, :early_payment_discount_taken)
         """), invoices[i:i + chunk])
 
-    print(f"  ✓ {len(invoices)} invoices inserted")
+    log.info(f"{len(invoices)} invoices inserted")
 
 
 # ═════════════════════════════════════════════════════════════════════
@@ -658,7 +661,7 @@ def seed_fx_rates(conn):
             VALUES (:currency_id, :rate_date, :rate_to_usd, :source)
         """), rates[i:i + chunk])
 
-    print(f"  ✓ {len(rates)} FX rate records inserted ({len(anchor_rates)} currencies)")
+    log.info(f"{len(rates)} FX rate records inserted ({len(anchor_rates)} currencies)")
 
 
 # ═════════════════════════════════════════════════════════════════════
@@ -702,7 +705,7 @@ def seed_commodity_prices(conn):
             VALUES (:commodity_group, :price_date, :price_usd, :unit, :source)
         """), prices[i:i + chunk])
 
-    print(f"  ✓ {len(prices)} commodity price records inserted")
+    log.info(f"{len(prices)} commodity price records inserted")
 
 
 # ═════════════════════════════════════════════════════════════════════
@@ -737,7 +740,7 @@ def seed_country_risk(conn):
             :ease_of_business_rank, :logistics_performance_index,
             :composite_country_risk)
     """), records)
-    print(f"  ✓ {len(records)} country risk records inserted")
+    log.info(f"{len(records)} country risk records inserted")
 
 
 # ═════════════════════════════════════════════════════════════════════
@@ -812,7 +815,7 @@ def seed_esg(conn, supplier_ids):
             :ethics_compliance_score, :transparency_score, :board_diversity_score,
             :governance_composite, :esg_overall_score, :esg_rating)
     """), assessments)
-    print(f"  ✓ {len(assessments)} ESG assessments inserted")
+    log.info(f"{len(assessments)} ESG assessments inserted")
 
 
 # ═════════════════════════════════════════════════════════════════════
@@ -852,7 +855,7 @@ def seed_carbon(conn, shipment_ids):
                 :weight_tonnes, :co2e_kg, :calculation_method)
         """), estimates[i:i + chunk])
 
-    print(f"  ✓ {len(estimates)} carbon estimates inserted")
+    log.info(f"{len(estimates)} carbon estimates inserted")
 
 
 # ═════════════════════════════════════════════════════════════════════
@@ -881,7 +884,7 @@ def seed_certifications(conn, supplier_ids):
             VALUES (:supplier_id, :cert_id, :issued_date,
                 :expiry_date, :is_verified)
         """), certs)
-    print(f"  ✓ {len(certs)} supplier certifications inserted")
+    log.info(f"{len(certs)} supplier certifications inserted")
 
 
 # ═════════════════════════════════════════════════════════════════════
@@ -965,64 +968,64 @@ def seed_compliance(conn, supplier_ids):
             :overall_status, :findings)
     """), dd_records)
 
-    print(f"  ✓ {len(checks)} compliance checks, {len(dd_records)} DD records inserted")
+    log.info(f"{len(checks)} compliance checks, {len(dd_records)} DD records inserted")
 
 
 # ═════════════════════════════════════════════════════════════════════
 #  MAIN ORCHESTRATOR
 # ═════════════════════════════════════════════════════════════════════
 def main():
-    print("=" * 60)
-    print("AEGIS — Seed Data Generation")
-    print("=" * 60)
+    log.info("=" * 60)
+    log.info("AEGIS — Seed Data Generation")
+    log.info("=" * 60)
 
     with ENGINE.begin() as conn:
-        print("\n[1/14] Suppliers...")
+        log.info("[1/14] Suppliers...")
         supplier_ids = seed_suppliers(conn)
 
-        print("[2/14] Materials...")
+        log.info("[2/14] Materials...")
         material_ids = seed_materials(conn)
 
-        print("[3/14] Supplier-Material Catalog...")
+        log.info("[3/14] Supplier-Material Catalog...")
         seed_catalog(conn, supplier_ids, material_ids)
 
-        print("[4/14] Contracts...")
+        log.info("[4/14] Contracts...")
         contract_ids = seed_contracts(conn, supplier_ids)
 
-        print("[5/14] Purchase Orders + Line Items...")
+        log.info("[5/14] Purchase Orders + Line Items...")
         po_ids = seed_purchase_orders(conn, supplier_ids, material_ids, contract_ids)
 
-        print("[6/14] Shipments...")
+        log.info("[6/14] Shipments...")
         shipment_ids = seed_shipments(conn, po_ids)
 
-        print("[7/14] Quality Inspections + Incidents...")
+        log.info("[7/14] Quality Inspections + Incidents...")
         seed_quality(conn, shipment_ids, supplier_ids)
 
-        print("[8/14] Invoices...")
+        log.info("[8/14] Invoices...")
         seed_invoices(conn, po_ids, supplier_ids)
 
-        print("[9/14] FX Rates (GBM)...")
+        log.info("[9/14] FX Rates (GBM)...")
         seed_fx_rates(conn)
 
-        print("[10/14] Commodity Prices...")
+        log.info("[10/14] Commodity Prices...")
         seed_commodity_prices(conn)
 
-        print("[11/14] Country Risk Indices...")
+        log.info("[11/14] Country Risk Indices...")
         seed_country_risk(conn)
 
-        print("[12/14] ESG Assessments...")
+        log.info("[12/14] ESG Assessments...")
         seed_esg(conn, supplier_ids)
 
-        print("[13/14] Carbon Estimates...")
+        log.info("[13/14] Carbon Estimates...")
         seed_carbon(conn, shipment_ids)
 
-        print("[14/14] Certifications & Compliance...")
+        log.info("[14/14] Certifications & Compliance...")
         seed_certifications(conn, supplier_ids)
         seed_compliance(conn, supplier_ids)
 
-    print("\n" + "=" * 60)
-    print("✓ AEGIS seed data generation complete!")
-    print("=" * 60)
+    log.info("=" * 60)
+    log.info("AEGIS seed data generation complete!")
+    log.info("=" * 60)
 
 
 if __name__ == "__main__":

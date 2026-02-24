@@ -10,12 +10,16 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from sqlalchemy import create_engine, text
 import config
+from utils.logging_config import get_logger, DataQualityLogger
+
+log = get_logger("pipeline")
+dq = DataQualityLogger()
 
 
 def banner(msg: str):
-    print(f"\n{'='*60}")
-    print(f"  {msg}")
-    print(f"{'='*60}")
+    log.info("=" * 60)
+    log.info("  %s", msg)
+    log.info("=" * 60)
 
 
 def step_deploy_schema(engine):
@@ -54,7 +58,7 @@ def step_deploy_schema(engine):
 
     for sql_file in files:
         path = os.path.join(sql_dir, sql_file)
-        print(f"  Executing {sql_file}...")
+        log.info("  Executing %s...", sql_file)
         with open(path, "r", encoding="utf-8") as f:
             sql_content = f.read()
 
@@ -77,12 +81,12 @@ def step_deploy_schema(engine):
             if "already exists" in str(e).lower() or "duplicate" in str(e).lower():
                 pass
             else:
-                print(f"    Warning: {e}")
-        print(f"    [OK] {sql_file}")
+                log.warning("    %s: %s", sql_file, e)
+        log.info("    [OK] %s", sql_file)
 
     cursor.close()
     conn.close()
-    print("  Schema deployment complete.")
+    log.info("  Schema deployment complete.")
 
 
 def step_seed_reference(engine):
@@ -127,11 +131,11 @@ def step_seed_reference(engine):
         if "duplicate" in str(e).lower():
             pass
         else:
-            print(f"    Warning: {e}")
+            log.warning("    Reference seed: %s", e)
 
     cursor.close()
     conn.close()
-    print("  Reference data seeded.")
+    log.info("  Reference data seeded.")
 
 
 def step_generate_data():
@@ -139,7 +143,7 @@ def step_generate_data():
     banner("Step 3/6 — Generate Sample Data")
     from data_ingestion.generate_seed_data import main as generate_main
     generate_main()
-    print("  Sample data generated.")
+    log.info("  Sample data generated.")
 
 
 def step_populate_warehouse():
@@ -147,56 +151,58 @@ def step_populate_warehouse():
     banner("Step 4/6 — Populate Data Warehouse")
     from data_ingestion.populate_warehouse import run_etl as warehouse_main
     warehouse_main()
-    print("  Warehouse populated.")
+    log.info("  Warehouse populated.")
 
 
 def step_run_analytics():
     """Run all analytics engines."""
     banner("Step 5/6 — Run Analytics Engines")
 
-    print("  Running MCDA scoring...")
+    log.info("  Running MCDA scoring...")
     from analytics.mcda_engine import run_mcda
     run_mcda()
 
-    print("  Running risk scoring...")
+    log.info("  Running risk scoring...")
     from analytics.risk_scoring import compute_risk_scores, persist_risk_assessments
     scores = compute_risk_scores()
     persist_risk_assessments(scores)
 
-    print("  Running concentration analysis...")
+    log.info("  Running concentration analysis...")
     from analytics.concentration import run_full_concentration_analysis, persist_concentration
     conc_results = run_full_concentration_analysis()
     if conc_results:
         persist_concentration(conc_results)
 
-    print("  Running carbon calculations...")
+    log.info("  Running carbon calculations...")
     from analytics.carbon_engine import calculate_emissions
     calculate_emissions()
 
-    print("  Running should-cost analysis...")
+    log.info("  Running should-cost analysis...")
     from analytics.should_cost import get_leakage_summary
     summary = get_leakage_summary()
     if summary:
-        print(f"    Leakage: ${summary.get('total_leakage_usd', 0):,.0f} "
-              f"({summary.get('leakage_pct', 0):.1f}%)")
+        log.info("    Leakage: $%s (%s%%)",
+                 f"{summary.get('total_leakage_usd', 0):,.0f}",
+                 f"{summary.get('leakage_pct', 0):.1f}")
 
-    print("  Running working capital analysis...")
+    log.info("  Running working capital analysis...")
     from analytics.working_capital import analyze_working_capital
     wc = analyze_working_capital()
     if wc:
-        print(f"    Avg DPO: {wc.get('avg_dpo', 0):.1f} days, "
-              f"Total Spend: ${wc.get('total_spend', 0):,.0f}")
+        log.info("    Avg DPO: %.1f days, Total Spend: $%s",
+                 wc.get('avg_dpo', 0), f"{wc.get('total_spend', 0):,.0f}")
 
-    print("  Running scenario planner (baseline)...")
+    log.info("  Running scenario planner (baseline)...")
     from analytics.scenario_planner import scenario_nearshoring
     try:
         near = scenario_nearshoring()
         if near and "error" not in near:
-            print(f"    Nearshoring net impact: ${near.get('net_cost_impact', 0):,.0f}")
+            log.info("    Nearshoring net impact: $%s",
+                     f"{near.get('net_cost_impact', 0):,.0f}")
     except Exception:
-        print("    Skipped (insufficient data)")
+        log.info("    Skipped (insufficient data)")
 
-    print("  Analytics engines complete.")
+    log.info("  Analytics engines complete.")
 
 
 def step_verify(engine):
@@ -215,17 +221,38 @@ def step_verify(engine):
 
     with engine.connect() as conn:
         conn.execute(text("USE aegis_procurement"))
-        print(f"  {'Table':<30} {'Count':>10}")
-        print(f"  {'-'*40}")
+        log.info("  %-30s %10s", "Table", "Count")
+        log.info("  %s", "-" * 40)
         for tbl in tables:
             try:
                 count = conn.execute(text(f"SELECT COUNT(*) FROM `{tbl}`")).scalar()
                 status = "OK" if count > 0 else "!! EMPTY"
-                print(f"  {tbl:<30} {count:>10,}  {status}")
+                log.info("  %-30s %10s  %s", tbl, f"{count:,}", status)
+                # Record DQ check
+                dq.log(
+                    check_name=f"row_count_{tbl}",
+                    check_type="Completeness",
+                    table_name=tbl,
+                    column_name=None,
+                    records_checked=count,
+                    records_failed=0 if count > 0 else 1,
+                    severity="Info" if count > 0 else "Warning",
+                    details=f"Row count: {count}",
+                )
             except Exception:
-                print(f"  {tbl:<30} {'N/A':>10}  MISSING")
+                log.warning("  %-30s %10s  MISSING", tbl, "N/A")
+                dq.log(
+                    check_name=f"table_exists_{tbl}",
+                    check_type="Completeness",
+                    table_name=tbl,
+                    column_name=None,
+                    records_checked=0,
+                    records_failed=1,
+                    severity="Error",
+                    details="Table missing from database",
+                )
 
-    print("\n  Pipeline verification complete!")
+    log.info("  Pipeline verification complete!")
 
 
 def step_load_external_data(input_dir: str):
@@ -236,14 +263,14 @@ def step_load_external_data(input_dir: str):
     loader = ExternalDataLoader(input_dir)
 
     if not loader.load_all_files():
-        print("  [FAIL] External data validation failed. Aborting.")
+        log.error("  External data validation failed. Aborting.")
         sys.exit(1)
 
     if not loader.import_data():
-        print("  [FAIL] External data import failed. Aborting.")
+        log.error("  External data import failed. Aborting.")
         sys.exit(1)
 
-    print("  External data loaded successfully.")
+    log.info("  External data loaded successfully.")
 
 
 def main():
@@ -264,10 +291,11 @@ def main():
     args = parser.parse_args()
 
     banner("AEGIS Procurement Intelligence — Pipeline Runner")
-    print(f"  Database: {config.DATABASE_URL.split('@')[1] if '@' in config.DATABASE_URL else config.DATABASE_URL}")
-    print(f"  Demo Mode: {config.DEMO_MODE}")
+    log.info("  Database: %s",
+             config.DATABASE_URL.split('@')[1] if '@' in config.DATABASE_URL else '***')
+    log.info("  Demo Mode: %s", config.DEMO_MODE)
     if args.external:
-        print(f"  External Data: {os.path.abspath(args.external)}")
+        log.info("  External Data: %s", os.path.abspath(args.external))
 
     start = time.time()
 
@@ -301,7 +329,7 @@ def main():
 
     elapsed = time.time() - start
     banner(f"Pipeline Complete — {elapsed:.1f}s")
-    print(f"\n  Launch dashboard:  streamlit run streamlit_app.py\n")
+    log.info("  Launch dashboard:  streamlit run streamlit_app.py")
 
 
 if __name__ == "__main__":

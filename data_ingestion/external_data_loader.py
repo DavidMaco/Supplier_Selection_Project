@@ -33,11 +33,21 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
     from config import DATABASE_URL
+    from utils.logging_config import get_logger
 except Exception:
     DATABASE_URL = os.getenv(
         "DATABASE_URL",
         "mysql+pymysql://root@localhost:3306/aegis_procurement",
     )
+    import logging
+    def get_logger(name):
+        logger = logging.getLogger(name)
+        if not logger.handlers:
+            logger.addHandler(logging.StreamHandler(sys.stdout))
+            logger.setLevel(logging.INFO)
+        return logger
+
+log = get_logger("external_loader")
 
 ENGINE = create_engine(DATABASE_URL, echo=False)
 
@@ -252,8 +262,8 @@ class ExternalDataLoader:
     #  Phase 1 — Load & validate
     # ------------------------------------------------------------------
     def load_all_files(self) -> bool:
-        print(f"Loading external data from: {self.input_dir}")
-        print()
+        log.info(f"Loading external data from: {self.input_dir}")
+
 
         all_types = self.REQUIRED_FILES + self.OPTIONAL_FILES
         for file_type in all_types:
@@ -262,36 +272,35 @@ class ExternalDataLoader:
 
             if not file_path.exists():
                 if required:
-                    print(f"  [MISSING] {file_type}.csv  (REQUIRED)")
+                    log.error(f"[MISSING] {file_type}.csv  (REQUIRED)")
                     self.validator.errors.append(f"Required file missing: {file_type}.csv")
                 else:
-                    print(f"  [SKIP]    {file_type}.csv  (optional, not provided)")
+                    log.info(f"[SKIP] {file_type}.csv  (optional, not provided)")
                 continue
 
-            print(f"  Validating {file_type}.csv ... ", end="")
+            log.info(f"Validating {file_type}.csv ...")
             if self.validator.validate_file(str(file_path), file_type):
                 df = pd.read_csv(file_path)
                 self.data[file_type] = df
-                print(f"[OK] ({len(df)} rows)")
+                log.info(f"  {file_type}.csv [OK] ({len(df)} rows)")
             else:
-                print("[FAIL]")
+                log.error(f"  {file_type}.csv [FAIL]")
                 for err in self.validator.errors:
-                    print(f"    Error: {err}")
+                    log.error(f"    Error: {err}")
                 self.validator.errors.clear()
                 return False
 
         if self.validator.warnings:
-            print()
-            print("  Warnings:")
+            log.warning("Warnings:")
             for w in self.validator.warnings:
-                print(f"    - {w}")
+                log.warning(f"  - {w}")
             self.validator.warnings.clear()
 
         missing_required = [
             f for f in self.REQUIRED_FILES if f not in self.data
         ]
         if missing_required:
-            print(f"\n  Cannot import: missing required files {missing_required}")
+            log.error(f"Cannot import: missing required files {missing_required}")
             return False
 
         return True
@@ -301,12 +310,11 @@ class ExternalDataLoader:
     # ------------------------------------------------------------------
     def import_data(self) -> bool:
         if not self.data:
-            print("No data to import.")
+            log.warning("No data to import.")
             return False
 
         try:
-            print()
-            print("Importing data into AEGIS database ...")
+            log.info("Importing data into AEGIS database ...")
 
             with ENGINE.begin() as conn:
                 conn.execute(text("SET FOREIGN_KEY_CHECKS = 0"))
@@ -331,12 +339,11 @@ class ExternalDataLoader:
             with ENGINE.begin() as conn:
                 conn.execute(text("SET FOREIGN_KEY_CHECKS = 1"))
 
-            print()
-            print("[OK] External data imported successfully!")
+            log.info("External data imported successfully!")
             return True
 
         except Exception as e:
-            print(f"[FAIL] Import failed: {e}")
+            log.error(f"Import failed: {e}")
             import traceback
             traceback.print_exc()
             return False
@@ -354,9 +361,9 @@ class ExternalDataLoader:
                 conn.execute(text("DELETE FROM commodity_prices"))
                 seed_fx_rates(conn)
                 seed_commodity_prices(conn)
-            print("  [OK] FX rates & commodity prices seeded")
+            log.info("FX rates & commodity prices seeded")
         except Exception as e:
-            print(f"  [WARN] Market data seeding failed: {e}")
+            log.warning(f"Market data seeding failed: {e}")
 
     # ------------------------------------------------------------------
     #  Table clearing
@@ -454,10 +461,10 @@ class ExternalDataLoader:
         # Warn on unmatched countries
         unmatched_c = df[df["country_id"].isna()]["country"].unique()
         if len(unmatched_c):
-            print(f"    Warning: unmatched countries (skipped): {list(unmatched_c)}")
+            log.warning(f"Unmatched countries (skipped): {list(unmatched_c)}")
         unmatched_cur = df[df["default_currency_id"].isna()]["currency_code"].unique()
         if len(unmatched_cur):
-            print(f"    Warning: unmatched currencies (skipped): {list(unmatched_cur)}")
+            log.warning(f"Unmatched currencies (skipped): {list(unmatched_cur)}")
 
         df = df.dropna(subset=["country_id", "default_currency_id"])
 
@@ -499,7 +506,7 @@ class ExternalDataLoader:
         ]].copy()
 
         insert_df.to_sql("suppliers", ENGINE, if_exists="append", index=False)
-        print(f"  [OK] Imported {len(insert_df)} suppliers")
+        log.info(f"Imported {len(insert_df)} suppliers")
 
     # ------------------------------------------------------------------
     #  Import: Materials
@@ -524,7 +531,7 @@ class ExternalDataLoader:
             insert_df["sub_category"] = df["sub_category"]
 
         insert_df.to_sql("materials", ENGINE, if_exists="append", index=False)
-        print(f"  [OK] Imported {len(insert_df)} materials")
+        log.info(f"Imported {len(insert_df)} materials")
 
     # ------------------------------------------------------------------
     #  Import: Purchase Orders
@@ -560,7 +567,7 @@ class ExternalDataLoader:
         # Drop unresolved FKs
         unmatched_s = df[df["supplier_id"].isna()]["supplier_name"].unique()
         if len(unmatched_s):
-            print(f"    Warning: unmatched suppliers (skipped): {list(unmatched_s)}")
+            log.warning(f"Unmatched suppliers (skipped): {list(unmatched_s)}")
         df = df.dropna(subset=["supplier_id", "currency_id"])
 
         insert_df = df[[
@@ -570,7 +577,7 @@ class ExternalDataLoader:
         ]].copy()
 
         insert_df.to_sql("purchase_orders", ENGINE, if_exists="append", index=False)
-        print(f"  [OK] Imported {len(insert_df)} purchase orders")
+        log.info(f"Imported {len(insert_df)} purchase orders")
 
     # ------------------------------------------------------------------
     #  Import: PO Line Items
@@ -587,16 +594,16 @@ class ExternalDataLoader:
 
         unmatched = df[df["po_id"].isna()]["po_number"].unique()
         if len(unmatched):
-            print(f"    Warning: unmatched PO numbers (skipped): {list(unmatched[:5])}")
+            log.warning(f"Unmatched PO numbers (skipped): {list(unmatched[:5])}")
         unmatched_m = df[df["material_id"].isna()]["material_name"].unique()
         if len(unmatched_m):
-            print(f"    Warning: unmatched materials (skipped): {list(unmatched_m[:5])}")
+            log.warning(f"Unmatched materials (skipped): {list(unmatched_m[:5])}")
 
         df = df.dropna(subset=["po_id", "material_id"])
 
         insert_df = df[["po_id", "material_id", "quantity", "unit_price"]].copy()
         insert_df.to_sql("po_line_items", ENGINE, if_exists="append", index=False)
-        print(f"  [OK] Imported {len(insert_df)} PO line items")
+        log.info(f"Imported {len(insert_df)} PO line items")
 
     # ------------------------------------------------------------------
     #  Import: Shipments (optional)
@@ -641,7 +648,7 @@ class ExternalDataLoader:
 
         insert_df = df[[c for c in cols if c in df.columns]].copy()
         insert_df.to_sql("shipments", ENGINE, if_exists="append", index=False)
-        print(f"  [OK] Imported {len(insert_df)} shipments")
+        log.info(f"Imported {len(insert_df)} shipments")
 
     # ------------------------------------------------------------------
     #  Import: Invoices (optional)
@@ -680,7 +687,7 @@ class ExternalDataLoader:
 
         insert_df = df[[c for c in cols if c in df.columns]].copy()
         insert_df.to_sql("invoices", ENGINE, if_exists="append", index=False)
-        print(f"  [OK] Imported {len(insert_df)} invoices")
+        log.info(f"Imported {len(insert_df)} invoices")
 
     # ------------------------------------------------------------------
     #  Import: ESG Assessments (optional)
@@ -731,7 +738,7 @@ class ExternalDataLoader:
 
         insert_df = df[[c for c in insert_cols if c in df.columns]].copy()
         insert_df.to_sql("esg_assessments", ENGINE, if_exists="append", index=False)
-        print(f"  [OK] Imported {len(insert_df)} ESG assessments")
+        log.info(f"Imported {len(insert_df)} ESG assessments")
 
 
 # ====================================================================
@@ -754,11 +761,11 @@ if __name__ == "__main__":
 
     if loader.load_all_files():
         if loader.import_data():
-            print()
-            print("Next steps:")
-            print("  1. Run warehouse ETL:  python data_ingestion/populate_warehouse.py")
-            print("  2. Run analytics:      python run_aegis_pipeline.py   (steps 4-6 only)")
-            print("  3. Launch dashboard:   streamlit run streamlit_app.py")
+            log.info("")
+            log.info("Next steps:")
+            log.info("  1. Run warehouse ETL:  python data_ingestion/populate_warehouse.py")
+            log.info("  2. Run analytics:      python run_aegis_pipeline.py   (steps 4-6 only)")
+            log.info("  3. Launch dashboard:   streamlit run streamlit_app.py")
             sys.exit(0)
 
     sys.exit(1)

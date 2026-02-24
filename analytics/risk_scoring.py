@@ -10,6 +10,9 @@ from sqlalchemy import create_engine, text
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
+from utils.logging_config import get_logger
+
+log = get_logger("risk")
 
 ENGINE = create_engine(config.DATABASE_URL, echo=False)
 
@@ -181,13 +184,13 @@ def persist_risk_assessments(df: pd.DataFrame):
                  :composite_risk, :risk_tier)
         """), records)
 
-    print(f"[OK] {len(records)} risk assessments persisted")
+    log.info(f"{len(records)} risk assessments persisted")
 
 
 def run_risk_scoring(supplier_id: int = None):
     df = compute_risk_scores(supplier_id)
     if df.empty:
-        print("No suppliers to assess.")
+        log.warning("No suppliers to assess.")
         return df
     persist_risk_assessments(df)
     return df
@@ -196,6 +199,6 @@ def run_risk_scoring(supplier_id: int = None):
 if __name__ == "__main__":
     result = run_risk_scoring()
     if not result.empty:
-        print(result[["supplier_name", "composite_risk", "risk_tier"]]
+        log.info(result[["supplier_name", "composite_risk", "risk_tier"]]
               .sort_values("composite_risk", ascending=False)
               .head(15).to_string(index=False))

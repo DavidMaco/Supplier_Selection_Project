@@ -11,6 +11,9 @@ from sqlalchemy import create_engine, text
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
+from utils.logging_config import get_logger
+
+log = get_logger("should_cost")
 
 ENGINE = create_engine(config.DATABASE_URL, echo=False)
 
@@ -142,10 +145,10 @@ def get_leakage_summary(year: int = 2024) -> dict:
 if __name__ == "__main__":
     summary = get_leakage_summary()
     if summary:
-        print(f"Total Quoted: ${summary['total_quoted_usd']:,.0f}")
-        print(f"Total Should-Cost: ${summary['total_should_cost_usd']:,.0f}")
-        print(f"Leakage: ${summary['total_leakage_usd']:,.0f} ({summary['leakage_pct']:.1f}%)")
-        print(f"\nFlags: {summary['items_in_range']} OK, "
+        log.info(f"Total Quoted: ${summary['total_quoted_usd']:,.0f}")
+        log.info(f"Total Should-Cost: ${summary['total_should_cost_usd']:,.0f}")
+        log.info(f"Leakage: ${summary['total_leakage_usd']:,.0f} ({summary['leakage_pct']:.1f}%)")
+        log.info(f"Flags: {summary['items_in_range']} OK, "
               f"{summary['items_investigate']} Investigate, "
               f"{summary['items_escalate']} Escalate, "
               f"{summary['items_red_flag']} Red Flag")

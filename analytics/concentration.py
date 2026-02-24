@@ -10,6 +10,9 @@ from sqlalchemy import create_engine, text
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
+from utils.logging_config import get_logger
+
+log = get_logger("concentration")
 
 ENGINE = create_engine(config.DATABASE_URL, echo=False)
 
@@ -143,7 +146,7 @@ def run_full_concentration_analysis(year: int = 2024) -> dict:
                     "top3_share": df["top_n_share_pct"].iloc[0] if len(df) > 0 else 0,
                 }
         except Exception as e:
-            print(f"  Warning: {dim} analysis failed: {e}")
+            log.warning(f"{dim} analysis failed: {e}")
             results[dim] = {"data": pd.DataFrame(), "hhi": 0,
                            "hhi_category": "Error", "top3_share": 0}
 
@@ -194,14 +197,14 @@ def persist_concentration(results: dict, year: int = 2024):
                          :hhi_category, :top_n_share_pct, :recommendation)
                 """), records[i:i+100])
 
-    print(f"[OK] {len(records)} concentration records persisted")
+    log.info(f"{len(records)} concentration records persisted")
 
 
 if __name__ == "__main__":
     results = run_full_concentration_analysis(2024)
     for dim, info in results.items():
-        print(f"\n{dim}: HHI={info['hhi']:.0f} ({info['hhi_category']}), "
+        log.info(f"{dim}: HHI={info['hhi']:.0f} ({info['hhi_category']}), "
               f"Top-3 Share={info['top3_share']:.1f}%")
         if not info["data"].empty:
-            print(info["data"][["dimension_value", "spend_usd", "spend_share_pct"]]
+            log.debug(info["data"][["dimension_value", "spend_usd", "spend_share_pct"]]
                   .head(5).to_string(index=False))

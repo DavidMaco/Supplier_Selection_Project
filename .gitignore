@@ -13,5 +13,6 @@ build/
 *.sqlite3
 reports/figures/*.png
 reports/figures/*.pdf
+logs/
 .DS_Store
 Thumbs.db

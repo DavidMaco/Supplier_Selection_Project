@@ -10,6 +10,9 @@ from sqlalchemy import create_engine, text
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
+from utils.logging_config import get_logger
+
+log = get_logger("working_capital")
 
 ENGINE = create_engine(config.DATABASE_URL, echo=False)
 
@@ -147,18 +150,18 @@ def optimize_payment_timing(budget_constraint_usd: float = 500_000,
 
     result = pd.DataFrame(selected) if selected else pd.DataFrame()
     if not result.empty:
-        print(f"[OK] {len(result)} invoices selected for early payment")
-        print(f"  Total: ${result['amount_usd'].sum():,.0f}")
-        print(f"  Savings: ${result['savings_usd'].sum():,.0f}")
-        print(f"  Avg annualized return: {result['annualized_return'].mean():.1%}")
+        log.info(f"{len(result)} invoices selected for early payment")
+        log.info(f"  Total: ${result['amount_usd'].sum():,.0f}")
+        log.info(f"  Savings: ${result['savings_usd'].sum():,.0f}")
+        log.info(f"  Avg annualized return: {result['annualized_return'].mean():.1%}")
 
     return result
 
 
 if __name__ == "__main__":
     wc = analyze_working_capital(2024)
-    print(f"Total Spend: ${wc['total_spend']:,.0f}")
-    print(f"Avg DPO: {wc['avg_dpo']:.1f} days")
-    print(f"Overdue: ${wc['total_overdue']:,.0f} ({wc['overdue_pct']:.1f}%)")
-    print(f"Discount Captured: ${wc['discount_captured']:,.0f}")
-    print(f"Discount Missed: ${wc['discount_missed']:,.0f}")
+    log.info(f"Total Spend: ${wc['total_spend']:,.0f}")
+    log.info(f"Avg DPO: {wc['avg_dpo']:.1f} days")
+    log.info(f"Overdue: ${wc['total_overdue']:,.0f} ({wc['overdue_pct']:.1f}%)")
+    log.info(f"Discount Captured: ${wc['discount_captured']:,.0f}")
+    log.info(f"Discount Missed: ${wc['discount_missed']:,.0f}")

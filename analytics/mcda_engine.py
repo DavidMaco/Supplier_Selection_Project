@@ -11,6 +11,9 @@ from sqlalchemy import create_engine, text
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
+from utils.logging_config import get_logger
+
+log = get_logger("mcda")
 
 ENGINE = create_engine(config.DATABASE_URL, echo=False)
 
@@ -246,7 +249,7 @@ def run_mcda(method: str = "TOPSIS",
         df = build_decision_matrix(conn, period_year, period_quarter)
 
     if df.empty:
-        print("No data for the selected period.")
+        log.warning("No data for the selected period.")
         return pd.DataFrame()
 
     dm = df[score_cols].values.astype(float)
@@ -314,12 +317,12 @@ def run_mcda(method: str = "TOPSIS",
                  :composite_score, :rank, :tier_recommendation, :methodology)
         """), records)
 
-    print(f"[OK] MCDA ({method}) complete -- {len(records)} suppliers scored for {period_label}")
+    log.info(f"MCDA ({method}) complete -- {len(records)} suppliers scored for {period_label}")
     return df
 
 
 if __name__ == "__main__":
     result = run_mcda("TOPSIS", 2024)
     if not result.empty:
-        print(result[["supplier_name", "composite_score", "rank", "tier_recommendation"]]
+        log.info(result[["supplier_name", "composite_score", "rank", "tier_recommendation"]]
               .sort_values("rank").head(15).to_string(index=False))
