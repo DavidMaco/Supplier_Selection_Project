@@ -1,0 +1,13 @@
+po_number,transport_mode,dispatch_date,carrier_name,origin_port,destination_port,weight_tonnes,eta_date,actual_arrival,status
+PO-EXT-0001,Sea,2024-01-20,"Maersk","Lagos (Apapa)","Lagos (Apapa)",12.5,2024-02-05,2024-02-07,Delivered
+PO-EXT-0002,Air,2024-01-22,"DHL Logistics","Frankfurt","Lagos (Tincan)",0.8,2024-01-25,2024-01-25,Delivered
+PO-EXT-0003,Sea,2024-02-05,"COSCO","Shanghai","Lagos (Apapa)",18.0,2024-03-15,2024-03-18,Delivered
+PO-EXT-0004,Road,2024-02-15,"Bolloré Logistics","Lagos (Apapa)","Lagos (Apapa)",8.5,2024-02-18,2024-02-19,Delivered
+PO-EXT-0005,Sea,2024-02-20,"MSC","Mumbai (JNPT)","Lagos (Tincan)",4.2,2024-03-25,2024-03-28,Delivered
+PO-EXT-0006,Sea,2024-03-05,"Hapag-Lloyd","Houston","Lagos (Apapa)",22.0,2024-03-28,2024-03-30,Delivered
+PO-EXT-0007,Sea,2024-03-15,"CMA CGM","Felixstowe","Lagos (Tincan)",6.5,2024-04-10,2024-04-12,Delivered
+PO-EXT-0008,Sea,2024-03-25,"MSC","Santos","Lagos (Apapa)",5.0,2024-04-25,2024-04-30,Delivered
+PO-EXT-0009,Road,2024-04-10,"Local Trucking","Lagos (Apapa)","Lagos (Apapa)",6.0,2024-04-12,2024-04-12,Delivered
+PO-EXT-0010,Air,2024-04-15,"Emirates SkyCargo","Frankfurt","Lagos (Tincan)",0.6,2024-04-18,2024-04-18,Delivered
+PO-EXT-0011,Sea,2024-04-25,"Maersk","Durban","Lagos (Apapa)",9.0,2024-05-20,2024-05-23,Delivered
+PO-EXT-0012,Sea,2024-05-05,"CMA CGM","Istanbul (Ambarli)","Lagos (Tincan)",7.5,2024-05-28,2024-06-01,Delivered

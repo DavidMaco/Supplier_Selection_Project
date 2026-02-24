@@ -205,6 +205,24 @@ def step_verify(engine):
     print("\n  Pipeline verification complete!")
 
 
+def step_load_external_data(input_dir: str):
+    """Import external company data from CSV files."""
+    banner("Step 3/6 — Load External Data")
+    from data_ingestion.external_data_loader import ExternalDataLoader
+
+    loader = ExternalDataLoader(input_dir)
+
+    if not loader.load_all_files():
+        print("  [FAIL] External data validation failed. Aborting.")
+        sys.exit(1)
+
+    if not loader.import_data():
+        print("  [FAIL] External data import failed. Aborting.")
+        sys.exit(1)
+
+    print("  External data loaded successfully.")
+
+
 def main():
     parser = argparse.ArgumentParser(description="AEGIS Pipeline Runner")
     parser.add_argument("--skip-schema", action="store_true",
@@ -217,11 +235,16 @@ def main():
                        help="Skip analytics engines")
     parser.add_argument("--verify-only", action="store_true",
                        help="Only run verification")
+    parser.add_argument("--external", type=str, default=None,
+                       metavar="DIR",
+                       help="Import external CSV data from DIR instead of generating sample data")
     args = parser.parse_args()
 
     banner("AEGIS Procurement Intelligence — Pipeline Runner")
     print(f"  Database: {config.DATABASE_URL.split('@')[1] if '@' in config.DATABASE_URL else config.DATABASE_URL}")
     print(f"  Demo Mode: {config.DEMO_MODE}")
+    if args.external:
+        print(f"  External Data: {os.path.abspath(args.external)}")
 
     start = time.time()
 
@@ -239,7 +262,10 @@ def main():
 
     step_seed_reference(engine_base)
 
-    if not args.skip_seed:
+    if args.external:
+        # External data mode: load from CSV instead of generating
+        step_load_external_data(args.external)
+    elif not args.skip_seed:
         step_generate_data()
 
     if not args.skip_warehouse:

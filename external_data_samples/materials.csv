@@ -1,0 +1,13 @@
+material_name,category,standard_cost_usd,commodity_group,unit_of_measure,is_critical
+"Carbon Steel Pipe 6in",Pipes,45.00,Steel,MT,1
+"Stainless Steel Flange DN150",Flanges,28.50,Steel,EA,1
+"HDPE Pipe 4in SDR11",Pipes,12.80,Polymers,MT,0
+"Gate Valve 8in 150#",Valves,320.00,Valves,EA,1
+"Ball Valve 2in SS316",Valves,85.00,Valves,EA,0
+"Welding Rod E7018 3.2mm",Consumables,3.50,Welding,KG,0
+"Gasket Spiral Wound 6in",Gaskets,8.75,Sealing,EA,0
+"Bolt Set M20x80 Gr8.8",Fasteners,2.20,Fasteners,SET,0
+"Epoxy Coating 2-Part",Coatings,18.00,Chemicals,LT,0
+"Hydraulic Fluid ISO 46",Lubricants,6.50,Chemicals,LT,0
+"Insulation Mineral Wool 50mm",Insulation,9.20,Insulation,M2,0
+"Cable Gland M25 Brass",Electrical,4.10,Electrical,EA,0

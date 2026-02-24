@@ -1,0 +1,11 @@
+supplier_name,country,currency_code,lead_time_days,lead_time_stddev,defect_rate_pct,annual_revenue_usd,payment_terms_days,tier_level,is_iso9001_certified
+"AfroPipe Industries",Nigeria,NGN,18,3.6,2.5,5000000,30,Approved,1
+"Lagos Steel Works",Nigeria,NGN,21,4.2,3.0,8500000,45,Preferred,1
+"Rhine Chemical GmbH",Germany,EUR,14,2.8,0.8,120000000,60,Strategic,1
+"Shanghai Heavy Eng",China,CNY,28,5.6,1.5,250000000,30,Preferred,1
+"Mumbai Valve Corp",India,USD,25,5.0,2.1,35000000,45,Approved,0
+"Houston Pipe Supply",United States,USD,10,2.0,0.5,80000000,30,Strategic,1
+"Yorkshire Polymers",United Kingdom,GBP,16,3.2,1.2,45000000,60,Preferred,1
+"Sao Paulo Metals SA",Brazil,BRL,30,6.0,4.0,22000000,30,Approved,0
+"Cape Industrial",South Africa,ZAR,22,4.4,2.8,18000000,45,Approved,0
+"Istanbul Fasteners",Turkey,TRY,20,4.0,3.5,12000000,30,Conditional,0

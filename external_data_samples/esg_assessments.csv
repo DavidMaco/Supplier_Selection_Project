@@ -1,0 +1,11 @@
+supplier_name,assessment_date,esg_rating,carbon_intensity_score,waste_management_score,water_usage_score,labor_practices_score,health_safety_score,community_impact_score,ethics_compliance_score,transparency_score,board_diversity_score
+"AfroPipe Industries",2024-06-01,C,45,50,55,60,55,50,55,50,40
+"Lagos Steel Works",2024-06-01,C,40,45,50,55,50,45,50,45,35
+"Rhine Chemical GmbH",2024-06-01,A,85,90,88,92,95,80,90,88,75
+"Shanghai Heavy Eng",2024-06-01,B,65,60,55,58,62,50,55,52,45
+"Mumbai Valve Corp",2024-06-01,B,60,55,58,65,60,55,62,58,50
+"Houston Pipe Supply",2024-06-01,A,80,85,82,88,90,78,85,82,70
+"Yorkshire Polymers",2024-06-01,A,82,88,85,90,92,82,88,85,72
+"Sao Paulo Metals SA",2024-06-01,C,50,48,45,52,48,42,48,45,38
+"Cape Industrial",2024-06-01,C,48,52,50,55,52,48,52,48,42
+"Istanbul Fasteners",2024-06-01,D,35,38,40,42,40,35,40,38,30

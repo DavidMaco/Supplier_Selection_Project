@@ -26,7 +26,9 @@ Global procurement teams face compounding risks from FX volatility, single-sourc
 ```mermaid
 flowchart LR
     A[ERP / PO / FX Data] --> B[Seed Data Generator]
+    X[Company CSVs] --> Y[External Data Loader]
     B --> C[AEGIS OLTP: 30+ tables]
+    Y --> C
     C --> D[Star-Schema Warehouse ETL]
     D --> E[Warehouse: dim/fact tables]
     E --> F[8 Analytics Engines]
@@ -107,7 +109,17 @@ aegis-procurement/
 │
 ├── data_ingestion/
 │   ├── generate_seed_data.py      # 14-step realistic data generator
-│   └── populate_warehouse.py      # Star-schema ETL (SCD Type 2)
+│   ├── populate_warehouse.py      # Star-schema ETL (SCD Type 2)
+│   └── external_data_loader.py    # Import company CSV data
+│
+├── external_data_samples/         # Sample CSV templates
+│   ├── suppliers.csv
+│   ├── materials.csv
+│   ├── purchase_orders.csv
+│   ├── po_line_items.csv
+│   ├── shipments.csv
+│   ├── invoices.csv
+│   └── esg_assessments.csv
 │
 ├── analytics/                     # 8 engines
 │   ├── mcda_engine.py             # TOPSIS, PROMETHEE-II, WSM
@@ -157,7 +169,19 @@ python run_aegis_pipeline.py
 streamlit run streamlit_app.py
 ```
 
-### Option B: Docker
+### Option B: External Company Data
+
+```bash
+# Import your own data instead of using sample data
+python run_aegis_pipeline.py --external ./external_data_samples
+
+# Or use the loader directly
+python data_ingestion/external_data_loader.py --input-dir ./company_data
+```
+
+Place CSV files in a directory following the schema in `EXTERNAL_DATA_GUIDE.md`. Required files: `suppliers.csv`, `materials.csv`, `purchase_orders.csv`, `po_line_items.csv`. Optional: `shipments.csv`, `invoices.csv`, `esg_assessments.csv`.
+
+### Option C: Docker
 
 ```bash
 docker-compose up -d
