@@ -1,0 +1,128 @@
+"""
+AEGIS — Page 12: Settings & Configuration
+Manage weights, thresholds, feature flags.
+"""
+
+import streamlit as st
+import json
+import config
+
+st.set_page_config(page_title="AEGIS · Settings", layout="wide")
+st.title("⚙️ Settings & Configuration")
+
+tab_mcda, tab_risk, tab_fx, tab_sys = st.tabs([
+    "🏅 MCDA Weights", "🛡️ Risk Config", "💱 FX Config", "🖥️ System"])
+
+# ── Tab 1: MCDA Weights ─────────────────────────────────────────────
+with tab_mcda:
+    st.subheader("Multi-Criteria Decision Analysis Weights")
+    st.caption("Adjust weights used for supplier scoring (must sum to 1.0)")
+
+    weights = dict(config.MCDA_DEFAULT_WEIGHTS)
+
+    cols = st.columns(4)
+    new_weights = {}
+    for i, (key, val) in enumerate(weights.items()):
+        with cols[i % 4]:
+            new_weights[key] = st.number_input(
+                key.replace("_", " ").title(),
+                0.0, 1.0, float(val), 0.01,
+                key=f"mcda_{key}")
+
+    total = sum(new_weights.values())
+    if abs(total - 1.0) > 0.01:
+        st.warning(f"⚠️ Weights sum to {total:.2f} — should be 1.00")
+    else:
+        st.success(f"✓ Weights sum to {total:.2f}")
+
+    st.json(new_weights)
+
+# ── Tab 2: Risk Config ──────────────────────────────────────────────
+with tab_risk:
+    st.subheader("Risk Assessment Configuration")
+
+    st.markdown("#### Risk Dimension Weights")
+    risk_w = dict(config.RISK_WEIGHTS)
+
+    cols = st.columns(4)
+    new_risk = {}
+    for i, (key, val) in enumerate(risk_w.items()):
+        with cols[i % 4]:
+            new_risk[key] = st.number_input(
+                key.replace("_", " ").title(),
+                0.0, 1.0, float(val), 0.01,
+                key=f"risk_{key}")
+
+    risk_total = sum(new_risk.values())
+    if abs(risk_total - 1.0) > 0.01:
+        st.warning(f"⚠️ Risk weights sum to {risk_total:.2f}")
+    else:
+        st.success(f"✓ Risk weights sum to {risk_total:.2f}")
+
+    st.markdown("#### HHI Thresholds")
+    c1, c2, c3 = st.columns(3)
+    c1.number_input("Competitive", value=config.HHI_COMPETITIVE, key="hhi_mod")
+    c2.number_input("Moderate", value=config.HHI_MODERATE, key="hhi_high")
+    c3.number_input("Concentrated", value=config.HHI_CONCENTRATED, key="hhi_vh")
+
+    st.markdown("#### Cost Leakage Thresholds")
+    c1, c2, c3 = st.columns(3)
+    c1.number_input("Investigate (%)", value=int(config.COST_LEAKAGE_INVESTIGATE_PCT), key="cl_inv")
+    c2.number_input("Escalate (%)", value=int(config.COST_LEAKAGE_ESCALATE_PCT), key="cl_esc")
+    c3.number_input("Red Flag (%)", value=int(config.COST_LEAKAGE_RED_FLAG_PCT), key="cl_rf")
+
+# ── Tab 3: FX Config ────────────────────────────────────────────────
+with tab_fx:
+    st.subheader("Foreign Exchange Configuration")
+
+    st.markdown("#### Anchor Rates (per 1 USD)")
+    anchor = dict(config.FX_ANCHOR_RATES)
+    cols = st.columns(5)
+    for i, (ccy, rate) in enumerate(anchor.items()):
+        with cols[i % 5]:
+            st.number_input(ccy, value=float(rate), key=f"anchor_{ccy}",
+                          format="%.4f")
+
+    st.markdown("#### Annual Volatilities (σ)")
+    vols = dict(config.FX_VOLATILITIES)
+    cols = st.columns(5)
+    for i, (ccy, vol) in enumerate(vols.items()):
+        with cols[i % 5]:
+            st.number_input(ccy, value=float(vol), key=f"vol_{ccy}",
+                          format="%.2f", min_value=0.01, max_value=1.0)
+
+    st.markdown("#### Monte Carlo Defaults")
+    c1, c2 = st.columns(2)
+    c1.number_input("Default Paths", value=config.MC_DEFAULT_PATHS,
+                   min_value=1000, max_value=500000, step=1000, key="mc_paths")
+    c2.number_input("Default Horizon (days)", value=config.MC_DEFAULT_HORIZON_DAYS,
+                   min_value=7, max_value=365, step=7, key="mc_horizon")
+
+# ── Tab 4: System ───────────────────────────────────────────────────
+with tab_sys:
+    st.subheader("System Configuration")
+
+    c1, c2 = st.columns(2)
+    with c1:
+        st.text_input("Database URL", value=config.DATABASE_URL, disabled=True)
+        st.checkbox("Demo Mode", value=config.DEMO_MODE, key="demo_mode")
+        st.checkbox("Live FX Feed", value=config.ENABLE_LIVE_FX, key="live_fx")
+        st.number_input("Random Seed", value=config.RANDOM_SEED, key="rand_seed")
+
+    with c2:
+        st.markdown("#### API Endpoints")
+        st.text_input("Primary FX API", value=config.FX_API_PRIMARY, disabled=True)
+        st.text_input("Secondary FX API", value=config.FX_API_SECONDARY, disabled=True)
+        st.text_input("Tertiary FX API", value=config.FX_API_TERTIARY, disabled=True)
+
+    st.markdown("---")
+    st.markdown("#### Emission Factors")
+    ef = dict(config.EMISSION_FACTORS)
+    cols = st.columns(len(ef))
+    for i, (mode, factor) in enumerate(ef.items()):
+        with cols[i]:
+            st.metric(mode.title(), f"{factor} kg/tonne-km")
+
+    st.markdown("---")
+    st.caption("**Note:** Configuration changes on this page are for exploration only. "
+              "To persist changes, edit `config.py` directly.")

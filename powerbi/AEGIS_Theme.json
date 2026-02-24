@@ -1,0 +1,30 @@
+{
+    "name": "AEGIS Procurement",
+    "dataColors": [
+        "#4e79a7", "#f28e2b", "#e15759", "#76b7b2",
+        "#59a14f", "#edc949", "#af7aa1", "#ff9da7",
+        "#9c755f", "#bab0ab"
+    ],
+    "background": { "color": "#FFFFFF" },
+    "foreground": { "color": "#252423" },
+    "tableAccent": "#4e79a7",
+    "visualStyles": {
+        "*": {
+            "*": {
+                "border": [{ "color": { "solid": { "color": "#E5E5E5" } }, "width": 1 }],
+                "shadow": [{ "show": true, "color": "#00000010", "position": "outer" }]
+            }
+        },
+        "card": {
+            "*": {
+                "labels": [{ "color": { "solid": { "color": "#252423" } }, "fontSize": 24 }],
+                "categoryLabels": [{ "color": { "solid": { "color": "#666666" } }, "fontSize": 12 }]
+            }
+        }
+    },
+    "textClasses": {
+        "title": { "fontFace": "Segoe UI Semibold", "fontSize": 14, "color": "#252423" },
+        "header": { "fontFace": "Segoe UI", "fontSize": 12, "color": "#252423" },
+        "label": { "fontFace": "Segoe UI", "fontSize": 10, "color": "#666666" }
+    }
+}

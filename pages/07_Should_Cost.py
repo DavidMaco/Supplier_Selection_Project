@@ -1,0 +1,120 @@
+"""
+AEGIS — Page 7: Should-Cost Analysis
+Bottom-up cost model, leakage detection.
+"""
+
+import streamlit as st
+import plotly.express as px
+import plotly.graph_objects as go
+import pandas as pd
+from sqlalchemy import create_engine, text
+import config
+
+st.set_page_config(page_title="AEGIS · Should-Cost", layout="wide")
+st.title("💲 Should-Cost Analysis & Leakage Detection")
+
+ENGINE = create_engine(config.DATABASE_URL)
+
+# ── Sidebar ─────────────────────────────────────────────────────────
+with st.sidebar:
+    year = st.selectbox("Year", [2024, 2023, 2022, 2025], key="sc_yr")
+    flag_filter = st.multiselect(
+        "Leakage Flag",
+        ["Within Range", "Investigate", "Escalate", "Red Flag"],
+        default=["Investigate", "Escalate", "Red Flag"])
+
+try:
+    from analytics.should_cost import build_should_cost, get_leakage_summary
+
+    with st.spinner("Building should-cost model..."):
+        items = build_should_cost(year)
+
+    if not items:
+        st.info("No should-cost data for the selected year.")
+        st.stop()
+
+    df = pd.DataFrame(items)
+
+    # ── KPI row ─────────────────────────────────────────────────────
+    total_actual = df["actual_unit_price"].sum()
+    total_should = df["should_cost_total"].sum()
+    leakage_usd = total_actual - total_should
+    leakage_pct = (leakage_usd / total_should * 100) if total_should else 0
+    flags = df["flag"].value_counts().to_dict()
+
+    c1, c2, c3, c4, c5 = st.columns(5)
+    c1.metric("Items Analysed", f"{len(df):,}")
+    c2.metric("Total Actual", f"${total_actual:,.0f}")
+    c3.metric("Total Should-Cost", f"${total_should:,.0f}")
+    c4.metric("Total Leakage", f"${leakage_usd:,.0f}")
+    c5.metric("Leakage %", f"{leakage_pct:+.1f}%")
+
+    # ── Leakage flag distribution ───────────────────────────────────
+    st.subheader("Leakage Classification")
+    flag_colors = {
+        "Within Range": "#59a14f", "Investigate": "#edc949",
+        "Escalate": "#f28e2b", "Red Flag": "#e15759"
+    }
+    flag_df = pd.DataFrame([
+        {"flag": k, "count": v} for k, v in flags.items()
+    ])
+    if not flag_df.empty:
+        col1, col2 = st.columns(2)
+        with col1:
+            fig = px.bar(flag_df, x="flag", y="count",
+                        color="flag",
+                        color_discrete_map=flag_colors,
+                        title="Items by Leakage Classification")
+            fig.update_layout(showlegend=False, height=350)
+            st.plotly_chart(fig, use_container_width=True)
+
+        with col2:
+            fig = px.pie(flag_df, names="flag", values="count",
+                        color="flag",
+                        color_discrete_map=flag_colors,
+                        title="Leakage Distribution")
+            fig.update_layout(height=350)
+            st.plotly_chart(fig, use_container_width=True)
+
+    # ── Cost breakdown waterfall (sample item) ──────────────────────
+    st.subheader("Cost Decomposition — Worst Leakage Item")
+    worst = df.sort_values("variance_pct", ascending=False).iloc[0]
+
+    fig = go.Figure(go.Waterfall(
+        name="Should-Cost",
+        orientation="v",
+        x=["Material", "Freight", "Customs", "Overhead",
+           "Margin", "Should-Cost", "Actual", "Variance"],
+        y=[worst["material_cost"], worst["freight_cost"],
+           worst["customs_cost"], worst["overhead_cost"],
+           worst["margin_cost"], 0,
+           worst["actual_unit_price"],
+           worst["actual_unit_price"] - worst["should_cost_total"]],
+        measure=["relative", "relative", "relative", "relative",
+                 "relative", "total", "total", "relative"],
+        connector={"line": {"color": "rgb(63, 63, 63)"}},
+        increasing={"marker": {"color": "#e15759"}},
+        decreasing={"marker": {"color": "#59a14f"}},
+        totals={"marker": {"color": "#4e79a7"}}
+    ))
+    fig.update_layout(
+        title=f"Cost Decomposition: {worst.get('material_name', 'Item')}",
+        yaxis_title="USD", height=400)
+    st.plotly_chart(fig, use_container_width=True)
+
+    # ── Leakage detail table ────────────────────────────────────────
+    st.subheader("Leakage Detail")
+    filtered = df[df["flag"].isin(flag_filter)] if flag_filter else df
+    display_cols = ["material_name", "supplier_name", "actual_unit_price",
+                    "should_cost_total", "variance_pct", "flag"]
+    available_cols = [c for c in display_cols if c in filtered.columns]
+    if available_cols:
+        st.dataframe(
+            filtered[available_cols].sort_values("variance_pct", ascending=False)
+            .style.format({"actual_unit_price": "${:,.2f}",
+                          "should_cost_total": "${:,.2f}",
+                          "variance_pct": "{:+.1f}%"}),
+            use_container_width=True, height=400)
+
+except Exception as e:
+    st.error(f"Error: {e}")
