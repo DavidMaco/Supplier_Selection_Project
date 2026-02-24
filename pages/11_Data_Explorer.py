@@ -1,6 +1,6 @@
 """
 AEGIS — Page 11: Data Explorer
-Browse all tables, run ad-hoc queries, export to CSV.
+Browse all tables, run ad-hoc queries, export to Excel/CSV.
 """
 
 import streamlit as st
@@ -13,7 +13,8 @@ st.title("🗄️ Data Explorer")
 
 ENGINE = create_engine(config.DATABASE_URL)
 
-tab_browse, tab_query = st.tabs(["📋 Table Browser", "🔍 Ad-Hoc Query"])
+tab_browse, tab_query, tab_export = st.tabs([
+    "📋 Table Browser", "🔍 Ad-Hoc Query", "📥 Executive Export"])
 
 # ── Tab 1: Table Browser ────────────────────────────────────────────
 with tab_browse:
@@ -126,3 +127,37 @@ JOIN purchase_orders po ON po.po_id = sh.po_id
 JOIN suppliers s ON s.supplier_id = po.supplier_id
 WHERE sh.delay_days > 7
 ORDER BY sh.delay_days DESC LIMIT 20;""", language="sql")
+
+# ── Tab 3: Executive Export ──────────────────────────────────────────
+with tab_export:
+    st.subheader("📥 Executive Report Export")
+    st.markdown(
+        "Download a multi-sheet Excel workbook containing scorecards, "
+        "risk assessments, concentration analysis, spend summary, and carbon data."
+    )
+
+    if st.button("📊 Generate Executive Report", type="primary"):
+        with st.spinner("Building report..."):
+            try:
+                from utils.export import generate_executive_summary, to_excel_bytes
+
+                sheets = generate_executive_summary(ENGINE)
+                if sheets:
+                    excel_data = to_excel_bytes(sheets)
+                    st.success(f"Report ready — {len(sheets)} sheets, "
+                              f"{sum(len(df) for df in sheets.values())} total rows")
+
+                    for name, df in sheets.items():
+                        with st.expander(f"{name} ({len(df)} rows)"):
+                            st.dataframe(df.head(10), use_container_width=True)
+
+                    st.download_button(
+                        "⬇️ Download Excel",
+                        excel_data,
+                        "AEGIS_Executive_Report.xlsx",
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    )
+                else:
+                    st.warning("No data available. Run the pipeline first.")
+            except Exception as e:
+                st.error(f"Export failed: {e}")
