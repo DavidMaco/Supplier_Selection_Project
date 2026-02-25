@@ -81,7 +81,10 @@ _FX_STATIC_RATES = {
 def _fetch_live_fx() -> dict:
     """3-tier failover: open.er-api → exchangerate-api → frankfurter.
     Each API returns rates under a 'rates' key.  Frankfurter may omit
-    exotic currencies; any missing ones are back-filled from static."""
+    exotic currencies; any missing ones are back-filled from static.
+    Set AEGIS_FX_OFFLINE=1 to skip live fetch (used in CI/Docker tests)."""
+    if os.getenv("AEGIS_FX_OFFLINE"):
+        return dict(_FX_STATIC_RATES)
     import urllib.request, json as _json, logging as _log
     _apis = [FX_API_PRIMARY, FX_API_SECONDARY, FX_API_TERTIARY]
     for url in _apis:

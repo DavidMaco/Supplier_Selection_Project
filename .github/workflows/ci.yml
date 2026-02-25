@@ -94,4 +94,4 @@ jobs:
       - name: Build Docker image
         run: docker build -t aegis-procurement .
       - name: Test Docker image
-        run: docker run --rm aegis-procurement python -c "import config; print('OK')"
+        run: docker run --rm -e AEGIS_FX_OFFLINE=1 aegis-procurement python -c "import config; print('OK')"
