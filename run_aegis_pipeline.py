@@ -44,6 +44,9 @@ def step_deploy_schema(engine):
         "charset": "utf8mb4",
         "client_flag": pymysql.constants.CLIENT.MULTI_STATEMENTS,
     }
+    _ssl_ctx = config.pymysql_ssl_context()
+    if _ssl_ctx:
+        conn_kwargs["ssl"] = _ssl_ctx
 
     conn = pymysql.connect(**conn_kwargs)
     cursor = conn.cursor()
@@ -101,15 +104,19 @@ def step_seed_reference(engine):
     host_db = parts[1].split("/")
     host_port = host_db[0].split(":")
 
-    conn = pymysql.connect(
-        host=host_port[0],
-        port=int(host_port[1]) if len(host_port) > 1 else 3306,
-        user=user_pass[0],
-        password=user_pass[1] if len(user_pass) > 1 else "",
-        database="aegis_procurement",
-        charset="utf8mb4",
-        client_flag=pymysql.constants.CLIENT.MULTI_STATEMENTS,
-    )
+    _ssl_ctx = config.pymysql_ssl_context()
+    _conn_kw = {
+        "host": host_port[0],
+        "port": int(host_port[1]) if len(host_port) > 1 else 3306,
+        "user": user_pass[0],
+        "password": user_pass[1] if len(user_pass) > 1 else "",
+        "database": "aegis_procurement",
+        "charset": "utf8mb4",
+        "client_flag": pymysql.constants.CLIENT.MULTI_STATEMENTS,
+    }
+    if _ssl_ctx:
+        _conn_kw["ssl"] = _ssl_ctx
+    conn = pymysql.connect(**_conn_kw)
     cursor = conn.cursor()
 
     sql_path = os.path.join(os.path.dirname(__file__),

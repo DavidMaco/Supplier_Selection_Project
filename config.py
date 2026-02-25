@@ -25,11 +25,22 @@ DB_PORT = int(_secret("database", "DB_PORT", "3306"))
 DB_USER = _secret("database", "DB_USER", "root")
 DB_PASSWORD = _secret("database", "DB_PASSWORD", "")
 DB_NAME = _secret("database", "DB_NAME", "aegis_procurement")
+DB_SSL = _secret("database", "DB_SSL", "false").lower() in ("true", "1", "yes")
 
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}",
-)
+_base_url = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+if DB_SSL:
+    _base_url += "?ssl_verify_cert=true&ssl_verify_identity=true"
+
+DATABASE_URL = os.getenv("DATABASE_URL", _base_url)
+
+
+def pymysql_ssl_context():
+    """Return an ssl.SSLContext for raw pymysql connections, or None."""
+    if not DB_SSL:
+        return None
+    import ssl
+    return ssl.create_default_context()
+
 
 # ─── FX API (3-tier failover) ───────────────────────────────────────
 FX_API_PRIMARY = "https://open.er-api.com/v6/latest/USD"

@@ -54,15 +54,19 @@ def _get_connection():
     from urllib.parse import urlparse
 
     parsed = urlparse(config.DATABASE_URL)
-    return pymysql.connect(
+    kw = dict(
         host=parsed.hostname or "localhost",
         port=parsed.port or 3306,
         user=parsed.username or "root",
         password=parsed.password or "",
-        database=parsed.path.lstrip("/"),
+        database=parsed.path.lstrip("/").split("?")[0],
         charset="utf8mb4",
         autocommit=True,
     )
+    _ssl_ctx = config.pymysql_ssl_context()
+    if _ssl_ctx:
+        kw["ssl"] = _ssl_ctx
+    return pymysql.connect(**kw)
 
 
 class AuditLogger:
