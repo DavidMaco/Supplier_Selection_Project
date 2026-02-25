@@ -60,6 +60,10 @@ with tab_fx:
                      line_color="red", annotation_text="Current")
         fig.add_vline(x=result["p95"], line_dash="dot",
                      line_color="orange", annotation_text="P95")
+        fig.add_vline(x=result["p5"], line_dash="dot",
+                     line_color="green", annotation_text="P5")
+        fig.add_vline(x=result["median"], line_dash="solid",
+                     line_color="purple", annotation_text="P50")
         fig.update_layout(
             title=f"{currency}/USD — {n_paths:,} Paths, {horizon} Days",
             xaxis_title="Rate", yaxis_title="Frequency", height=400)
@@ -97,6 +101,10 @@ with tab_lt:
                                    marker_color="#59a14f"))
         fig.add_vline(x=result["p95"], line_dash="dot", line_color="red",
                      annotation_text="P95")
+        fig.add_vline(x=result["p5"], line_dash="dot", line_color="green",
+                     annotation_text="P5")
+        fig.add_vline(x=result["median"], line_dash="solid", line_color="purple",
+                     annotation_text="P50")
         fig.update_layout(title="Lead-Time Distribution",
                          xaxis_title="Days", yaxis_title="Frequency", height=400)
         st.plotly_chart(fig, use_container_width=True)
@@ -162,6 +170,10 @@ with tab_cost:
                      line_color="blue", annotation_text="Baseline")
         fig.add_vline(x=result["p95_cost"], line_dash="dot",
                      line_color="red", annotation_text="P95")
+        fig.add_vline(x=result["p5_cost"], line_dash="dot",
+                     line_color="green", annotation_text="P5")
+        fig.add_vline(x=result["median_cost"], line_dash="solid",
+                     line_color="purple", annotation_text="P50")
         fig.update_layout(title="Total Cost Distribution",
                          xaxis_title="USD", yaxis_title="Frequency", height=400)
         st.plotly_chart(fig, use_container_width=True)

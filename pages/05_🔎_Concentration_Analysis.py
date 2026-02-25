@@ -20,7 +20,7 @@ ENGINE = get_engine()
 
 # ── Sidebar ─────────────────────────────────────────────────────────
 with st.sidebar:
-    year_filter = st.selectbox("Calendar Year", [2024, 2023, 2022, 2025], index=0)
+    year_filter = st.selectbox("Calendar Year", [2025, 2024, 2023, 2022], index=0)
     if st.button("🔄 Refresh HHI Scores"):
         with st.spinner("Computing..."):
             from analytics.concentration import run_full_concentration_analysis

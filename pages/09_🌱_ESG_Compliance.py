@@ -42,7 +42,10 @@ with tab_esg:
             st.info("No ESG data.")
             st.stop()
 
-        latest = esg_df[esg_df["assessment_year"] == esg_df["assessment_year"].max()]
+        latest = esg_df[esg_df["assessment_year"] == esg_df["assessment_year"].max()].copy()
+        for _c in ["environmental_score", "social_score", "governance_score", "composite_score"]:
+            if _c in latest.columns:
+                latest[_c] = pd.to_numeric(latest[_c], errors="coerce").fillna(0)
 
         r1 = st.columns(2)
         r1[0].metric("Assessed Suppliers", f"{len(latest)}")

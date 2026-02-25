@@ -6,7 +6,7 @@ Main Streamlit Application
 import streamlit as st
 
 st.set_page_config(
-    page_title="AEGIS — Procurement Intelligence",
+    page_title="AEGIS · Landing Page",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -61,7 +61,7 @@ st.sidebar.caption("AEGIS v1.0.0 · © 2025")
 
 
 # ─── Landing Page ────────────────────────────────────────────────────
-st.title("🛡️ AEGIS — Procurement Intelligence Platform")
+st.title("🛡️ AEGIS Landing Page")
 st.markdown("""
 **Adaptive Engine for Global Intelligent Sourcing**
 

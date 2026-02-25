@@ -25,7 +25,7 @@ st.markdown("MCDA-based supplier ranking with adjustable AHP weights")
 with st.sidebar:
     st.subheader("⚙️ MCDA Settings")
     method = st.selectbox("Methodology", ["TOPSIS", "PROMETHEE", "WSM"])
-    year = st.selectbox("Year", [2024, 2023, 2022], index=0)
+    year = st.selectbox("Year", [2025, 2024, 2023, 2022], index=0)
 
     st.markdown("---")
     st.subheader("📊 Weight Adjustment")
@@ -118,6 +118,7 @@ if df is not None and not df.empty:
         # Radar chart for top supplier
         if len(df) > 0:
             top = df.iloc[0]
+            st.subheader(f"🏅 Top Supplier: {top.get('supplier_name', 'N/A')}")
             dims = ["cost_score", "quality_score", "delivery_score",
                     "risk_score", "esg_score", "innovation_score", "financial_score"]
             available_dims = [d for d in dims if d in df.columns]
@@ -130,7 +131,6 @@ if df is not None and not df.empty:
                     fill="toself", name=top.get("supplier_name", "Top")))
                 fig.update_layout(
                     polar=dict(radialaxis=dict(range=[0, 100])),
-                    title=f"Top Supplier: {top.get('supplier_name', 'N/A')}",
                     height=380, margin=dict(t=40, b=20))
                 st.plotly_chart(fig, use_container_width=True)
 

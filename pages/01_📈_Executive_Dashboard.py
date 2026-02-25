@@ -18,13 +18,18 @@ ENGINE = get_engine()
 
 st.title("📈 Executive Dashboard")
 
+with st.sidebar:
+    analysis_year = st.selectbox(
+        "Analysis Year", [2025, 2024, 2023, 2022], index=0, key="exec_yr")
+
 try:
+    yr = int(analysis_year)
     with ENGINE.connect() as conn:
         # ─── KPIs ────────────────────────────────────────────────
         total_spend = float(conn.execute(text(
             "SELECT COALESCE(SUM(line_total),0) FROM po_line_items li "
-            "JOIN purchase_orders po ON li.po_id=po.po_id WHERE YEAR(po.order_date)=2024"
-        )).scalar())
+            "JOIN purchase_orders po ON li.po_id=po.po_id WHERE YEAR(po.order_date)=:yr"
+        ), {"yr": yr}).scalar())
 
         active_suppliers = conn.execute(text(
             "SELECT COUNT(*) FROM suppliers WHERE status='Active'"
@@ -32,26 +37,26 @@ try:
 
         on_time = conn.execute(text(
             "SELECT AVG(CASE WHEN delay_days<=0 THEN 100 ELSE 0 END) FROM shipments "
-            "WHERE YEAR(dispatch_date)=2024"
-        )).scalar() or 0
+            "WHERE YEAR(dispatch_date)=:yr"
+        ), {"yr": yr}).scalar() or 0
 
         avg_defect = conn.execute(text(
             "SELECT AVG(defect_rate_pct) FROM quality_inspections qi "
             "JOIN shipments sh ON qi.shipment_id=sh.shipment_id "
-            "WHERE YEAR(sh.dispatch_date)=2024"
-        )).scalar() or 0
+            "WHERE YEAR(sh.dispatch_date)=:yr"
+        ), {"yr": yr}).scalar() or 0
 
         maverick_pct = conn.execute(text(
-            "SELECT AVG(is_maverick)*100 FROM purchase_orders WHERE YEAR(order_date)=2024"
-        )).scalar() or 0
+            "SELECT AVG(is_maverick)*100 FROM purchase_orders WHERE YEAR(order_date)=:yr"
+        ), {"yr": yr}).scalar() or 0
 
         overdue_amt = float(conn.execute(text(
             "SELECT COALESCE(SUM(amount_usd),0) FROM invoices "
-            "WHERE status='Overdue' AND YEAR(invoice_date)=2024"
-        )).scalar())
+            "WHERE status='Overdue' AND YEAR(invoice_date)=:yr"
+        ), {"yr": yr}).scalar())
 
     r1 = st.columns(3)
-    r1[0].metric("2024 Spend", f"${total_spend:,.0f}")
+    r1[0].metric(f"{yr} Spend", f"${total_spend:,.0f}")
     r1[1].metric("Active Suppliers", active_suppliers)
     r1[2].metric("On-Time Delivery", f"{on_time:.1f}%")
     r2 = st.columns(3)
@@ -68,9 +73,9 @@ try:
                    SUM(li.line_total) AS spend
             FROM po_line_items li
             JOIN purchase_orders po ON li.po_id = po.po_id
-            WHERE po.order_date >= '2023-01-01'
+            WHERE YEAR(po.order_date) BETWEEN :yr_start AND :yr
             GROUP BY month ORDER BY month
-        """), conn)
+        """), conn, params={"yr": yr, "yr_start": yr - 2})
 
         spend_by_region = pd.read_sql(text("""
             SELECT c.region, SUM(li.line_total) AS spend
@@ -78,9 +83,9 @@ try:
             JOIN purchase_orders po ON li.po_id = po.po_id
             JOIN suppliers s ON po.supplier_id = s.supplier_id
             JOIN countries c ON s.country_id = c.country_id
-            WHERE YEAR(po.order_date) = 2024
+            WHERE YEAR(po.order_date) = :yr
             GROUP BY c.region ORDER BY spend DESC
-        """), conn)
+        """), conn, params={"yr": yr})
 
         tier_dist = pd.read_sql(text("""
             SELECT tier_level, COUNT(*) AS count
@@ -98,7 +103,7 @@ try:
 
     with col2:
         fig = px.pie(spend_by_region, values="spend", names="region",
-                     title="2024 Spend by Region", hole=0.4)
+                     title=f"{yr} Spend by Region", hole=0.4)
         fig.update_layout(height=350)
         st.plotly_chart(fig, use_container_width=True)
 
@@ -119,7 +124,7 @@ try:
         st.subheader("⚠️ Active Alerts")
         with ENGINE.connect() as conn:
             alerts = pd.read_sql(text("""
-                SELECT s.supplier_name, qi.incident_type, qi.severity, qi.incident_date
+                SELECT s.supplier_name, qi.category, qi.severity, qi.incident_date
                 FROM quality_incidents qi
                 JOIN suppliers s ON qi.supplier_id = s.supplier_id
                 WHERE qi.capa_status IN ('Open','In Progress')

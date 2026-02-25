@@ -121,20 +121,18 @@ try:
 
     # ── Reduction opportunities ─────────────────────────────────────
     st.subheader("🟢 Mode-Shift Reduction Opportunities")
-    with ENGINE.connect() as conn:
-        from analytics.carbon_engine import get_reduction_opportunities
-        opps = get_reduction_opportunities()
+    from analytics.carbon_engine import get_reduction_opportunities
+    opps = get_reduction_opportunities()
 
-    if opps:
-        opp_df = pd.DataFrame(opps)
-        st.dataframe(opp_df.style.format({
-            "current_kg_co2": "{:,.0f}",
-            "potential_kg_co2": "{:,.0f}",
-            "savings_kg_co2": "{:,.0f}",
-            "reduction_pct": "{:.0f}%"
+    if not opps.empty:
+        st.dataframe(opps.style.format({
+            "current_co2e": "{:,.0f}",
+            "sea_co2e": "{:,.0f}",
+            "reduction_if_sea": "{:,.0f}",
+            "reduction_pct_sea": "{:.0f}%"
         }), use_container_width=True)
 
-        total_savings = sum(o["savings_kg_co2"] for o in opps)
+        total_savings = opps["reduction_if_sea"].sum()
         st.metric("Total Potential Savings",
                  f"{total_savings/1000:,.1f} tonnes CO₂")
     else:

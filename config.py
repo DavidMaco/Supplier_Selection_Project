@@ -70,18 +70,34 @@ FX_VOLATILITIES = {
     "TRY": 0.35,
 }
 
-# ─── FX Anchor Rates (to USD, as of Feb 2026) ───────────────────────
-FX_ANCHOR_RATES = {
-    "EUR": 0.92,
-    "GBP": 0.79,
-    "CNY": 7.25,
-    "NGN": 1580.0,
-    "JPY": 149.5,
-    "KRW": 1435.0,
-    "BRL": 5.85,
-    "ZAR": 18.4,
-    "TRY": 36.2,
+# ─── FX Anchor Rates (live feed with static fallback) ───────────────
+_FX_STATIC_RATES = {
+    "EUR": 0.92, "GBP": 0.79, "CNY": 7.25, "NGN": 1580.0,
+    "JPY": 149.5, "KRW": 1435.0, "BRL": 5.85, "ZAR": 18.4, "TRY": 36.2,
 }
+
+
+def _fetch_live_fx() -> dict:
+    """3-tier failover: open.er-api → exchangerate-api → frankfurter."""
+    import urllib.request, json as _json, logging as _log
+    _apis = [FX_API_PRIMARY, FX_API_SECONDARY, FX_API_TERTIARY]
+    for url in _apis:
+        try:
+            with urllib.request.urlopen(url, timeout=5) as resp:
+                data = _json.loads(resp.read().decode())
+            rates = data.get("rates", {})
+            if rates:
+                live = {c: float(rates[c]) for c in _FX_STATIC_RATES if c in rates}
+                for c, r in _FX_STATIC_RATES.items():
+                    live.setdefault(c, r)
+                _log.getLogger(__name__).info("Live FX rates loaded from %s", url)
+                return live
+        except Exception as exc:
+            _log.getLogger(__name__).debug("FX fetch failed (%s): %s", url, exc)
+    return dict(_FX_STATIC_RATES)
+
+
+FX_ANCHOR_RATES = _fetch_live_fx()
 
 # ─── Risk Scoring Weights (sum = 1.00) ──────────────────────────────
 RISK_WEIGHTS = {

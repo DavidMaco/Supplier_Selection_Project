@@ -20,7 +20,7 @@ ENGINE = get_engine()
 
 # ── Sidebar ─────────────────────────────────────────────────────────
 with st.sidebar:
-    year = st.selectbox("Year", [2024, 2023, 2022, 2025], key="sc_yr")
+    year = st.selectbox("Year", [2025, 2024, 2023, 2022], key="sc_yr")
     flag_filter = st.multiselect(
         "Leakage Flag",
         ["Within Range", "Investigate", "Escalate", "Red Flag"],
