@@ -44,12 +44,13 @@ with tab_fx:
             result = simulate_fx(currency, int(n_paths), int(horizon),
                                 annual_vol=vol_override)
 
-        c1, c2, c3, c4, c5 = st.columns(5)
-        c1.metric("Current Rate", f"{result['current_rate']:,.2f}")
-        c2.metric("Mean (sim)", f"{result['mean']:,.2f}")
-        c3.metric("95th %ile", f"{result['p95']:,.2f}")
-        c4.metric("VaR (95%)", f"{result['var_95']:,.2f}")
-        c5.metric("CVaR (95%)", f"{result['cvar_95']:,.2f}")
+        r1 = st.columns(3)
+        r1[0].metric("Current Rate", f"{result['current_rate']:,.2f}")
+        r1[1].metric("Mean (sim)", f"{result['mean']:,.2f}")
+        r1[2].metric("95th %ile", f"{result['p95']:,.2f}")
+        r2 = st.columns(2)
+        r2[0].metric("VaR (95%)", f"{result['var_95']:,.2f}")
+        r2[1].metric("CVaR (95%)", f"{result['cvar_95']:,.2f}")
 
         fig = go.Figure()
         fig.add_trace(go.Histogram(
@@ -147,11 +148,12 @@ with tab_cost:
             from analytics.monte_carlo import simulate_cost_scenario, save_simulation
             result = simulate_cost_scenario(int(cost_n), cost_ccys)
 
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Baseline", f"${result['baseline_spend']:,.0f}")
-        c2.metric("Mean Cost", f"${result['mean_cost']:,.0f}")
-        c3.metric("P95 Cost", f"${result['p95_cost']:,.0f}")
-        c4.metric("VaR (95%)", f"${result['var_95']:,.0f}")
+        r1 = st.columns(2)
+        r1[0].metric("Baseline", f"${result['baseline_spend']:,.0f}")
+        r1[1].metric("Mean Cost", f"${result['mean_cost']:,.0f}")
+        r2 = st.columns(2)
+        r2[0].metric("P95 Cost", f"${result['p95_cost']:,.0f}")
+        r2[1].metric("VaR (95%)", f"${result['var_95']:,.0f}")
 
         fig = go.Figure()
         fig.add_trace(go.Histogram(x=result["cost_distribution"], nbinsx=80,
