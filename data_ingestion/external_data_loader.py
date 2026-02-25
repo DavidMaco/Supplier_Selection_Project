@@ -34,11 +34,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
     from config import DATABASE_URL
     from utils.logging_config import get_logger
-except Exception:
-    DATABASE_URL = os.getenv(
-        "DATABASE_URL",
-        "mysql+pymysql://root@localhost:3306/aegis_procurement",
-    )
+except (ImportError, ModuleNotFoundError):
+    DATABASE_URL = os.getenv("DATABASE_URL")
+    if not DATABASE_URL:
+        raise RuntimeError(
+            "DATABASE_URL is required when config.py cannot be imported."
+        )
     import logging
     def get_logger(name):
         logger = logging.getLogger(name)

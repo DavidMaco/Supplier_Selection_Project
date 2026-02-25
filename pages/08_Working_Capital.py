@@ -3,6 +3,9 @@ AEGIS — Page 8: Working Capital Optimizer
 DPO/DSO analysis, invoice aging, early payment optimisation.
 """
 
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go

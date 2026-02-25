@@ -3,6 +3,9 @@ AEGIS — Page 6: Carbon & Emissions Dashboard
 Scope-3 Cat-4 transport emissions, reduction opportunities.
 """
 
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go

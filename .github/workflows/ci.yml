@@ -47,7 +47,7 @@ jobs:
         run: |
           for f in database/0[1-9]*.sql; do
             echo "Executing $f ..."
-            mysql -h 127.0.0.1 -u root -ptestpassword aegis_procurement < "$f" || true
+            mysql -h 127.0.0.1 -u root -ptestpassword aegis_procurement < "$f"
           done
 
       - name: Run tests

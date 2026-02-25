@@ -7,6 +7,7 @@ import pytest
 import sys
 import os
 import hashlib
+import importlib
 import tempfile
 import csv
 from pathlib import Path
@@ -20,22 +21,37 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 class TestAuth:
-    def test_default_password_hash(self):
-        from utils.auth import DASHBOARD_PASS_HASH
-        expected = hashlib.sha256("aegis2025".encode()).hexdigest()
-        assert DASHBOARD_PASS_HASH == expected
+    def test_no_default_credentials(self, monkeypatch):
+        monkeypatch.delenv("AEGIS_DASHBOARD_USER", raising=False)
+        monkeypatch.delenv("AEGIS_DASHBOARD_PASS_HASH", raising=False)
+        import utils.auth as auth
+        importlib.reload(auth)
+        assert auth.DASHBOARD_USER is None
+        assert auth.DASHBOARD_PASS_HASH is None
 
-    def test_check_password_correct(self):
-        from utils.auth import _check_password
-        assert _check_password("aegis2025") is True
+    def test_check_password_correct(self, monkeypatch):
+        expected = hashlib.sha256("secure-pass".encode()).hexdigest()
+        monkeypatch.setenv("AEGIS_DASHBOARD_USER", "admin")
+        monkeypatch.setenv("AEGIS_DASHBOARD_PASS_HASH", expected)
+        import utils.auth as auth
+        importlib.reload(auth)
+        assert auth._check_password("secure-pass") is True
 
-    def test_check_password_wrong(self):
-        from utils.auth import _check_password
-        assert _check_password("wrong") is False
+    def test_check_password_wrong(self, monkeypatch):
+        expected = hashlib.sha256("secure-pass".encode()).hexdigest()
+        monkeypatch.setenv("AEGIS_DASHBOARD_USER", "admin")
+        monkeypatch.setenv("AEGIS_DASHBOARD_PASS_HASH", expected)
+        import utils.auth as auth
+        importlib.reload(auth)
+        assert auth._check_password("wrong") is False
 
-    def test_default_username(self):
-        from utils.auth import DASHBOARD_USER
-        assert DASHBOARD_USER == "admin"
+    def test_username_from_env(self, monkeypatch):
+        expected = hashlib.sha256("secure-pass".encode()).hexdigest()
+        monkeypatch.setenv("AEGIS_DASHBOARD_USER", "svc-user")
+        monkeypatch.setenv("AEGIS_DASHBOARD_PASS_HASH", expected)
+        import utils.auth as auth
+        importlib.reload(auth)
+        assert auth.DASHBOARD_USER == "svc-user"
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

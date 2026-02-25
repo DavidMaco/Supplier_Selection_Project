@@ -21,7 +21,7 @@ log = get_logger("scenario")
 try:
     from utils.db import get_engine
     ENGINE = get_engine()
-except Exception:
+except (ImportError, ModuleNotFoundError):
     ENGINE = create_engine(config.DATABASE_URL, echo=False)
 
 

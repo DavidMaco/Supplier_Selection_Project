@@ -9,6 +9,7 @@ sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from sqlalchemy import create_engine, text
+from sqlalchemy.engine import make_url
 import config
 from utils.logging_config import get_logger, DataQualityLogger
 from utils.freshness import record_start, record_finish
@@ -28,19 +29,16 @@ def step_deploy_schema(engine):
     banner("Step 1/6 — Deploy Database Schema")
     import pymysql
 
-    # Parse connection info from config
-    db_url = config.DATABASE_URL
-    # mysql+pymysql://root:Maconoelle86@localhost:3306/aegis_procurement
-    parts = db_url.replace("mysql+pymysql://", "").split("@")
-    user_pass = parts[0].split(":")
-    host_db = parts[1].split("/")
-    host_port = host_db[0].split(":")
+    parsed = make_url(config.DATABASE_URL)
+    db_name = parsed.database or "aegis_procurement"
+    if not re.match(r"^[A-Za-z0-9_]+$", db_name):
+        raise ValueError(f"Unsafe database name: {db_name}")
 
     conn_kwargs = {
-        "host": host_port[0],
-        "port": int(host_port[1]) if len(host_port) > 1 else 3306,
-        "user": user_pass[0],
-        "password": user_pass[1] if len(user_pass) > 1 else "",
+        "host": parsed.host or "localhost",
+        "port": int(parsed.port or 3306),
+        "user": parsed.username or "root",
+        "password": parsed.password or "",
         "charset": "utf8mb4",
         "client_flag": pymysql.constants.CLIENT.MULTI_STATEMENTS,
     }
@@ -52,8 +50,8 @@ def step_deploy_schema(engine):
     cursor = conn.cursor()
 
     # Create database
-    cursor.execute("CREATE DATABASE IF NOT EXISTS aegis_procurement CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
-    cursor.execute("USE aegis_procurement")
+    cursor.execute(f"CREATE DATABASE IF NOT EXISTS `{db_name}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+    cursor.execute(f"USE `{db_name}`")
     conn.commit()
 
     sql_dir = os.path.join(os.path.dirname(__file__), "database")
@@ -80,13 +78,16 @@ def step_deploy_schema(engine):
             # Consume any remaining results from multi-statement execution
             while cursor.nextset():
                 pass
+            log.info("    [OK] %s", sql_file)
         except Exception as e:
-            conn.commit()
+            conn.rollback()
             if "already exists" in str(e).lower() or "duplicate" in str(e).lower():
-                pass
+                log.info("    [SKIP] %s: %s", sql_file, e)
             else:
-                log.warning("    %s: %s", sql_file, e)
-        log.info("    [OK] %s", sql_file)
+                log.error("    [FAIL] %s: %s", sql_file, e)
+                cursor.close()
+                conn.close()
+                raise
 
     cursor.close()
     conn.close()
@@ -98,19 +99,18 @@ def step_seed_reference(engine):
     banner("Step 2/6 — Seed Reference Data")
     import pymysql
 
-    db_url = config.DATABASE_URL
-    parts = db_url.replace("mysql+pymysql://", "").split("@")
-    user_pass = parts[0].split(":")
-    host_db = parts[1].split("/")
-    host_port = host_db[0].split(":")
+    parsed = make_url(config.DATABASE_URL)
+    db_name = parsed.database or "aegis_procurement"
+    if not re.match(r"^[A-Za-z0-9_]+$", db_name):
+        raise ValueError(f"Unsafe database name: {db_name}")
 
     _ssl_ctx = config.pymysql_ssl_context()
     _conn_kw = {
-        "host": host_port[0],
-        "port": int(host_port[1]) if len(host_port) > 1 else 3306,
-        "user": user_pass[0],
-        "password": user_pass[1] if len(user_pass) > 1 else "",
-        "database": "aegis_procurement",
+        "host": parsed.host or "localhost",
+        "port": int(parsed.port or 3306),
+        "user": parsed.username or "root",
+        "password": parsed.password or "",
+        "database": db_name,
         "charset": "utf8mb4",
         "client_flag": pymysql.constants.CLIENT.MULTI_STATEMENTS,
     }
@@ -134,16 +134,18 @@ def step_seed_reference(engine):
         conn.commit()
         while cursor.nextset():
             pass
+        log.info("  Reference data seeded.")
     except Exception as e:
-        conn.commit()
+        conn.rollback()
         if "duplicate" in str(e).lower():
-            pass
+            log.info("  Reference data already exists; skipping duplicate rows.")
         else:
-            log.warning("    Reference seed: %s", e)
+            cursor.close()
+            conn.close()
+            raise RuntimeError(f"Reference seed failed: {e}")
 
     cursor.close()
     conn.close()
-    log.info("  Reference data seeded.")
 
 
 def step_generate_data():
@@ -299,8 +301,13 @@ def main():
     args = parser.parse_args()
 
     banner("AEGIS Procurement Intelligence — Pipeline Runner")
-    log.info("  Database: %s",
-             config.DATABASE_URL.split('@')[1] if '@' in config.DATABASE_URL else '***')
+    parsed = make_url(config.DATABASE_URL)
+    log.info(
+        "  Database: %s:%s/%s",
+        parsed.host or "localhost",
+        parsed.port or 3306,
+        parsed.database or "aegis_procurement",
+    )
     log.info("  Demo Mode: %s", config.DEMO_MODE)
     if args.external:
         log.info("  External Data: %s", os.path.abspath(args.external))
@@ -309,7 +316,7 @@ def main():
     run_id = record_start()
 
     # Use a connection URL without database for schema creation
-    base_url = config.DATABASE_URL.rsplit("/", 1)[0]
+    base_url = make_url(config.DATABASE_URL).set(database=None)
     engine_base = create_engine(base_url)
     engine = create_engine(config.DATABASE_URL)
 

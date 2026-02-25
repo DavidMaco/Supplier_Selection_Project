@@ -3,6 +3,9 @@ AEGIS — Page 12: Settings & Configuration
 Manage weights, thresholds, feature flags, external data upload.
 """
 
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import streamlit as st
 import json
 import tempfile

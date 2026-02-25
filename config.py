@@ -15,7 +15,7 @@ def _secret(section: str, key: str, fallback: str = "") -> str:
     try:
         import streamlit as st
         return str(st.secrets[section][key])
-    except Exception:
+    except (ImportError, KeyError, AttributeError, TypeError):
         return os.getenv(key, fallback)
 
 

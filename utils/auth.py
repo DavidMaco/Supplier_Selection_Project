@@ -5,21 +5,20 @@ Credentials are configured via environment variables or config.py.
 """
 
 import os
+import hmac
 import hashlib
 import streamlit as st
 
-# Default credentials (override via env vars for production)
-_DEFAULT_USER = "admin"
-_DEFAULT_HASH = hashlib.sha256("aegis2025".encode()).hexdigest()
-
-DASHBOARD_USER = os.getenv("AEGIS_DASHBOARD_USER", _DEFAULT_USER)
-DASHBOARD_PASS_HASH = os.getenv(
-    "AEGIS_DASHBOARD_PASS_HASH", _DEFAULT_HASH
-)
+# Credentials must be provided via environment variables in all environments.
+DASHBOARD_USER = os.getenv("AEGIS_DASHBOARD_USER")
+DASHBOARD_PASS_HASH = os.getenv("AEGIS_DASHBOARD_PASS_HASH")
 
 
 def _check_password(password: str) -> bool:
-    return hashlib.sha256(password.encode()).hexdigest() == DASHBOARD_PASS_HASH
+    if not DASHBOARD_PASS_HASH:
+        return False
+    candidate = hashlib.sha256(password.encode()).hexdigest()
+    return hmac.compare_digest(candidate, DASHBOARD_PASS_HASH)
 
 
 def login_gate() -> bool:
@@ -29,6 +28,14 @@ def login_gate() -> bool:
     """
     if st.session_state.get("authenticated"):
         return True
+
+    if not DASHBOARD_USER or not DASHBOARD_PASS_HASH:
+        st.error("Authentication is not configured.")
+        st.info(
+            "Set `AEGIS_DASHBOARD_USER` and `AEGIS_DASHBOARD_PASS_HASH` "
+            "environment variables before starting the dashboard."
+        )
+        return False
 
     st.markdown(
         "<div style='text-align:center; padding-top: 60px;'>"
@@ -52,7 +59,7 @@ def login_gate() -> bool:
                     st.session_state["user"] = username
                     st.rerun()
                 else:
-                    st.error("Invalid credentials. Default: admin / aegis2025")
+                    st.error("Invalid credentials.")
 
         st.caption("Set `AEGIS_DASHBOARD_USER` and `AEGIS_DASHBOARD_PASS_HASH` "
                    "env vars in production.")

@@ -3,6 +3,9 @@ AEGIS — Page 9: ESG & Compliance Centre
 ESG ratings, compliance checks, OECD due-diligence tracker.
 """
 
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go

@@ -3,8 +3,12 @@ AEGIS — Page 11: Data Explorer
 Browse all tables, run ad-hoc queries, export to Excel/CSV.
 """
 
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import streamlit as st
 import pandas as pd
+import re
 from sqlalchemy import text, inspect
 from utils.db import get_engine
 
@@ -15,6 +19,31 @@ ENGINE = get_engine()
 
 tab_browse, tab_query, tab_export = st.tabs([
     "📋 Table Browser", "🔍 Ad-Hoc Query", "📥 Executive Export"])
+
+
+def _is_safe_read_only_sql(query: str) -> tuple[bool, str]:
+    q = (query or "").strip()
+    if not q:
+        return False, "Query cannot be empty."
+
+    core = q[:-1] if q.endswith(";") else q
+    if ";" in core:
+        return False, "Only a single statement is allowed."
+
+    stripped = re.sub(r"--.*?$", "", q, flags=re.MULTILINE)
+    stripped = re.sub(r"/\*.*?\*/", "", stripped, flags=re.DOTALL).strip()
+    if not re.match(r"^(select|with)\b", stripped, flags=re.IGNORECASE):
+        return False, "Only SELECT/CTE read-only queries are allowed."
+
+    blocked = (
+        r"\b(insert|update|delete|drop|alter|truncate|create|grant|revoke|"
+        r"replace|merge|call|execute|set|use)\b"
+    )
+    if re.search(blocked, stripped, flags=re.IGNORECASE):
+        return False, "Write/DDL statements are not allowed."
+
+    return True, ""
+
 
 # ── Tab 1: Table Browser ────────────────────────────────────────────
 with tab_browse:
@@ -79,15 +108,14 @@ with tab_query:
         run_btn = st.button("▶️ Execute")
 
     if run_btn:
-        q_lower = query.strip().lower()
-        blocked = ["drop", "delete", "truncate", "alter", "update", "insert", "create"]
-        if any(q_lower.startswith(b) for b in blocked):
-            st.error("⛔ Only SELECT queries are permitted in the explorer.")
+        ok, reason = _is_safe_read_only_sql(query)
+        if not ok:
+            st.error(f"⛔ {reason}")
         else:
             try:
                 with ENGINE.connect() as conn:
                     result_df = pd.DataFrame(
-                        conn.execute(text(query)).mappings().fetchall())
+                        conn.execute(text(query.rstrip(";"))).mappings().fetchall())
 
                 if not result_df.empty:
                     st.success(f"✓ {len(result_df)} rows returned")
@@ -100,8 +128,8 @@ with tab_query:
                 else:
                     st.info("Query returned 0 rows.")
 
-            except Exception as e:
-                st.error(f"Query error: {e}")
+            except Exception:
+                st.error("Query failed. Check SQL syntax and read permissions.")
 
     # Quick templates
     with st.expander("📝 Query Templates"):

@@ -17,7 +17,7 @@ log = get_logger("concentration")
 try:
     from utils.db import get_engine
     ENGINE = get_engine()
-except Exception:
+except (ImportError, ModuleNotFoundError):
     ENGINE = create_engine(config.DATABASE_URL, echo=False)
 
 

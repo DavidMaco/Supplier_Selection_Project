@@ -117,7 +117,8 @@ except Exception as e:
     with st.expander("Connection details"):
         _masked_url = config.DATABASE_URL.split("@")[-1] if "@" in config.DATABASE_URL else "not configured"
         st.code(f"Target: {_masked_url}")
-        st.text(f"Error: {e}")
+        if os.getenv("AEGIS_DEBUG", "false").lower() in ("1", "true", "yes"):
+            st.text(f"Error: {e}")
 
     st.info(
         "**Local setup:** Run `python run_aegis_pipeline.py` to initialize the database.\n\n"
