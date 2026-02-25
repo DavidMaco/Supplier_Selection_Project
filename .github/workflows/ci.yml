@@ -41,14 +41,9 @@ jobs:
             sleep 2
           done
 
-      - name: Deploy schema & seed reference data
-        env:
-          DATABASE_URL: "mysql+pymysql://root:testpassword@localhost:3306/aegis_procurement"
+      - name: Verify DB connectivity
         run: |
-          for f in database/0[1-9]*.sql; do
-            echo "Executing $f ..."
-            mysql -h 127.0.0.1 -u root -ptestpassword aegis_procurement < "$f"
-          done
+          mysql -h 127.0.0.1 -u root -ptestpassword -e "CREATE DATABASE IF NOT EXISTS aegis_procurement;"
 
       - name: Run tests
         env:
