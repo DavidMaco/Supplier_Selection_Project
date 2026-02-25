@@ -71,9 +71,14 @@ st.markdown("---")
 from sqlalchemy import create_engine, text
 import config
 
-ENGINE = create_engine(config.DATABASE_URL, echo=False)
+_db_available = False
 
 try:
+    ENGINE = create_engine(
+        config.DATABASE_URL, echo=False,
+        pool_pre_ping=True,
+        connect_args={"connect_timeout": 5},
+    )
     with ENGINE.connect() as conn:
         stats = {}
         stats["suppliers"] = conn.execute(text(
@@ -97,10 +102,28 @@ try:
     col4.metric("Countries", stats["countries"])
     col5.metric("Shipments", f"{stats['shipments']:,}")
     col6.metric("Materials", stats["materials"])
+    _db_available = True
 
 except Exception as e:
-    st.warning(f"Database connection pending. Run the pipeline first. ({e})")
-    st.info("Run: `python run_aegis_pipeline.py` to initialize the database.")
+    st.warning("Database connection is not available.")
+    with st.expander("Connection details"):
+        _masked_url = config.DATABASE_URL.split("@")[-1] if "@" in config.DATABASE_URL else "not configured"
+        st.code(f"Target: {_masked_url}")
+        st.text(f"Error: {e}")
+
+    st.info(
+        "**Local setup:** Run `python run_aegis_pipeline.py` to initialize the database.\n\n"
+        "**Streamlit Cloud:** Add your MySQL connection details in "
+        "**App Settings → Secrets** using this format:\n"
+        "```toml\n"
+        "[database]\n"
+        "DB_HOST = \"your-mysql-host.example.com\"\n"
+        "DB_PORT = \"3306\"\n"
+        "DB_USER = \"aegis_user\"\n"
+        "DB_PASSWORD = \"your-password\"\n"
+        "DB_NAME = \"aegis_procurement\"\n"
+        "```"
+    )
 
 st.markdown("---")
 

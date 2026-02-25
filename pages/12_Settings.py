@@ -219,7 +219,11 @@ with tab_sys:
 
     c1, c2 = st.columns(2)
     with c1:
-        st.text_input("Database URL", value=config.DATABASE_URL, disabled=True)
+        import re as _re
+        _masked_url = _re.sub(
+            r"://([^:]+):([^@]+)@", r"://\1:****@", config.DATABASE_URL
+        )
+        st.text_input("Database URL", value=_masked_url, disabled=True)
         st.checkbox("Demo Mode", value=config.DEMO_MODE, key="demo_mode")
         st.checkbox("Live FX Feed", value=config.ENABLE_LIVE_FX, key="live_fx")
         st.number_input("Random Seed", value=config.RANDOM_SEED, key="rand_seed")

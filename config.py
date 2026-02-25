@@ -1,15 +1,30 @@
 """
 AEGIS — Adaptive Engine for Global Intelligent Sourcing
 Configuration Module
+
+Reads settings from (highest priority first):
+  1. Streamlit Cloud secrets  (st.secrets["database"]["DB_HOST"], etc.)
+  2. Environment variables     (DB_HOST, DB_PASSWORD, ...)
+  3. Built-in defaults
 """
 import os
 
+
+def _secret(section: str, key: str, fallback: str = "") -> str:
+    """Read a value from Streamlit secrets, env var, or fallback."""
+    try:
+        import streamlit as st
+        return str(st.secrets[section][key])
+    except Exception:
+        return os.getenv(key, fallback)
+
+
 # ─── Database ────────────────────────────────────────────────────────
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = int(os.getenv("DB_PORT", "3306"))
-DB_USER = os.getenv("DB_USER", "root")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "")
-DB_NAME = os.getenv("DB_NAME", "aegis_procurement")
+DB_HOST = _secret("database", "DB_HOST", "localhost")
+DB_PORT = int(_secret("database", "DB_PORT", "3306"))
+DB_USER = _secret("database", "DB_USER", "root")
+DB_PASSWORD = _secret("database", "DB_PASSWORD", "")
+DB_NAME = _secret("database", "DB_NAME", "aegis_procurement")
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
