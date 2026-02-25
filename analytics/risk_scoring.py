@@ -14,7 +14,11 @@ from utils.logging_config import get_logger
 
 log = get_logger("risk")
 
-ENGINE = create_engine(config.DATABASE_URL, echo=False)
+try:
+    from utils.db import get_engine
+    ENGINE = get_engine()
+except Exception:
+    ENGINE = create_engine(config.DATABASE_URL, echo=False)
 
 
 def compute_risk_scores(supplier_id: int = None) -> pd.DataFrame:

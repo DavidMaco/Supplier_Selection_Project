@@ -14,7 +14,11 @@ from utils.logging_config import get_logger
 
 log = get_logger("concentration")
 
-ENGINE = create_engine(config.DATABASE_URL, echo=False)
+try:
+    from utils.db import get_engine
+    ENGINE = get_engine()
+except Exception:
+    ENGINE = create_engine(config.DATABASE_URL, echo=False)
 
 
 def compute_hhi(shares) -> float:

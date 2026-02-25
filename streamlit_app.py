@@ -43,7 +43,12 @@ st.sidebar.markdown("### Navigation")
 # Data freshness indicator
 try:
     from utils.freshness import freshness_badge
-    st.sidebar.markdown(f"**Data:** {freshness_badge()}")
+
+    @st.cache_data(ttl=120, show_spinner=False)
+    def _cached_freshness():
+        return freshness_badge()
+
+    st.sidebar.markdown(f"**Data:** {_cached_freshness()}")
 except Exception:
     pass
 
@@ -68,32 +73,35 @@ st.markdown("""
 st.markdown("---")
 
 # Key metrics from database
-from sqlalchemy import create_engine, text
+from sqlalchemy import text
+from utils.db import get_engine
 import config
+
+
+@st.cache_data(ttl=300, show_spinner=False)
+def _load_landing_stats():
+    """Load all KPI stats in a single query (cached 5 min)."""
+    engine = get_engine()
+    with engine.connect() as conn:
+        row = conn.execute(text(
+            "SELECT "
+            "(SELECT COUNT(*) FROM suppliers WHERE status='Active'),"
+            "(SELECT COUNT(*) FROM purchase_orders),"
+            "(SELECT COALESCE(SUM(line_total),0) FROM po_line_items),"
+            "(SELECT COUNT(DISTINCT country_id) FROM suppliers),"
+            "(SELECT COUNT(*) FROM shipments),"
+            "(SELECT COUNT(*) FROM materials)"
+        )).fetchone()
+    return {
+        "suppliers": row[0], "pos": row[1], "spend": float(row[2]),
+        "countries": row[3], "shipments": row[4], "materials": row[5],
+    }
+
 
 _db_available = False
 
 try:
-    ENGINE = create_engine(
-        config.DATABASE_URL, echo=False,
-        pool_pre_ping=True,
-        connect_args={"connect_timeout": 5},
-    )
-    with ENGINE.connect() as conn:
-        stats = {}
-        stats["suppliers"] = conn.execute(text(
-            "SELECT COUNT(*) FROM suppliers WHERE status='Active'")).scalar() or 0
-        stats["pos"] = conn.execute(text(
-            "SELECT COUNT(*) FROM purchase_orders")).scalar() or 0
-        stats["spend"] = conn.execute(text(
-            "SELECT COALESCE(SUM(li.line_total), 0) FROM po_line_items li"
-        )).scalar() or 0
-        stats["countries"] = conn.execute(text(
-            "SELECT COUNT(DISTINCT country_id) FROM suppliers")).scalar() or 0
-        stats["shipments"] = conn.execute(text(
-            "SELECT COUNT(*) FROM shipments")).scalar() or 0
-        stats["materials"] = conn.execute(text(
-            "SELECT COUNT(*) FROM materials")).scalar() or 0
+    stats = _load_landing_stats()
 
     col1, col2, col3, col4, col5, col6 = st.columns(6)
     col1.metric("Active Suppliers", f"{stats['suppliers']:,}")

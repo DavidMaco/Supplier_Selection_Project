@@ -8,11 +8,11 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
-from sqlalchemy import create_engine, text
-import config
+from sqlalchemy import text
+from utils.db import get_engine
 
 st.set_page_config(page_title="AEGIS · Risk Radar", layout="wide")
-ENGINE = create_engine(config.DATABASE_URL, echo=False)
+ENGINE = get_engine()
 
 st.title("⚡ Risk Radar")
 

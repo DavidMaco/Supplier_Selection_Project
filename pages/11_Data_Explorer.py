@@ -5,13 +5,13 @@ Browse all tables, run ad-hoc queries, export to Excel/CSV.
 
 import streamlit as st
 import pandas as pd
-from sqlalchemy import create_engine, text, inspect
-import config
+from sqlalchemy import text, inspect
+from utils.db import get_engine
 
 st.set_page_config(page_title="AEGIS · Data Explorer", layout="wide")
 st.title("🗄️ Data Explorer")
 
-ENGINE = create_engine(config.DATABASE_URL)
+ENGINE = get_engine()
 
 tab_browse, tab_query, tab_export = st.tabs([
     "📋 Table Browser", "🔍 Ad-Hoc Query", "📥 Executive Export"])

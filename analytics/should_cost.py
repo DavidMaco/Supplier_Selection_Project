@@ -15,7 +15,11 @@ from utils.logging_config import get_logger
 
 log = get_logger("should_cost")
 
-ENGINE = create_engine(config.DATABASE_URL, echo=False)
+try:
+    from utils.db import get_engine
+    ENGINE = get_engine()
+except Exception:
+    ENGINE = create_engine(config.DATABASE_URL, echo=False)
 
 
 def build_should_cost(material_id: int = None, year: int = 2024) -> pd.DataFrame:

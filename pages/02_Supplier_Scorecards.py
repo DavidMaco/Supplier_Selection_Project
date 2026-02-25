@@ -8,11 +8,12 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
-from sqlalchemy import create_engine, text
+from sqlalchemy import text
+from utils.db import get_engine
 import config
 
 st.set_page_config(page_title="AEGIS · Supplier Scorecards", layout="wide")
-ENGINE = create_engine(config.DATABASE_URL, echo=False)
+ENGINE = get_engine()
 
 st.title("🏆 Supplier Scorecards")
 st.markdown("MCDA-based supplier ranking with adjustable AHP weights")

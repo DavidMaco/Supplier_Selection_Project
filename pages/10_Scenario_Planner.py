@@ -7,13 +7,13 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
-from sqlalchemy import create_engine, text
-import config
+from sqlalchemy import text
+from utils.db import get_engine
 
 st.set_page_config(page_title="AEGIS · Scenario Planner", layout="wide")
 st.title("🔮 Scenario Planner")
 
-ENGINE = create_engine(config.DATABASE_URL)
+ENGINE = get_engine()
 
 tab_switch, tab_hedge, tab_near = st.tabs([
     "🔄 Supplier Switch", "💱 Currency Hedge", "📍 Nearshoring"])
