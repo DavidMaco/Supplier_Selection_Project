@@ -32,13 +32,13 @@ try:
 
         on_time = conn.execute(text(
             "SELECT AVG(CASE WHEN delay_days<=0 THEN 100 ELSE 0 END) FROM shipments "
-            "WHERE YEAR(ship_date)=2024"
+            "WHERE YEAR(dispatch_date)=2024"
         )).scalar() or 0
 
         avg_defect = conn.execute(text(
             "SELECT AVG(defect_rate_pct) FROM quality_inspections qi "
             "JOIN shipments sh ON qi.shipment_id=sh.shipment_id "
-            "WHERE YEAR(sh.ship_date)=2024"
+            "WHERE YEAR(sh.dispatch_date)=2024"
         )).scalar() or 0
 
         maverick_pct = conn.execute(text(

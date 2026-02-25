@@ -134,10 +134,10 @@ with tab_query:
     # Quick templates
     with st.expander("📝 Query Templates"):
         st.code("""-- Top 10 suppliers by spend
-SELECT s.company_name, SUM(po.total_value_usd) AS total_spend
+SELECT s.supplier_name, SUM(po.total_value_usd) AS total_spend
 FROM purchase_orders po
 JOIN suppliers s ON s.supplier_id = po.supplier_id
-GROUP BY s.company_name
+GROUP BY s.supplier_name
 ORDER BY total_spend DESC LIMIT 10;""", language="sql")
 
         st.code("""-- FX rate trend for NGN
@@ -148,7 +148,7 @@ WHERE c.currency_code = 'NGN'
 ORDER BY rate_date;""", language="sql")
 
         st.code("""-- Overdue shipments
-SELECT sh.shipment_id, s.company_name, sh.estimated_arrival,
+SELECT sh.shipment_id, s.supplier_name, sh.eta_date,
        sh.actual_arrival, sh.delay_days
 FROM shipments sh
 JOIN purchase_orders po ON po.po_id = sh.po_id

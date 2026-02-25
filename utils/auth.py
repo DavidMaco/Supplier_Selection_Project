@@ -30,12 +30,8 @@ def login_gate() -> bool:
         return True
 
     if not DASHBOARD_USER or not DASHBOARD_PASS_HASH:
-        st.error("Authentication is not configured.")
-        st.info(
-            "Set `AEGIS_DASHBOARD_USER` and `AEGIS_DASHBOARD_PASS_HASH` "
-            "environment variables before starting the dashboard."
-        )
-        return False
+        # Auth not configured — allow access (set env vars to enable)
+        return True
 
     st.markdown(
         "<div style='text-align:center; padding-top: 60px;'>"

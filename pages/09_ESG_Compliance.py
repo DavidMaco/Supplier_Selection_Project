@@ -26,13 +26,16 @@ with tab_esg:
     try:
         with ENGINE.connect() as conn:
             esg_df = pd.DataFrame(conn.execute(text("""
-                SELECT s.company_name, e.assessment_year,
-                       e.environmental_score, e.social_score,
-                       e.governance_score, e.composite_score,
+                SELECT s.supplier_name,
+                       YEAR(e.assessment_date) AS assessment_year,
+                       e.env_composite       AS environmental_score,
+                       e.social_composite     AS social_score,
+                       e.governance_composite AS governance_score,
+                       e.esg_overall_score    AS composite_score,
                        e.esg_rating
                 FROM esg_assessments e
                 JOIN suppliers s ON s.supplier_id = e.supplier_id
-                ORDER BY e.assessment_year DESC, e.composite_score DESC
+                ORDER BY e.assessment_date DESC, e.esg_overall_score DESC
             """)).mappings().fetchall())
 
         if esg_df.empty:
@@ -64,7 +67,7 @@ with tab_esg:
             fig = px.scatter(latest, x="environmental_score",
                            y="social_score", size="governance_score",
                            color="esg_rating",
-                           hover_name="company_name",
+                           hover_name="supplier_name",
                            title="E vs S Score (bubble = G)",
                            color_discrete_map={
                                "A": "#59a14f", "B": "#76b7b2",
@@ -75,8 +78,8 @@ with tab_esg:
 
         # Radar for selected supplier
         st.subheader("Supplier ESG Detail")
-        sel = st.selectbox("Select Supplier", latest["company_name"].tolist())
-        row = latest[latest["company_name"] == sel].iloc[0]
+        sel = st.selectbox("Select Supplier", latest["supplier_name"].tolist())
+        row = latest[latest["supplier_name"] == sel].iloc[0]
         fig = go.Figure(go.Scatterpolar(
             r=[row["environmental_score"], row["social_score"],
                row["governance_score"], row["composite_score"]],
@@ -94,8 +97,8 @@ with tab_comp:
     try:
         with ENGINE.connect() as conn:
             comp_df = pd.DataFrame(conn.execute(text("""
-                SELECT s.company_name, cf.framework_name,
-                       cc.check_date, cc.status, cc.findings
+                SELECT s.supplier_name, cf.framework_name,
+                       cc.check_date, cc.status, cc.gaps_identified AS findings
                 FROM compliance_checks cc
                 JOIN suppliers s ON s.supplier_id = cc.supplier_id
                 JOIN compliance_frameworks cf ON cf.framework_id = cc.framework_id
@@ -145,25 +148,38 @@ with tab_dd:
     try:
         with ENGINE.connect() as conn:
             dd_df = pd.DataFrame(conn.execute(text("""
-                SELECT s.company_name, d.dd_type, d.oecd_step,
-                       d.start_date, d.completion_date, d.status,
-                       d.risk_level, d.findings_summary
+                SELECT s.supplier_name,
+                       d.dd_date,
+                       d.step_1_policy, d.step_2_identify,
+                       d.step_3_mitigate, d.step_4_verify,
+                       d.step_5_communicate, d.step_6_remediate,
+                       d.overall_status, d.findings
                 FROM due_diligence_records d
                 JOIN suppliers s ON s.supplier_id = d.supplier_id
-                ORDER BY d.start_date DESC
+                ORDER BY d.dd_date DESC
             """)).mappings().fetchall())
 
         if not dd_df.empty:
+            in_progress = len(dd_df[dd_df['overall_status'] == 'In Progress'])
+            complete = len(dd_df[dd_df['overall_status'] == 'Complete'])
             c1, c2, c3 = st.columns(3)
             c1.metric("DD Records", f"{len(dd_df)}")
-            c2.metric("In Progress", f"{len(dd_df[dd_df['status'] == 'In Progress'])}")
-            c3.metric("High Risk", f"{len(dd_df[dd_df['risk_level'] == 'High'])}")
+            c2.metric("In Progress", f"{in_progress}")
+            c3.metric("Complete", f"{complete}")
 
-            fig = px.histogram(dd_df, x="oecd_step", color="status",
-                             barmode="group",
-                             title="OECD 6-Step Due Diligence Progress")
-            fig.update_layout(height=350)
-            st.plotly_chart(fig, use_container_width=True)
+            # Melt step columns for visualization
+            steps = ['step_1_policy', 'step_2_identify', 'step_3_mitigate',
+                     'step_4_verify', 'step_5_communicate', 'step_6_remediate']
+            step_counts = {s: dd_df[s].value_counts().to_dict() for s in steps if s in dd_df.columns}
+            if step_counts:
+                step_summary = pd.DataFrame(step_counts).T.fillna(0).reset_index()
+                step_summary.rename(columns={'index': 'step'}, inplace=True)
+                step_summary = step_summary.melt(id_vars='step', var_name='status', value_name='count')
+                fig = px.bar(step_summary, x='step', y='count', color='status',
+                             barmode='group',
+                             title='OECD 6-Step Due Diligence Progress')
+                fig.update_layout(height=350)
+                st.plotly_chart(fig, use_container_width=True)
 
             st.dataframe(dd_df, use_container_width=True, height=400)
         else:

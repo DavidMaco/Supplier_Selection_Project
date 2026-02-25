@@ -31,11 +31,14 @@ with st.sidebar:
 try:
     with ENGINE.connect() as conn:
         rows = conn.execute(text("""
-            SELECT dimension, hhi_score, category, top_entity,
-                   top_entity_share_pct, entity_count
+            SELECT dimension,
+                   hhi_index   AS hhi_score,
+                   hhi_category AS category,
+                   dimension_value AS top_entity,
+                   spend_share_pct AS top_entity_share_pct
             FROM concentration_analysis
-            WHERE YEAR(calculated_at) = :yr
-            ORDER BY calculated_at DESC
+            WHERE YEAR(analysis_date) = :yr
+            ORDER BY analysis_date DESC
             LIMIT 5
         """), {"yr": year_filter}).mappings().fetchall()
 
@@ -60,7 +63,7 @@ try:
     colors = {"Low": "#59a14f", "Moderate": "#edc949", "High": "#e15759"}
     fig.add_trace(go.Bar(
         x=df["dimension"],
-        y=df["hhi_score"],
+        y=df["hhi_score"].astype(float),
         marker_color=[colors.get(c, "#4e79a7") for c in df["category"]],
         text=df["category"],
         textposition="outside"))
@@ -80,12 +83,12 @@ try:
     with tab_sup:
         with ENGINE.connect() as conn:
             sup_df = pd.DataFrame(conn.execute(text("""
-                SELECT s.company_name AS label,
+                SELECT s.supplier_name AS label,
                        SUM(po.total_value_usd) AS spend
                 FROM purchase_orders po
                 JOIN suppliers s ON s.supplier_id = po.supplier_id
                 WHERE YEAR(po.order_date) = :yr
-                GROUP BY s.company_name ORDER BY spend DESC LIMIT 20
+                GROUP BY s.supplier_name ORDER BY spend DESC LIMIT 20
             """), {"yr": year_filter}).mappings().fetchall())
         if not sup_df.empty:
             fig = px.treemap(sup_df, path=["label"], values="spend",

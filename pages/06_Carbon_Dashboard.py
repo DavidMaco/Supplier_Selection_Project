@@ -31,8 +31,8 @@ try:
         # ── KPI row ─────────────────────────────────────────────────
         kpi = conn.execute(text("""
             SELECT COUNT(*) AS estimates,
-                   SUM(estimated_kg_co2) AS total_kg,
-                   AVG(carbon_intensity_per_1000usd) AS avg_intensity
+                   SUM(co2e_kg) AS total_kg,
+                   AVG(co2e_kg / NULLIF(distance_km * weight_tonnes, 0)) AS avg_intensity
             FROM carbon_estimates
         """)).mappings().fetchone()
 
@@ -46,7 +46,7 @@ try:
     with ENGINE.connect() as conn:
         mode_df = pd.DataFrame(conn.execute(text("""
             SELECT transport_mode,
-                   SUM(estimated_kg_co2) AS kg_co2,
+                   SUM(co2e_kg) AS kg_co2,
                    COUNT(*) AS shipments,
                    AVG(distance_km) AS avg_dist
             FROM carbon_estimates
@@ -71,20 +71,20 @@ try:
     st.subheader("Top Emitting Suppliers")
     with ENGINE.connect() as conn:
         sup_df = pd.DataFrame(conn.execute(text("""
-            SELECT s.company_name,
-                   SUM(ce.estimated_kg_co2) AS total_kg,
-                   AVG(ce.carbon_intensity_per_1000usd) AS intensity,
+            SELECT s.supplier_name,
+                   SUM(ce.co2e_kg) AS total_kg,
+                   AVG(ce.co2e_kg / NULLIF(ce.distance_km * ce.weight_tonnes, 0)) AS intensity,
                    COUNT(*) AS shipments
             FROM carbon_estimates ce
             JOIN shipments sh ON sh.shipment_id = ce.shipment_id
             JOIN purchase_orders po ON po.po_id = sh.po_id
             JOIN suppliers s ON s.supplier_id = po.supplier_id
-            GROUP BY s.company_name
+            GROUP BY s.supplier_name
             ORDER BY total_kg DESC LIMIT 15
         """)).mappings().fetchall())
 
     if not sup_df.empty:
-        fig = px.bar(sup_df, x="company_name", y="total_kg",
+        fig = px.bar(sup_df, x="supplier_name", y="total_kg",
                     color="intensity",
                     color_continuous_scale="RdYlGn_r",
                     title="Top 15 Suppliers by CO₂ Emissions")
@@ -95,13 +95,17 @@ try:
     st.subheader("Top Emitting Routes")
     with ENGINE.connect() as conn:
         route_df = pd.DataFrame(conn.execute(text("""
-            SELECT ce.origin_port, ce.destination_port,
+            SELECT po_orig.port_name AS origin_port,
+                   po_dest.port_name AS destination_port,
                    ce.transport_mode,
-                   SUM(ce.estimated_kg_co2) AS total_kg,
+                   SUM(ce.co2e_kg) AS total_kg,
                    AVG(ce.distance_km) AS avg_dist_km,
                    COUNT(*) AS n
             FROM carbon_estimates ce
-            GROUP BY ce.origin_port, ce.destination_port, ce.transport_mode
+            JOIN shipments sh ON sh.shipment_id = ce.shipment_id
+            LEFT JOIN ports po_orig ON po_orig.port_id = sh.origin_port_id
+            LEFT JOIN ports po_dest ON po_dest.port_id = sh.destination_port_id
+            GROUP BY po_orig.port_name, po_dest.port_name, ce.transport_mode
             ORDER BY total_kg DESC LIMIT 15
         """)).mappings().fetchall())
 
