@@ -1,25 +1,25 @@
-# AEGIS — Adaptive Engine for Global Intelligent Sourcing
+# AEGIS: Adaptive Engine for Global Intelligent Sourcing
 
-> **Investment-grade procurement intelligence platform** — 40+ table normalized schema, 8 analytics engines, 12-page interactive dashboard, Monte Carlo simulation, ESG/carbon tracking, and enterprise-ready deployment.
+A procurement intelligence platform built on a 40+ table MySQL schema, 8 analytics engines, and a 12-page Streamlit dashboard. It covers Monte Carlo simulation, ESG and carbon tracking, concentration analysis, should-cost modelling, and working capital optimization.
 
 ---
 
-## Business Problem
+## What It Does
 
-Global procurement teams face compounding risks from FX volatility, single-source concentration, ESG compliance gaps, and opaque cost structures. Without a unified analytics layer, organizations cannot quantify supplier risk, model disruption scenarios, or benchmark should-cost against actual spend. AEGIS solves this by delivering a fully integrated procurement intelligence stack — from normalized OLTP through star-schema warehouse to investor-grade analytics and real-time dashboards — enabling data-driven sourcing decisions at board level.
+AEGIS brings together supplier scoring, risk quantification, FX simulation, cost benchmarking, and ESG compliance into one stack. The data flows from normalized OLTP tables through a star-schema warehouse into analytics output tables, all surfaced in a Streamlit dashboard and optionally in Power BI.
 
-## AEGIS Capabilities
+## Capabilities
 
-- Multi-Criteria Supplier Scoring (TOPSIS, PROMETHEE-II, WSM)
-- 7-Dimension Composite Risk Scoring
-- Monte Carlo Simulation (FX, Lead-Time, Disruption, Cost)
-- Carbon Footprint Tracking (GHG Protocol Scope 3, GLEC Framework)
-- Spend Concentration Analysis (HHI across 5 dimensions)
-- Should-Cost Modelling with Automated Leakage Detection
-- Working Capital & Early Payment Discount Optimization
-- Scenario Planning (Supplier Switch, Currency Hedge, Nearshoring)
-- ESG Compliance & OECD 6-Step Due Diligence Tracking
-- Interactive 12-Page Streamlit Dashboard
+- Multi-criteria supplier scoring (TOPSIS, PROMETHEE-II, WSM)
+- 7-dimension composite risk scoring
+- Monte Carlo simulation for FX, lead-time, disruption, and cost
+- Carbon footprint tracking (GHG Protocol Scope 3, GLEC Framework)
+- Spend concentration analysis (HHI across 5 dimensions)
+- Should-cost modelling with automated leakage detection
+- Working capital and early payment discount optimization
+- Scenario planning: supplier switch, currency hedge, nearshoring
+- ESG compliance and OECD 6-step due diligence tracking
+- Interactive 12-page Streamlit dashboard
 
 ## Architecture Diagram
 
@@ -39,12 +39,12 @@ flowchart LR
 
 ## Data Model
 
-AEGIS uses a three-layer architecture: normalized OLTP, star-schema warehouse, and analytics output tables.
+The database has three layers:
 
-- **OLTP Layer:** suppliers, materials, purchase_orders, po_line_items, shipments, invoices, quality_inspections, quality_incidents, contracts, fx_rates, commodity_prices, esg_assessments, carbon_estimates, compliance_checks, due_diligence_records (30+ tables)
-- **Warehouse Layer:** `dim_date`, `dim_supplier` (SCD Type 2), `dim_material`, `dim_geography`, `fact_procurement`, `fact_esg`
-- **Analytics Layer:** `supplier_scorecards`, `risk_assessments`, `concentration_analysis`, `simulation_runs`
-- **Reference:** 15 countries, 10 currencies, 12 ports, 7 incoterms, emission factors, certifications catalog
+- **OLTP:** suppliers, materials, purchase_orders, po_line_items, shipments, invoices, quality_inspections, quality_incidents, contracts, fx_rates, commodity_prices, esg_assessments, carbon_estimates, compliance_checks, due_diligence_records (30+ tables)
+- **Warehouse:** `dim_date`, `dim_supplier` (SCD Type 2), `dim_material`, `dim_geography`, `fact_procurement`, `fact_esg`
+- **Analytics:** `supplier_scorecards`, `risk_assessments`, `concentration_analysis`, `simulation_runs`
+- **Reference data:** 15 countries, 10 currencies, 12 ports, 7 incoterms, emission factors, certifications catalog
 
 ## Risk Score Formula
 
@@ -58,11 +58,11 @@ Default weights: Financial (0.15), Operational (0.20), Geopolitical (0.15), Comp
 
 ## FX Monte Carlo Methodology
 
-- Calculate daily log returns from historical FX rates (GBM seed data)
+- Calculate daily log returns from historical FX rates
 - Estimate drift ($\mu$) and volatility ($\sigma$) per currency
 - Simulate $N = 10{,}000$ paths over 90 trading days using Geometric Brownian Motion
-- Report P5, P25, median (P50), P75, and P95 for risk banding
-- VaR (Value at Risk) at 95th and 99th percentiles
+- Report P5, P25, P50 (median), P75, and P95 percentiles
+- Compute Value at Risk (VaR) at the 95th and 99th percentiles
 
 ## HHI Concentration Methodology
 
@@ -82,16 +82,16 @@ $$
 \text{CO}_2\text{e (kg)} = \text{weight (tonnes)} \times \text{distance (km)} \times \text{emission factor}
 $$
 
-Emission factors (GLEC Framework v3): Sea (0.016), Air (0.602), Rail (0.028), Road (0.062) kgCO₂e/tonne-km. Route distances computed via Haversine formula. Mode-shift opportunities identified for Air → Sea/Rail reduction.
+Emission factors (GLEC Framework v3): Sea (0.016), Air (0.602), Rail (0.028), Road (0.062) kgCO2e/tonne-km. Route distances are computed using the Haversine formula. The dashboard highlights mode-shift opportunities where switching from Air to Sea or Rail would cut emissions.
 
-## Business Impact
+## What You Get
 
-- **Visibility:** Enterprise-level spend concentration, FX exposure, and ESG risk by supplier, category, and geography
-- **Risk Control:** Quantified 7-dimension supplier risk with automated tier recommendations
-- **Cost Intelligence:** Should-cost modelling with automated leakage flags (5%/15%/25% thresholds)
-- **Cash Efficiency:** DPO analysis and EPD optimizer with annualized return comparison
-- **Sustainability:** GHG Scope 3 emissions tracked per shipment with mode-shift reduction opportunities
-- **Scenario Readiness:** Monte Carlo risk banding and what-if analysis for strategic sourcing decisions
+- Spend concentration, FX exposure, and ESG risk broken down by supplier, category, and geography
+- 7-dimension risk scores with automated tier assignments
+- Should-cost models with leakage flags at 5%, 15%, and 25% thresholds
+- DPO analysis and an early payment discount optimizer that compares annualized returns
+- GHG Scope 3 emissions per shipment, including mode-shift reduction opportunities
+- Monte Carlo risk banding and what-if analysis for sourcing decisions
 
 ## Architecture
 
@@ -104,8 +104,8 @@ aegis-procurement/
 ├── Dockerfile / docker-compose.yml
 │
 ├── database/                      # 10 SQL files, 40+ tables
-│   ├── 00_MASTER_DEPLOY.sql       # Orchestration
-│   ├── 01-09 schema files         # OLTP + Warehouse + Analytics
+│   ├── 00_MASTER_DEPLOY.sql       # Deploy orchestration
+│   ├── 01-09 schema files         # OLTP, warehouse, analytics
 │
 ├── data_ingestion/
 │   ├── generate_seed_data.py      # 14-step realistic data generator
@@ -145,9 +145,9 @@ aegis-procurement/
 │   ├── 11_Data_Explorer           # Table browser + ad-hoc SQL
 │   └── 12_Settings                # Config management
 │
-├── powerbi/                       # DAX measures + theme
-├── tests/                         # pytest suite
-└── .github/workflows/ci.yml      # GitHub Actions
+├── powerbi/                       # DAX measures, theme, build guide
+├── tests/                         # 49 pytest tests
+└── .github/workflows/ci.yml      # CI: test, lint, docker
 ```
 
 ## Quick Start
@@ -162,7 +162,7 @@ python -m venv .venv
 .venv\Scripts\activate       # Windows
 pip install -r requirements.txt
 
-# Run full pipeline (schema → seed → ETL → analytics)
+# Run full pipeline (schema, seed, ETL, analytics)
 python run_aegis_pipeline.py
 
 # Launch dashboard
@@ -188,37 +188,37 @@ docker-compose up -d
 # Dashboard at http://localhost:8501
 ```
 
-## Key Differentiators
+## Notable Features
 
-| Feature | Description |
+| Feature | Details |
 |---------|-------------|
-| **TOPSIS + PROMETHEE-II** | Dual MCDA methodology with interactive weight tuning |
-| **GBM Monte Carlo** | 10,000-path Geometric Brownian Motion for FX risk |
-| **GHG Protocol Scope 3** | GLEC Framework emission factors, mode-shift opportunities |
-| **SCD Type 2 Warehouse** | Slowly-changing dimension for supplier history tracking |
-| **7-Dimension Risk** | Financial, operational, geopolitical, compliance, concentration, ESG, cyber |
-| **Should-Cost Model** | Bottom-up decomposition with automated leakage flagging |
-| **EPD Optimizer** | Early payment discount arbitrage with annualized return comparison |
-| **HHI Analysis** | Herfindahl-Hirschman across supplier, country, currency, material, port |
-| **OECD 6-Step DD** | Due diligence tracking aligned to OECD guidance |
+| TOPSIS + PROMETHEE-II | Two MCDA methods with interactive weight sliders |
+| GBM Monte Carlo | 10,000-path Geometric Brownian Motion for FX risk |
+| GHG Protocol Scope 3 | GLEC Framework emission factors with mode-shift analysis |
+| SCD Type 2 Warehouse | Slowly-changing dimensions for supplier history |
+| 7-Dimension Risk | Financial, operational, geopolitical, compliance, concentration, ESG, cyber |
+| Should-Cost Model | Bottom-up cost decomposition with leakage flags |
+| EPD Optimizer | Early payment discount arbitrage with annualized return comparison |
+| HHI Analysis | Herfindahl-Hirschman across supplier, country, currency, material, port |
+| OECD 6-Step DD | Due diligence tracking aligned to OECD guidance |
 
 ## Database
 
-- **MySQL 8.0** — localhost:3306
-- **Database:** `aegis_procurement`
-- **40+ tables** across OLTP, warehouse, and analytics layers
+- MySQL 8.0 on localhost:3306
+- Database name: `aegis_procurement`
+- 40+ tables across OLTP, warehouse, and analytics layers
 - Reference data: 15 countries, 10 currencies, 12 ports, 7 incoterms
 
 ## Analytics Engines
 
-1. **MCDA** — Multi-criteria supplier scoring (TOPSIS/PROMETHEE-II/WSM)
-2. **Monte Carlo** — Stochastic simulation for FX, lead-time, disruptions, cost
-3. **Risk** — 7-dimension composite risk with configurable weights
-4. **Working Capital** — DPO analysis, invoice aging, EPD optimization
-5. **Should-Cost** — Bottom-up cost model with leakage detection
-6. **Carbon** — GHG Scope 3 Category 4, haversine-based route emissions
-7. **Concentration** — HHI analysis across 5 dimensions
-8. **Scenario Planner** — Supplier switch, currency hedge, nearshoring what-ifs
+1. **MCDA** - Multi-criteria supplier scoring (TOPSIS, PROMETHEE-II, WSM)
+2. **Monte Carlo** - Stochastic simulation for FX, lead-time, disruptions, cost
+3. **Risk** - 7-dimension composite risk with configurable weights
+4. **Working Capital** - DPO analysis, invoice aging, EPD optimization
+5. **Should-Cost** - Bottom-up cost model with leakage detection
+6. **Carbon** - GHG Scope 3 Category 4, haversine-based route emissions
+7. **Concentration** - HHI analysis across 5 dimensions
+8. **Scenario Planner** - Supplier switch, currency hedge, nearshoring what-ifs
 
 ## Testing
 
@@ -237,20 +237,20 @@ pytest tests/ -v
 | `DB_NAME` | `aegis_procurement` | Database name |
 | `DATABASE_URL` | *(auto-built)* | Full SQLAlchemy connection URL |
 
-All analytics parameters are configurable in `config.py`: FX volatilities & anchor rates (9 currencies), MCDA & risk weights, Monte Carlo defaults (paths, horizon), emission factors (sea/air/road/rail), HHI & cost-leakage thresholds.
+All analytics parameters are configurable in `config.py`: FX volatilities and anchor rates (9 currencies), MCDA and risk weights, Monte Carlo defaults (paths, horizon), emission factors (sea/air/road/rail), HHI and cost-leakage thresholds.
 
-## Production Readiness Notes
+## Production Notes
 
-- Secrets are sourced from environment variables (see `config.py`)
-- Database constraints enforced via schema SQL files
-- Full test suite: `pytest tests/ -v` (24 tests)
-- Docker deployment with health checks
-- CI/CD via GitHub Actions (test, lint, docker)
-- See `PRODUCTION_READINESS.md` for detailed readiness assessment
+- Secrets come from environment variables (see `config.py`)
+- Database constraints are enforced in the schema SQL files
+- Test suite: `pytest tests/ -v` (49 tests)
+- Docker deployment includes health checks
+- CI/CD runs on GitHub Actions (test, lint, docker build)
+- See `PRODUCTION_READINESS.md` for a full readiness checklist
 
-## Deployment Notes
+## Deployment
 
-- Ensure MySQL 8.0 is running on the target host before first run
-- Run `python run_aegis_pipeline.py` to execute the full 6-step pipeline (schema → seed → ETL → analytics → verify)
-- For Docker deployment: `docker-compose up -d` (dashboard at http://localhost:8501)
-- For enterprise production, complete hardening controls in `PRODUCTION_READINESS.md`
+- MySQL 8.0 must be running before the first pipeline run
+- Run `python run_aegis_pipeline.py` to execute the 6-step pipeline (schema, seed, ETL, analytics, verify)
+- For Docker: `docker-compose up -d` (dashboard at http://localhost:8501)
+- See `PRODUCTION_READINESS.md` for production hardening steps
