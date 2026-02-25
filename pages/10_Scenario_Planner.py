@@ -9,6 +9,7 @@ import plotly.graph_objects as go
 import pandas as pd
 from sqlalchemy import text
 from utils.db import get_engine
+import config
 
 st.set_page_config(page_title="AEGIS · Scenario Planner", layout="wide")
 st.title("🔮 Scenario Planner")
