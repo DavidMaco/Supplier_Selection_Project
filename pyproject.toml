@@ -2,7 +2,7 @@
 name = "aegis-procurement"
 version = "1.1.0"
 description = "AEGIS — Adaptive Engine for Global Intelligent Sourcing"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.12"
 
 [tool.black]
 line-length = 120
