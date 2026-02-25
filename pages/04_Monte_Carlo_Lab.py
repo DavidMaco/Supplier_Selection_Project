@@ -120,13 +120,13 @@ with tab_dis:
             from analytics.monte_carlo import simulate_disruption, save_simulation
             result = simulate_disruption(scenario, entity, int(duration))
 
-        c1, c2, c3 = st.columns(3)
-        c1.metric("Baseline Spend", f"${result['baseline_spend']:,.0f}")
-        c2.metric("Cost Impact (Mean)", f"${result['cost_impact_mean']:,.0f}")
-        c3.metric("Cost Impact (P95)", f"${result['cost_impact_p95']:,.0f}")
-
-        st.metric("Lead-Time Addition (P95)", f"{result['lt_addition_p95']:.0f} days")
-        st.metric("CVaR (95%)", f"${result['cvar_95']:,.0f}")
+        r1 = st.columns(3)
+        r1[0].metric("Baseline Spend", f"${result['baseline_spend']:,.0f}")
+        r1[1].metric("Cost Impact (Mean)", f"${result['cost_impact_mean']:,.0f}")
+        r1[2].metric("Cost Impact (P95)", f"${result['cost_impact_p95']:,.0f}")
+        r2 = st.columns(3)
+        r2[0].metric("Lead-Time Addition (P95)", f"{result['lt_addition_p95']:.0f} days")
+        r2[1].metric("CVaR (95%)", f"${result['cvar_95']:,.0f}")
 
 # ────────────────────────────────────────────────────────────────────
 #  TAB 4: Total Cost

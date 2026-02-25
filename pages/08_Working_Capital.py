@@ -27,11 +27,12 @@ with tab_overview:
         from analytics.working_capital import analyze_working_capital
         wc = analyze_working_capital()
 
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Avg DPO", f"{wc['avg_dpo']:.0f} days")
-        c2.metric("Total Spend", f"${wc['total_spend']:,.0f}")
-        c3.metric("Overdue %", f"{wc['overdue_pct']:.1f}%")
-        c4.metric("Overdue Amount", f"${wc['total_overdue']:,.0f}")
+        r1 = st.columns(2)
+        r1[0].metric("Avg DPO", f"{wc['avg_dpo']:.0f} days")
+        r1[1].metric("Total Spend", f"${wc['total_spend']:,.0f}")
+        r2 = st.columns(2)
+        r2[0].metric("Overdue %", f"{wc['overdue_pct']:.1f}%")
+        r2[1].metric("Overdue Amount", f"${wc['total_overdue']:,.0f}")
 
         # DPO trend
         dpo_trend = wc.get("dpo_trend")
@@ -62,7 +63,8 @@ with tab_overview:
                         color="avg_age_days",
                         color_continuous_scale="RdYlGn_r",
                         title="Outstanding by Supplier (coloured by age)")
-            fig.update_layout(xaxis_tickangle=-45, height=400)
+            fig.update_layout(xaxis_tickangle=-45, height=450,
+                             margin=dict(b=120))
             st.plotly_chart(fig, use_container_width=True)
 
     except Exception as e:

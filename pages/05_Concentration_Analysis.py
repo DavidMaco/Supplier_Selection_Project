@@ -48,14 +48,17 @@ try:
 
     df = pd.DataFrame(rows)
 
-    # KPI row
-    cols = st.columns(len(df))
-    for i, row in df.iterrows():
-        color = "🟢" if row["category"] == "Low" else "🟡" if row["category"] == "Moderate" else "🔴"
-        cols[i].metric(
-            f"{color} {row['dimension']}",
-            f"HHI {row['hhi_score']:,.0f}",
-            f"Top: {row['top_entity']} ({row['top_entity_share_pct']:.0f}%)")
+    # KPI row — max 3 per row to avoid clutter
+    n_dims = len(df)
+    for row_start in range(0, n_dims, 3):
+        row_items = list(df.iloc[row_start:row_start + 3].iterrows())
+        cols = st.columns(len(row_items))
+        for j, (i, row) in enumerate(row_items):
+            color = "🟢" if row["category"] == "Low" else "🟡" if row["category"] == "Moderate" else "🔴"
+            cols[j].metric(
+                f"{color} {row['dimension']}",
+                f"HHI {row['hhi_score']:,.0f}",
+                f"Top: {row['top_entity']} ({row['top_entity_share_pct']:.0f}%)")
 
     # ── HHI bar chart ───────────────────────────────────────────────
     st.subheader("HHI by Dimension")

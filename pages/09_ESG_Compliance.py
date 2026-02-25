@@ -44,11 +44,12 @@ with tab_esg:
 
         latest = esg_df[esg_df["assessment_year"] == esg_df["assessment_year"].max()]
 
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Assessed Suppliers", f"{len(latest)}")
-        c2.metric("Avg Composite", f"{latest['composite_score'].mean():.1f}")
-        c3.metric("A/B Rated", f"{len(latest[latest['esg_rating'].isin(['A', 'B'])])}")
-        c4.metric("D/F Rated", f"{len(latest[latest['esg_rating'].isin(['D', 'F'])])}")
+        r1 = st.columns(2)
+        r1[0].metric("Assessed Suppliers", f"{len(latest)}")
+        r1[1].metric("Avg Composite", f"{latest['composite_score'].mean():.1f}")
+        r2 = st.columns(2)
+        r2[0].metric("A/B Rated", f"{len(latest[latest['esg_rating'].isin(['A', 'B'])])}")
+        r2[1].metric("D/F Rated", f"{len(latest[latest['esg_rating'].isin(['D', 'F'])])}")
 
         # Rating distribution
         col1, col2 = st.columns(2)
@@ -86,7 +87,8 @@ with tab_esg:
             theta=["Environmental", "Social", "Governance", "Composite"],
             fill="toself", line_color="#4e79a7"))
         fig.update_layout(polar=dict(radialaxis=dict(range=[0, 100])),
-                         height=350, title=f"ESG Profile: {sel}")
+                         height=400, margin=dict(t=40, b=20),
+                         title=f"ESG Profile: {sel}")
         st.plotly_chart(fig, use_container_width=True)
 
     except Exception as e:

@@ -52,14 +52,15 @@ with tab_switch:
                 result = scenario_supplier_switch(int(from_sup), int(to_sup))
 
                 st.markdown("---")
-                c1, c2, c3, c4 = st.columns(4)
-                c1.metric("Current Spend",
+                r1 = st.columns(2)
+                r1[0].metric("Current Spend",
                          f"${result.get('current_spend', 0):,.2f}")
-                c2.metric("Estimated New Spend",
+                r1[1].metric("Estimated New Spend",
                          f"${result.get('estimated_new_spend', 0):,.2f}")
-                c3.metric("Cost Impact",
+                r2 = st.columns(2)
+                r2[0].metric("Cost Impact",
                          f"{result.get('cost_impact_pct', 0):+.1f}%")
-                c4.metric("Delay Change",
+                r2[1].metric("Delay Change",
                          f"{result.get('delay_change', 0):+.1f} days")
 
                 # Comparison radar
@@ -102,13 +103,14 @@ with tab_hedge:
                 hedge_ccy, float(exposure) / 1e6 if exposure > 1 else 0.80,
                 float(forward_premium) * 100)
 
-            c1, c2, c3, c4 = st.columns(4)
-            c1.metric("Exposure (USD)", f"${result.get('exposure_usd', 0):,.0f}")
-            c2.metric("Hedge %",
+            r1 = st.columns(2)
+            r1[0].metric("Exposure (USD)", f"${result.get('exposure_usd', 0):,.0f}")
+            r1[1].metric("Hedge %",
                      f"{result.get('hedge_pct', 0) * 100:.0f}%")
-            c3.metric("Unhedged VaR (P95)",
+            r2 = st.columns(2)
+            r2[0].metric("Unhedged VaR (P95)",
                      f"${result.get('unhedged_worst_case_p95', 0):,.0f}")
-            c4.metric("Hedged VaR (P95)",
+            r2[1].metric("Hedged VaR (P95)",
                      f"${result.get('hedged_worst_case_p95', 0):,.0f}")
 
             savings = result.get('savings_at_p95', 0)
@@ -135,14 +137,15 @@ with tab_near:
             from analytics.scenario_planner import scenario_nearshoring
             result = scenario_nearshoring(target_region, realloc_pct)
 
-            c1, c2, c3, c4 = st.columns(4)
-            c1.metric("Reallocation Amount",
+            r1 = st.columns(2)
+            r1[0].metric("Reallocation Amount",
                      f"${result.get('reallocation_amount', 0):,.0f}")
-            c2.metric("Cost Premium Impact",
+            r1[1].metric("Cost Premium Impact",
                      f"${result.get('cost_premium_impact', 0):,.0f}")
-            c3.metric("Freight Savings",
+            r2 = st.columns(2)
+            r2[0].metric("Freight Savings",
                      f"${result.get('freight_savings', 0):,.0f}")
-            c4.metric("Net Cost Impact",
+            r2[1].metric("Net Cost Impact",
                      f"${result.get('net_cost_impact', 0):,.0f}")
 
             st.markdown(f"**Lead-time improvement:** {result.get('lead_time_improvement_pct', 0):.0f}%")

@@ -50,13 +50,14 @@ try:
             "WHERE status='Overdue' AND YEAR(invoice_date)=2024"
         )).scalar())
 
-    c1, c2, c3, c4, c5, c6 = st.columns(6)
-    c1.metric("2024 Spend", f"${total_spend:,.0f}")
-    c2.metric("Active Suppliers", active_suppliers)
-    c3.metric("On-Time Delivery", f"{on_time:.1f}%")
-    c4.metric("Avg Defect Rate", f"{avg_defect:.1f}%")
-    c5.metric("Maverick Spend", f"{maverick_pct:.1f}%")
-    c6.metric("Overdue Invoices", f"${overdue_amt:,.0f}")
+    r1 = st.columns(3)
+    r1[0].metric("2024 Spend", f"${total_spend:,.0f}")
+    r1[1].metric("Active Suppliers", active_suppliers)
+    r1[2].metric("On-Time Delivery", f"{on_time:.1f}%")
+    r2 = st.columns(3)
+    r2[0].metric("Avg Defect Rate", f"{avg_defect:.1f}%")
+    r2[1].metric("Maverick Spend", f"{maverick_pct:.1f}%")
+    r2[2].metric("Overdue Invoices", f"${overdue_amt:,.0f}")
 
     st.markdown("---")
 

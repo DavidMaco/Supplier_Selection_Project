@@ -103,13 +103,14 @@ _db_available = False
 try:
     stats = _load_landing_stats()
 
-    col1, col2, col3, col4, col5, col6 = st.columns(6)
-    col1.metric("Active Suppliers", f"{stats['suppliers']:,}")
-    col2.metric("Purchase Orders", f"{stats['pos']:,}")
-    col3.metric("Total Spend", f"${stats['spend']:,.0f}")
-    col4.metric("Countries", stats["countries"])
-    col5.metric("Shipments", f"{stats['shipments']:,}")
-    col6.metric("Materials", stats["materials"])
+    row1 = st.columns(3)
+    row1[0].metric("Active Suppliers", f"{stats['suppliers']:,}")
+    row1[1].metric("Purchase Orders", f"{stats['pos']:,}")
+    row1[2].metric("Total Spend", f"${stats['spend']:,.0f}")
+    row2 = st.columns(3)
+    row2[0].metric("Countries", stats["countries"])
+    row2[1].metric("Shipments", f"{stats['shipments']:,}")
+    row2[2].metric("Materials", stats["materials"])
     _db_available = True
 
 except Exception as e:

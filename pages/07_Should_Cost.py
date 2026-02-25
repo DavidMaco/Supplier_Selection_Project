@@ -47,12 +47,13 @@ try:
     leakage_pct = (leakage_usd / total_should * 100) if total_should else 0
     flags = df["leakage_flag"].value_counts().to_dict()
 
-    c1, c2, c3, c4, c5 = st.columns(5)
-    c1.metric("Items Analysed", f"{len(df):,}")
-    c2.metric("Total Quoted", f"${total_quoted:,.0f}")
-    c3.metric("Total Should-Cost", f"${total_should:,.0f}")
-    c4.metric("Total Leakage", f"${leakage_usd:,.0f}")
-    c5.metric("Leakage %", f"{leakage_pct:+.1f}%")
+    r1 = st.columns(3)
+    r1[0].metric("Items Analysed", f"{len(df):,}")
+    r1[1].metric("Total Quoted", f"${total_quoted:,.0f}")
+    r1[2].metric("Total Should-Cost", f"${total_should:,.0f}")
+    r2 = st.columns(2)
+    r2[0].metric("Total Leakage", f"${leakage_usd:,.0f}")
+    r2[1].metric("Leakage %", f"{leakage_pct:+.1f}%")
 
     # ── Leakage flag distribution ───────────────────────────────────
     st.subheader("Leakage Classification")

@@ -88,7 +88,8 @@ try:
                     color="intensity",
                     color_continuous_scale="RdYlGn_r",
                     title="Top 15 Suppliers by CO₂ Emissions")
-        fig.update_layout(xaxis_tickangle=-45, height=400)
+        fig.update_layout(xaxis_tickangle=-45, height=450,
+                         margin=dict(b=120))
         st.plotly_chart(fig, use_container_width=True)
 
     # ── Route-level emissions ───────────────────────────────────────
@@ -114,7 +115,8 @@ try:
         fig = px.bar(route_df, x="route", y="total_kg",
                     color="transport_mode",
                     title="Top 15 Routes by Emissions")
-        fig.update_layout(xaxis_tickangle=-45, height=400)
+        fig.update_layout(xaxis_tickangle=-45, height=450,
+                         margin=dict(b=120))
         st.plotly_chart(fig, use_container_width=True)
 
     # ── Reduction opportunities ─────────────────────────────────────

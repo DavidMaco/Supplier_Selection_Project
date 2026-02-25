@@ -87,21 +87,21 @@ if df is not None and not df.empty:
 
     st.markdown("---")
 
-    # ─── Rankings Table ─────────────────────────────────────────
-    col1, col2 = st.columns([3, 2])
+    # ─── Rankings Table (full width) ─────────────────────────────
+    st.subheader("📋 Supplier Rankings")
+    display_cols = ["rank", "supplier_name", "composite_score",
+                   "cost_score", "quality_score", "delivery_score",
+                   "risk_score", "esg_score", "tier_recommendation"]
+    available = [c for c in display_cols if c in df.columns]
+    st.dataframe(
+        df[available].style.background_gradient(
+            subset=["composite_score"], cmap="RdYlGn", vmin=0, vmax=100),
+        use_container_width=True, hide_index=True, height=450)
 
-    with col1:
-        st.subheader("📋 Supplier Rankings")
-        display_cols = ["rank", "supplier_name", "composite_score",
-                       "cost_score", "quality_score", "delivery_score",
-                       "risk_score", "esg_score", "tier_recommendation"]
-        available = [c for c in display_cols if c in df.columns]
-        st.dataframe(
-            df[available].style.background_gradient(
-                subset=["composite_score"], cmap="RdYlGn", vmin=0, vmax=100),
-            use_container_width=True, hide_index=True, height=500)
+    # ─── Tier Distribution + Top Supplier Radar (side by side) ──
+    col_left, col_right = st.columns(2)
 
-    with col2:
+    with col_left:
         st.subheader("🎯 Tier Distribution")
         tier_counts = df["tier_recommendation"].value_counts().reset_index()
         tier_counts.columns = ["Tier", "Count"]
@@ -111,9 +111,10 @@ if df is not None and not df.empty:
                          "Strategic": "#1a9850", "Preferred": "#91cf60",
                          "Approved": "#fee08b", "Conditional": "#fc8d59",
                          "Blocked": "#d73027"})
-        fig.update_layout(height=300)
+        fig.update_layout(height=380, margin=dict(t=40, b=20))
         st.plotly_chart(fig, use_container_width=True)
 
+    with col_right:
         # Radar chart for top supplier
         if len(df) > 0:
             top = df.iloc[0]
@@ -130,7 +131,7 @@ if df is not None and not df.empty:
                 fig.update_layout(
                     polar=dict(radialaxis=dict(range=[0, 100])),
                     title=f"Top Supplier: {top.get('supplier_name', 'N/A')}",
-                    height=350)
+                    height=380, margin=dict(t=40, b=20))
                 st.plotly_chart(fig, use_container_width=True)
 
     # ─── Score Distribution ─────────────────────────────────────

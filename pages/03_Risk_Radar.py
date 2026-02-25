@@ -60,28 +60,27 @@ try:
 
         st.markdown("---")
 
-        col1, col2 = st.columns([3, 2])
+        # ── Heatmap (full width) ──────────────────────────────────
+        st.subheader("🗺️ Risk Heatmap")
+        risk_dims = ["financial_risk", "operational_risk", "geopolitical_risk",
+                    "compliance_risk", "concentration_risk", "esg_risk", "cyber_risk"]
+        heatmap_data = df.set_index("supplier_name")[risk_dims].head(20)
+        heatmap_data.columns = [c.replace("_risk", "").title() for c in risk_dims]
 
-        with col1:
-            # Heatmap
-            st.subheader("🗺️ Risk Heatmap")
-            risk_dims = ["financial_risk", "operational_risk", "geopolitical_risk",
-                        "compliance_risk", "concentration_risk", "esg_risk", "cyber_risk"]
-            heatmap_data = df.set_index("supplier_name")[risk_dims].head(20)
-            heatmap_data.columns = [c.replace("_risk", "").title() for c in risk_dims]
+        fig = px.imshow(
+            heatmap_data.values,
+            x=heatmap_data.columns,
+            y=heatmap_data.index,
+            color_continuous_scale="RdYlGn_r",
+            aspect="auto",
+            title="Risk Heatmap (Top 20 Riskiest)")
+        fig.update_layout(height=550, margin=dict(l=180))
+        st.plotly_chart(fig, use_container_width=True)
 
-            fig = px.imshow(
-                heatmap_data.values,
-                x=heatmap_data.columns,
-                y=heatmap_data.index,
-                color_continuous_scale="RdYlGn_r",
-                aspect="auto",
-                title="Risk Heatmap (Top 20 Riskiest)")
-            fig.update_layout(height=500)
-            st.plotly_chart(fig, use_container_width=True)
+        # ── Tier Distribution + Region Risk (side by side) ────────
+        col_left, col_right = st.columns(2)
 
-        with col2:
-            # Tier pie
+        with col_left:
             st.subheader("🎯 Risk Tier Distribution")
             tier_ct = df["risk_tier"].value_counts().reset_index()
             tier_ct.columns = ["Tier", "Count"]
@@ -90,17 +89,17 @@ try:
                         color_discrete_map={
                             "Low": "#1a9850", "Medium": "#fee08b",
                             "High": "#fc8d59", "Critical": "#d73027"})
-            fig.update_layout(height=250)
+            fig.update_layout(height=350, margin=dict(t=40, b=20))
             st.plotly_chart(fig, use_container_width=True)
 
-            # Geographic risk
+        with col_right:
             st.subheader("🌍 Risk by Region")
             by_region = df.groupby("region")["composite_risk"].mean().reset_index()
             by_region = by_region.sort_values("composite_risk", ascending=False)
             fig = px.bar(by_region, x="region", y="composite_risk",
                         color="composite_risk",
                         color_continuous_scale="RdYlGn_r")
-            fig.update_layout(height=250)
+            fig.update_layout(height=350, margin=dict(t=40, b=20))
             st.plotly_chart(fig, use_container_width=True)
 
         # Detailed table
