@@ -18,10 +18,10 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h localhost"
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -ptestpassword --silent"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=5
+          --health-retries=10
 
     steps:
       - uses: actions/checkout@v4
@@ -34,16 +34,38 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt -r requirements-dev.txt
 
-      - name: Wait for MySQL
+      - name: Wait for MySQL + verify DB connectivity
         run: |
-          until mysqladmin ping -h 127.0.0.1 --silent; do
-            echo "Waiting for MySQL..."
-            sleep 2
-          done
+          python - <<'PY'
+          import time
+          import pymysql
 
-      - name: Verify DB connectivity
-        run: |
-          mysql -h 127.0.0.1 -u root -ptestpassword -e "CREATE DATABASE IF NOT EXISTS aegis_procurement;"
+          host = "127.0.0.1"
+          user = "root"
+          password = "testpassword"
+
+          last_error = None
+          for _ in range(60):
+              try:
+                  conn = pymysql.connect(
+                      host=host,
+                      port=3306,
+                      user=user,
+                      password=password,
+                      connect_timeout=3,
+                      autocommit=True,
+                  )
+                  with conn.cursor() as cur:
+                      cur.execute("CREATE DATABASE IF NOT EXISTS aegis_procurement")
+                  conn.close()
+                  print("MySQL is ready.")
+                  break
+              except Exception as exc:
+                  last_error = exc
+                  time.sleep(2)
+          else:
+              raise RuntimeError(f"MySQL not ready after retries: {last_error}")
+          PY
 
       - name: Run tests
         env:
