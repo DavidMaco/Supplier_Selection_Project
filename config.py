@@ -71,29 +71,34 @@ FX_VOLATILITIES = {
 }
 
 # ─── FX Anchor Rates (live feed with static fallback) ───────────────
+# Static rates updated 25 Feb 2026 — used only when all 3 APIs fail.
 _FX_STATIC_RATES = {
-    "EUR": 0.92, "GBP": 0.79, "CNY": 7.25, "NGN": 1580.0,
-    "JPY": 149.5, "KRW": 1435.0, "BRL": 5.85, "ZAR": 18.4, "TRY": 36.2,
+    "EUR": 0.85, "GBP": 0.74, "CNY": 6.89, "NGN": 1354.88,
+    "JPY": 155.7, "KRW": 1442.0, "BRL": 5.17, "ZAR": 15.97, "TRY": 43.86,
 }
 
 
 def _fetch_live_fx() -> dict:
-    """3-tier failover: open.er-api → exchangerate-api → frankfurter."""
+    """3-tier failover: open.er-api → exchangerate-api → frankfurter.
+    Each API returns rates under a 'rates' key.  Frankfurter may omit
+    exotic currencies; any missing ones are back-filled from static."""
     import urllib.request, json as _json, logging as _log
     _apis = [FX_API_PRIMARY, FX_API_SECONDARY, FX_API_TERTIARY]
     for url in _apis:
         try:
-            with urllib.request.urlopen(url, timeout=5) as resp:
+            with urllib.request.urlopen(url, timeout=8) as resp:
                 data = _json.loads(resp.read().decode())
             rates = data.get("rates", {})
             if rates:
                 live = {c: float(rates[c]) for c in _FX_STATIC_RATES if c in rates}
+                # back-fill any currencies the API didn't carry
                 for c, r in _FX_STATIC_RATES.items():
                     live.setdefault(c, r)
                 _log.getLogger(__name__).info("Live FX rates loaded from %s", url)
                 return live
         except Exception as exc:
             _log.getLogger(__name__).debug("FX fetch failed (%s): %s", url, exc)
+    _log.getLogger(__name__).warning("All FX APIs failed — using static fallback rates")
     return dict(_FX_STATIC_RATES)
 
 
