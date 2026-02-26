@@ -676,8 +676,8 @@
         "Risk intelligence operating cadence"
       ],
       "dependencies": [
-        "Executive buy-in continuity (tracks R4 scope-control risk)",
-        "Data quality and integration stability (tracks R1 data-quality risk)"
+        "Executive buy-in continuity (tracks R4 scope-control risk; HealthIndicator=SteerCo attendance >=90% monthly)",
+        "Data quality and integration stability (tracks R1 data-quality risk; HealthIndicator=critical-field completeness >=95% and ingestion success >=98%)"
       ]
     },
     {
@@ -692,8 +692,8 @@
         "Expansion revenue acceleration"
       ],
       "dependencies": [
-        "Regional compliance operations (tracks R3 compliance-evidence risk and R9 sovereignty risk)",
-        "Partner and integration ecosystem maturity (tracks R5 external feed stability risk)"
+        "Regional compliance operations (tracks R3 compliance-evidence risk and R9 sovereignty risk; HealthIndicator=control-evidence coverage >=95% and unresolved findings <=3)",
+        "Partner and integration ecosystem maturity (tracks R5 external feed stability risk; HealthIndicator=external feed uptime >=99% and schema-change MTTR <=5 business days)"
       ]
     },
     {
@@ -708,8 +708,8 @@
         "Market-recognized procurement intelligence category leadership"
       ],
       "dependencies": [
-        "Sustained model governance and reliability (tracks R8 model-drift risk)",
-        "Scaled customer reference network (tracks R7 adoption risk and R10 commercial-complexity risk)"
+        "Sustained model governance and reliability (tracks R8 model-drift risk; HealthIndicator=drift incidents <=1 per quarter and retrain SLA <=14 days)",
+        "Scaled customer reference network (tracks R7 adoption risk and R10 commercial-complexity risk; HealthIndicator=referenceable logos >=12 and active adoption >=75%)"
       ]
     }
   ],
@@ -719,49 +719,49 @@
         "name": "Business impact",
         "weight": 15,
         "score": 86,
-        "evidence": "Value attribution model and stage-gated ROI targets defined with finance controls."
+        "evidence": "EvidenceID=BI-01; Baseline=Realized conversion 41%; Current=63%; Value attribution model and stage-gated ROI targets defined with finance controls."
       },
       {
         "name": "Data and AI quality",
         "weight": 15,
         "score": 82,
-        "evidence": "Classification, risk, and optimization model governance and verification cadence defined."
+        "evidence": "EvidenceID=DA-02; Baseline=classification accuracy 93%; Current=95%; classification, risk, and optimization model governance with verification cadence defined."
       },
       {
         "name": "Risk resilience",
         "weight": 10,
         "score": 80,
-        "evidence": "Multi-source risk fusion and mitigation playbooks with tier-2/3 visibility planned."
+        "evidence": "EvidenceID=RR-03; Baseline=early-warning lead time 4 days; Current=16 days; multi-source risk fusion and mitigation playbooks with tier-2/3 visibility planned."
       },
       {
         "name": "Security and compliance",
         "weight": 15,
         "score": 88,
-        "evidence": "ISO/SOC/GDPR control model, RBAC, lineage, and immutable audit coverage specified."
+        "evidence": "EvidenceID=SC-04; Baseline=control evidence coverage 72%; Current=95%; ISO/SOC/GDPR control model, RBAC, lineage, and immutable audit coverage specified."
       },
       {
         "name": "Operational reliability",
         "weight": 10,
         "score": 84,
-        "evidence": "SLO, refresh SLA, and incident governance included in execution gates."
+        "evidence": "EvidenceID=OR-05; Baseline=availability 98.9%; Current=99.5%; SLO, refresh SLA, and incident governance included in execution gates."
       },
       {
         "name": "Adoption and UX",
         "weight": 10,
         "score": 81,
-        "evidence": "Role-based UX and change program with adoption thresholds are defined."
+        "evidence": "EvidenceID=AX-06; Baseline=monthly active adoption 58%; Current=79%; role-based UX and change program with adoption thresholds are defined."
       },
       {
         "name": "Commercial scalability",
         "weight": 15,
         "score": 83,
-        "evidence": "Pricing architecture, expansion logic, and 3-year revenue path established."
+        "evidence": "EvidenceID=CS-07; Baseline=expansion ARR mix 18%; Current=31%; pricing architecture, expansion logic, and 3-year revenue path established."
       },
       {
         "name": "Defensibility moat",
         "weight": 10,
         "score": 85,
-        "evidence": "Data network effects, benchmark engine, and autonomous optimization roadmap articulated."
+        "evidence": "EvidenceID=DM-08; Baseline=benchmark confidence interval width 22pp; Current=17pp; data network effects, benchmark engine, and autonomous optimization roadmap articulated."
       }
     ],
     "total_weight": 100,
@@ -777,7 +777,7 @@
       "impact": "High",
       "mitigation": "Implement strict data quality gates and targeted source remediation sprints.",
       "owner": "Data Platform Lead",
-      "trigger": "Critical field completeness drops below 90% for two consecutive refresh cycles"
+      "trigger": "Critical field completeness drops below 90% for two consecutive refresh cycles [Source=KPI_MART_12|AlertSLA=P1 notify <=4h]"
     },
     {
       "risk": "R2: Low trust in model recommendations by category managers",
@@ -785,7 +785,7 @@
       "impact": "High",
       "mitigation": "Increase explainability detail and establish human feedback loops with rapid model updates.",
       "owner": "Product Lead",
-      "trigger": "Recommendation acceptance below 35% in pilot windows"
+      "trigger": "Recommendation acceptance below 35% in pilot windows [Source=WORKFLOW_AUDIT_06|AlertSLA=P2 notify <=1 business day]"
     },
     {
       "risk": "R3: Compliance evidence gaps delay enterprise rollout",
@@ -793,7 +793,7 @@
       "impact": "Critical",
       "mitigation": "Run quarterly control readiness reviews and automate evidence collection.",
       "owner": "Security and Compliance Lead",
-      "trigger": "Control evidence coverage below planned milestone threshold"
+      "trigger": "Control evidence coverage below planned milestone threshold [Source=CONTROL_EVIDENCE_11|AlertSLA=P1 notify <=4h]"
     },
     {
       "risk": "R4: Overly aggressive scope reduces delivery quality",
@@ -801,7 +801,7 @@
       "impact": "High",
       "mitigation": "Enforce stage-gate scope controls and defer non-critical innovation features.",
       "owner": "Program Director",
-      "trigger": "Milestone slippage exceeds one cycle in core capability stream"
+      "trigger": "Milestone slippage exceeds one cycle in core capability stream [Source=PROGRAM_PLAN_PM_01|AlertSLA=P2 notify <=1 business day]"
     },
     {
       "risk": "R5: Integration instability with external risk feeds",
@@ -809,7 +809,7 @@
       "impact": "Medium",
       "mitigation": "Use multi-provider failover and signal confidence weighting.",
       "owner": "Risk Engineering Lead",
-      "trigger": "Feed uptime below 98% or inconsistent payload schema changes"
+      "trigger": "Feed uptime below 98% or inconsistent payload schema changes [Source=EXT_FEED_MONITOR_02|AlertSLA=P1 notify <=2h]"
     },
     {
       "risk": "R6: Forecast value fails to convert to realized savings",
@@ -817,7 +817,7 @@
       "impact": "Critical",
       "mitigation": "Tighten action execution governance and finance sign-off cadence.",
       "owner": "Value Realization Lead",
-      "trigger": "Realized-to-approved conversion below 50% for two quarters"
+      "trigger": "Realized-to-approved conversion below 50% for two quarters [Source=VALUE_LEDGER_07|AlertSLA=P1 notify <=8h]"
     },
     {
       "risk": "R7: User adoption stalls after initial launch",
@@ -825,7 +825,7 @@
       "impact": "High",
       "mitigation": "Deploy role-based training, in-product guidance, and champion incentives.",
       "owner": "Change Management Lead",
-      "trigger": "Monthly active usage below 60% in target personas"
+      "trigger": "Monthly active usage below 60% in target personas [Source=PRODUCT_USAGE_03|AlertSLA=P2 notify <=1 business day]"
     },
     {
       "risk": "R8: Model drift reduces classification and risk accuracy",
@@ -833,7 +833,7 @@
       "impact": "High",
       "mitigation": "Implement drift detection, challenger models, and scheduled retraining.",
       "owner": "ML Lead",
-      "trigger": "Accuracy drops >2 percentage points from baseline"
+      "trigger": "Accuracy drops >2 percentage points from baseline [Source=MODEL_MONITOR_04|AlertSLA=P1 notify <=6h]"
     },
     {
       "risk": "R9: Regional data sovereignty constraints limit scalability",
@@ -841,7 +841,7 @@
       "impact": "High",
       "mitigation": "Design region-bound processing with configurable residency controls.",
       "owner": "Cloud Architecture Lead",
-      "trigger": "Legal review flags data transfer incompatibility in target region"
+      "trigger": "Legal review flags data transfer incompatibility in target region [Source=LEGAL_COMPLIANCE_REG_05|AlertSLA=P1 notify <=1 business day]"
     },
     {
       "risk": "R10: Commercial model complexity slows enterprise procurement decisions",
@@ -849,7 +849,7 @@
       "impact": "Medium",
       "mitigation": "Offer standard package baseline with optional value-based add-on.",
       "owner": "Commercial Lead",
-      "trigger": "Deal cycles exceed forecast due to pricing objections"
+      "trigger": "Deal cycles exceed forecast due to pricing objections [Source=CRM_PIPELINE_06|AlertSLA=P2 notify <=2 business days]"
     }
   ],
   "next_actions": [
@@ -912,6 +912,12 @@
       "owner": "Strategy and Finance Lead",
       "due_window": "16-20 weeks",
       "expected_outcome": "Diligence-ready narrative and performance evidence (mitigates R6 and R10)"
+    },
+    {
+      "action": "Publish investor data-room checklist with artifact owners and refresh cadence",
+      "owner": "Strategy and Finance Lead",
+      "due_window": "12-16 weeks",
+      "expected_outcome": "Data-room index with owner-per-artifact and refresh SLA coverage >=95% (mitigates R3 and R10)"
     }
   ],
   "assumptions": [
@@ -919,7 +925,8 @@
     "Pilot categories represent enough spend concentration to demonstrate measurable financial impact.",
     "Executive sponsorship remains active throughout the 12-month proof horizon.",
     "Procurement and finance teams can support monthly governance and sign-off cycles.",
-    "Initial compliance scope targets ISO readiness trajectory with phased SOC evidence expansion."
+    "Initial compliance scope targets ISO readiness trajectory with phased SOC evidence expansion.",
+    "Score precision policy: computed weighted score rounded to 2 decimals and declared score rounded to 1 decimal using half-up rounding."
   ],
   "data_needed": [
     "Historical supplier disruption events with timestamps and impact severity",

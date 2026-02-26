@@ -1,0 +1,25 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "No blocking fixes: v4 closes prior v3 recommendations on score precision policy, evidence IDs/baselines, risk trigger source+SLA tagging, roadmap dependency health indicators, and investor data-room actioning.",
+    "Harden evaluator reproducibility by externalizing rounding policy to validator config (single source of truth) instead of narrative fields.",
+    "Normalize competitor proof format into a strict template (baseline, current, delta, sample size, period) for fully uniform diligence review.",
+    "Add explicit risk ID references inside each next_actions item to complete bidirectional traceability with risk_register.",
+    "Convert compliance control strings into a structured control artifact table outside schema (control_id, owner, cadence, evidence_uri, pass_threshold) for audit operations."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}
