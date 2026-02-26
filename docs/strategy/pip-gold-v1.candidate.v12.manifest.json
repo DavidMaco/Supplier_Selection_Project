@@ -1,0 +1,30 @@
+{
+  "generated_at_utc": "2026-02-26T19:18:54.295289+00:00",
+  "artifacts": {
+    "candidate_path": "docs\\strategy\\pip-gold-v1.candidate.json",
+    "candidate_sha256": "49c4fb902a5d197f1cd8c65f0147a8f5b133fe24a964f4091df1ea37d29e2b3d",
+    "schema_path": "docs\\strategy\\pip-gold-v1.schema.json",
+    "schema_sha256": "eb9b85061c32785d7fba5f72f672cc4b92e8bbaf3a1bf0807fecbaa528b75bb7",
+    "config_path": "docs\\strategy\\validator-config.json",
+    "config_sha256": "7cd89ff4842657a810407274ebe4d5b555fc611533a584b6324f1ce571a7f47b",
+    "validation_path": "docs\\strategy\\pip-gold-v1.candidate.v12.validation.json",
+    "validation_sha256": "c3b7bb72314f971dcd618c6627aae529fa5c017e94d89349aef2deba15273dce"
+  },
+  "validator": {
+    "version": "1.4.0",
+    "config_path_reported": "docs\\strategy\\validator-config.json",
+    "rounding_policy": {
+      "computed_decimals": 2,
+      "declared_decimals": 1,
+      "score_tolerance": 0.5
+    }
+  },
+  "result_summary": {
+    "schema_valid": true,
+    "score_math_valid": true,
+    "computed_weighted_score": 83.85,
+    "declared_score": 83.9,
+    "declared_status": "Investable",
+    "expected_status": "Investable"
+  }
+}

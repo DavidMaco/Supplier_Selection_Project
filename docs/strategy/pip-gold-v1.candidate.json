@@ -220,42 +220,42 @@
         "capability": "Procurement suite workflows",
         "incumbent_strength": "Large installed base and process coverage",
         "our_advantage": "Prescriptive cross-domain optimization with CFO-grade realized value attribution",
-        "proof": "Template|Period=12 months|Sample=n=124 sourcing events across 3 matched categories|MetricA=Realized savings conversion|Baseline=41%|Current=63%|Delta=+22pp|MetricB=Executive decision cycle time|Baseline=19 days|Current=11 days|Delta=-8 days|SourceTag=CustomerAttestation:CAT-ARIBA-2026Q1"
+        "proof": "Template|Period=12 months|Sample=n=124 sourcing events across 3 matched categories|MetricA=Realized savings conversion|Baseline=41%|Current=63%|Delta=+22pp|MetricB=Executive decision cycle time|Baseline=19 days|Current=11 days|Delta=-8 days|SourceTag=CustomerAttestation:CAT-ARIBA-2026Q1|DataAsOf=2026-01-31"
       },
       {
         "competitor": "Coupa",
         "capability": "Spend visibility and community intelligence",
         "incumbent_strength": "Strong spend analytics and adoption",
         "our_advantage": "Integrated disruption resilience + carbon-adjusted scenario optimization",
-        "proof": "Template|Period=12 months|Sample=n=286 suppliers across 5 critical categories|MetricA=Concentration risk index|Baseline=3110|Current=2270|Delta=-27%|MetricB=Risk-adjusted cost exposure|Baseline=$14.2M|Current=$11.6M|Delta=-18%|SourceTag=InternalAudit:AUD-RISK-2026Q1"
+        "proof": "Template|Period=12 months|Sample=n=286 suppliers across 5 critical categories|MetricA=Concentration risk index|Baseline=3110|Current=2270|Delta=-27%|MetricB=Risk-adjusted cost exposure|Baseline=$14.2M|Current=$11.6M|Delta=-18%|SourceTag=InternalAudit:AUD-RISK-2026Q1|DataAsOf=2026-01-31"
       },
       {
         "competitor": "GEP",
         "capability": "Unified source-to-pay platform",
         "incumbent_strength": "Broad procurement process integration",
         "our_advantage": "Graph-native supplier dependency modeling with tier-2/3 visibility",
-        "proof": "Template|Period=Backtest window 24 months|Sample=n=12 disruption incidents|MetricA=Median early-warning lead time|Baseline=4 days|Current=16 days|Delta=+12 days|MetricB=Disruption recall|Baseline=Not available|Current=78%|Delta=Not comparable|SourceTag=ThirdPartyBenchmark:SUPPLY-RISK-LAB-2026"
+        "proof": "Template|Period=Backtest window 24 months|Sample=n=12 disruption incidents|MetricA=Median early-warning lead time|Baseline=4 days|Current=16 days|Delta=+12 days|MetricB=Disruption recall|Baseline=Not available|Current=78%|Delta=Not comparable|SourceTag=ThirdPartyBenchmark:SUPPLY-RISK-LAB-2026|DataAsOf=2026-01-31"
       },
       {
         "competitor": "Jaggaer",
         "capability": "Category and sourcing management",
         "incumbent_strength": "Category depth and sourcing capabilities",
         "our_advantage": "Game-theory-informed negotiation recommendations tied to realized EBITDA outcomes",
-        "proof": "Template|Period=12 months|Sample=n=47 negotiations across 2 direct-material categories|MetricA=Negotiation close cycle|Baseline=100 index|Current=79 index|Delta=-21%|MetricB=Realized gross margin uplift|Baseline=0.0pp|Current=1.8pp|Delta=+1.8pp|SourceTag=FinanceSignoff:NEG-EBITDA-2026Q1"
+        "proof": "Template|Period=12 months|Sample=n=47 negotiations across 2 direct-material categories|MetricA=Negotiation close cycle|Baseline=100 index|Current=79 index|Delta=-21%|MetricB=Realized gross margin uplift|Baseline=0.0pp|Current=1.8pp|Delta=+1.8pp|SourceTag=FinanceSignoff:NEG-EBITDA-2026Q1|DataAsOf=2026-01-31"
       },
       {
         "competitor": "Ivalua",
         "capability": "Flexible procurement workflows",
         "incumbent_strength": "Configurable enterprise workflows",
         "our_advantage": "Decision copilot with grounded board-ready narratives and scenario causality",
-        "proof": "Template|Period=9 months|Sample=n=63 board packs|MetricA=Executive review preparation time|Baseline=100 index|Current=56 index|Delta=-44%|MetricB=Copilot-assisted monthly active adoption|Baseline=52%|Current=79%|Delta=+27pp|SourceTag=PMOReport:COPILOT-ADOPT-2026Q1"
+        "proof": "Template|Period=9 months|Sample=n=63 board packs|MetricA=Executive review preparation time|Baseline=100 index|Current=56 index|Delta=-44%|MetricB=Copilot-assisted monthly active adoption|Baseline=52%|Current=79%|Delta=+27pp|SourceTag=PMOReport:COPILOT-ADOPT-2026Q1|DataAsOf=2026-01-31"
       },
       {
         "competitor": "Oracle Procurement Cloud",
         "capability": "ERP-integrated procurement",
         "incumbent_strength": "Native ERP connectivity",
         "our_advantage": "Cross-ERP harmonization with independent optimization layer and benchmark network",
-        "proof": "Template|Period=12 months|Sample=n=9 business units across 3 ERP estates (SAP/Oracle/Dynamics)|MetricA=Insight quality variance|Baseline=11%|Current=6%|Delta=-5pp|MetricB=Realized value conversion|Baseline=49%|Current=58%|Delta=+9pp|SourceTag=DataQualityAudit:ERP-HARMON-2026Q1"
+        "proof": "Template|Period=12 months|Sample=n=9 business units across 3 ERP estates (SAP/Oracle/Dynamics)|MetricA=Insight quality variance|Baseline=11%|Current=6%|Delta=-5pp|MetricB=Realized value conversion|Baseline=49%|Current=58%|Delta=+9pp|SourceTag=DataQualityAudit:ERP-HARMON-2026Q1|DataAsOf=2026-01-31"
       }
     ]
   },
@@ -719,49 +719,49 @@
         "name": "Business impact",
         "weight": 15,
         "score": 86,
-        "evidence": "EvidenceID=BI-01; Baseline=Realized conversion 41%; Current=63%; Value attribution model and stage-gated ROI targets defined with finance controls."
+        "evidence": "EvidenceID=BI-01; DataAsOf=2026-01-31; Baseline=Realized conversion 41%; Current=63%; Value attribution model and stage-gated ROI targets defined with finance controls."
       },
       {
         "name": "Data and AI quality",
         "weight": 15,
         "score": 82,
-        "evidence": "EvidenceID=DA-02; Baseline=classification accuracy 93%; Current=95%; classification, risk, and optimization model governance with verification cadence defined."
+        "evidence": "EvidenceID=DA-02; DataAsOf=2026-01-31; Baseline=classification accuracy 93%; Current=95%; classification, risk, and optimization model governance with verification cadence defined."
       },
       {
         "name": "Risk resilience",
         "weight": 10,
         "score": 80,
-        "evidence": "EvidenceID=RR-03; Baseline=early-warning lead time 4 days; Current=16 days; multi-source risk fusion and mitigation playbooks with tier-2/3 visibility planned."
+        "evidence": "EvidenceID=RR-03; DataAsOf=2026-01-31; Baseline=early-warning lead time 4 days; Current=16 days; multi-source risk fusion and mitigation playbooks with tier-2/3 visibility planned."
       },
       {
         "name": "Security and compliance",
         "weight": 15,
         "score": 88,
-        "evidence": "EvidenceID=SC-04; Baseline=control evidence coverage 72%; Current=95%; ISO/SOC/GDPR control model, RBAC, lineage, and immutable audit coverage specified."
+        "evidence": "EvidenceID=SC-04; DataAsOf=2026-01-31; Baseline=control evidence coverage 72%; Current=95%; ISO/SOC/GDPR control model, RBAC, lineage, and immutable audit coverage specified."
       },
       {
         "name": "Operational reliability",
         "weight": 10,
         "score": 84,
-        "evidence": "EvidenceID=OR-05; Baseline=availability 98.9%; Current=99.5%; SLO, refresh SLA, and incident governance included in execution gates."
+        "evidence": "EvidenceID=OR-05; DataAsOf=2026-01-31; Baseline=availability 98.9%; Current=99.5%; SLO, refresh SLA, and incident governance included in execution gates."
       },
       {
         "name": "Adoption and UX",
         "weight": 10,
         "score": 81,
-        "evidence": "EvidenceID=AX-06; Baseline=monthly active adoption 58%; Current=79%; role-based UX and change program with adoption thresholds are defined."
+        "evidence": "EvidenceID=AX-06; DataAsOf=2026-01-31; Baseline=monthly active adoption 58%; Current=79%; role-based UX and change program with adoption thresholds are defined."
       },
       {
         "name": "Commercial scalability",
         "weight": 15,
         "score": 83,
-        "evidence": "EvidenceID=CS-07; Baseline=expansion ARR mix 18%; Current=31%; pricing architecture, expansion logic, and 3-year revenue path established."
+        "evidence": "EvidenceID=CS-07; DataAsOf=2026-01-31; Baseline=expansion ARR mix 18%; Current=31%; pricing architecture, expansion logic, and 3-year revenue path established."
       },
       {
         "name": "Defensibility moat",
         "weight": 10,
         "score": 85,
-        "evidence": "EvidenceID=DM-08; Baseline=benchmark confidence interval width 22pp; Current=17pp; data network effects, benchmark engine, and autonomous optimization roadmap articulated."
+        "evidence": "EvidenceID=DM-08; DataAsOf=2026-01-31; Baseline=benchmark confidence interval width 22pp; Current=17pp; data network effects, benchmark engine, and autonomous optimization roadmap articulated."
       }
     ],
     "total_weight": 100,

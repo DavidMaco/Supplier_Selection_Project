@@ -1,9 +1,10 @@
 import argparse
 import json
 import re
+from datetime import date
 from pathlib import Path
 
-VALIDATOR_VERSION = "1.3.0"
+VALIDATOR_VERSION = "1.4.0"
 
 
 def _load_json(path: Path):
@@ -95,24 +96,73 @@ def validate_traceability(payload: dict, config: dict) -> dict:
     trace_cfg = config.get("traceability", {})
     source_tag_pattern = re.compile(trace_cfg.get("source_tag_pattern", r"SourceTag=[A-Za-z]+:[A-Za-z0-9\-]+"))
     evidence_id_pattern = re.compile(trace_cfg.get("evidence_id_pattern", r"EvidenceID=[A-Z]{2}-\d{2}"))
+    data_as_of_pattern = re.compile(trace_cfg.get("data_as_of_pattern", r"DataAsOf=\d{4}-\d{2}-\d{2}"))
 
     strict_source_tags = bool(trace_cfg.get("strict_source_tags", False))
     strict_evidence_ids = bool(trace_cfg.get("strict_evidence_ids", False))
     strict_risk_linkage = bool(trace_cfg.get("strict_risk_linkage", False))
+    strict_freshness = bool(trace_cfg.get("strict_freshness", False))
+    max_age_days = int(trace_cfg.get("max_age_days", 365))
 
     source_tag_violations = []
     evidence_id_violations = []
     risk_linkage_violations = []
+    freshness_violations = []
+
+    context_date_raw = str(payload.get("meta", {}).get("date_context", ""))
+    try:
+        context_date = date.fromisoformat(context_date_raw)
+    except ValueError:
+        context_date = None
+        freshness_violations.append("meta.date_context is missing/invalid for freshness checks")
 
     for idx, row in enumerate(payload.get("differentiation_strategy", {}).get("competitor_matrix", []), start=1):
         proof = str(row.get("proof", ""))
         if not source_tag_pattern.search(proof):
             source_tag_violations.append(f"competitor_matrix[{idx}].proof missing/invalid SourceTag")
+        data_as_of_match = data_as_of_pattern.search(proof)
+        if not data_as_of_match:
+            freshness_violations.append(f"competitor_matrix[{idx}].proof missing DataAsOf")
+        elif context_date is not None:
+            data_as_of_raw = data_as_of_match.group(0).split("=", 1)[1]
+            try:
+                data_as_of_date = date.fromisoformat(data_as_of_raw)
+                age_days = (context_date - data_as_of_date).days
+                if age_days < 0:
+                    freshness_violations.append(
+                        f"competitor_matrix[{idx}].proof DataAsOf is in the future"
+                    )
+                elif age_days > max_age_days:
+                    freshness_violations.append(
+                        f"competitor_matrix[{idx}].proof DataAsOf exceeds max age ({age_days}>{max_age_days} days)"
+                    )
+            except ValueError:
+                freshness_violations.append(f"competitor_matrix[{idx}].proof has invalid DataAsOf date")
 
     for idx, row in enumerate(payload.get("readiness_scorecard", {}).get("dimensions", []), start=1):
         evidence = str(row.get("evidence", ""))
         if not evidence_id_pattern.search(evidence):
             evidence_id_violations.append(f"readiness_scorecard.dimensions[{idx}].evidence missing/invalid EvidenceID")
+        data_as_of_match = data_as_of_pattern.search(evidence)
+        if not data_as_of_match:
+            freshness_violations.append(f"readiness_scorecard.dimensions[{idx}].evidence missing DataAsOf")
+        elif context_date is not None:
+            data_as_of_raw = data_as_of_match.group(0).split("=", 1)[1]
+            try:
+                data_as_of_date = date.fromisoformat(data_as_of_raw)
+                age_days = (context_date - data_as_of_date).days
+                if age_days < 0:
+                    freshness_violations.append(
+                        f"readiness_scorecard.dimensions[{idx}].evidence DataAsOf is in the future"
+                    )
+                elif age_days > max_age_days:
+                    freshness_violations.append(
+                        f"readiness_scorecard.dimensions[{idx}].evidence DataAsOf exceeds max age ({age_days}>{max_age_days} days)"
+                    )
+            except ValueError:
+                freshness_violations.append(
+                    f"readiness_scorecard.dimensions[{idx}].evidence has invalid DataAsOf date"
+                )
 
     valid_risk_ids = _extract_risk_ids(payload)
     riskids_pattern = re.compile(r"\[RiskIDs=([A-Z0-9,]+)\]")
@@ -132,6 +182,7 @@ def validate_traceability(payload: dict, config: dict) -> dict:
     source_tag_ok = len(source_tag_violations) == 0
     evidence_id_ok = len(evidence_id_violations) == 0
     risk_linkage_ok = len(risk_linkage_violations) == 0
+    freshness_ok = len(freshness_violations) == 0
 
     traceability_ok = True
     if strict_source_tags and not source_tag_ok:
@@ -140,15 +191,19 @@ def validate_traceability(payload: dict, config: dict) -> dict:
         traceability_ok = False
     if strict_risk_linkage and not risk_linkage_ok:
         traceability_ok = False
+    if strict_freshness and not freshness_ok:
+        traceability_ok = False
 
     return {
         "traceability_ok": traceability_ok,
         "source_tag_ok": source_tag_ok,
         "evidence_id_ok": evidence_id_ok,
         "risk_linkage_ok": risk_linkage_ok,
+        "freshness_ok": freshness_ok,
         "source_tag_violations": source_tag_violations,
         "evidence_id_violations": evidence_id_violations,
         "risk_linkage_violations": risk_linkage_violations,
+        "freshness_violations": freshness_violations,
     }
 
 

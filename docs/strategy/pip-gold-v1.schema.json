@@ -153,7 +153,10 @@
               "our_advantage": { "type": "string" },
               "proof": {
                 "type": "string",
-                "pattern": "SourceTag=[A-Za-z]+:[A-Za-z0-9\\-]+"
+                "allOf": [
+                  { "pattern": "SourceTag=[A-Za-z]+:[A-Za-z0-9\\-]+" },
+                  { "pattern": "DataAsOf=\\d{4}-\\d{2}-\\d{2}" }
+                ]
               }
             }
           }
@@ -298,7 +301,10 @@
               "score": { "type": "number", "minimum": 0, "maximum": 100 },
               "evidence": {
                 "type": "string",
-                "pattern": "EvidenceID=[A-Z]{2}-\\d{2}"
+                "allOf": [
+                  { "pattern": "EvidenceID=[A-Z]{2}-\\d{2}" },
+                  { "pattern": "DataAsOf=\\d{4}-\\d{2}-\\d{2}" }
+                ]
               }
             }
           }

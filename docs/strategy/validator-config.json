@@ -8,8 +8,11 @@
     "strict_source_tags": true,
     "strict_evidence_ids": true,
     "strict_risk_linkage": true,
+    "strict_freshness": true,
+    "max_age_days": 365,
     "source_tag_pattern": "SourceTag=[A-Za-z]+:[A-Za-z0-9\\-]+",
-    "evidence_id_pattern": "EvidenceID=[A-Z]{2}-\\d{2}"
+    "evidence_id_pattern": "EvidenceID=[A-Z]{2}-\\d{2}",
+    "data_as_of_pattern": "DataAsOf=\\d{4}-\\d{2}-\\d{2}"
   },
   "status_mapping": {
     "investable_rule": "score >= investable_threshold",

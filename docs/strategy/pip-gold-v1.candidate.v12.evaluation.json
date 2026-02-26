@@ -1,0 +1,30 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "traceability_valid": true,
+  "freshness_valid": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true,
+    "validator_traceability_enforced": true,
+    "schema_traceability_enforced": true,
+    "freshness_guardrails_enforced": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Add explicit timezone and source publication timestamps for non-daily evidence feeds.",
+    "Introduce source-specific max-age policies (for example benchmark vs internal finance evidence).",
+    "Add stale-evidence warning tiers before hard-fail thresholds for phased rollout.",
+    "Emit per-evidence age diagnostics in manifest for audit trend analysis.",
+    "Automate monthly refresh checks with scheduled CI runs and alerting."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}
