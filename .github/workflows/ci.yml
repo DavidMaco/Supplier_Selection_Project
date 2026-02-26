@@ -5,6 +5,8 @@ on:
     branches: [main, develop]
   pull_request:
     branches: [main]
+  schedule:
+    - cron: "0 6 1 * *"
 
 jobs:
   strategy-validation:
@@ -51,6 +53,42 @@ jobs:
 
       - name: Run strategy policy unit tests
         run: python -m pytest tests/test_strategy_validator.py -v --tb=short
+
+  strategy-governance-scheduled:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install strategy validator dependency
+        run: pip install jsonschema
+
+      - name: Run strategy validator for governance check
+        run: |
+          python docs/strategy/validate_pip_output.py \
+            --input docs/strategy/pip-gold-v1.candidate.json \
+            --schema docs/strategy/pip-gold-v1.schema.json \
+            --config docs/strategy/validator-config.json > docs/strategy/ci-scheduled-validation.json
+
+      - name: Enforce monthly governance thresholds
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path("docs/strategy/ci-scheduled-validation.json").read_text(encoding="utf-8"))
+          if not report.get("all_checks_valid", False):
+              raise SystemExit("Scheduled governance failed: all_checks_valid=false")
+          warning_count = len(report.get("freshness_warnings", []))
+          if warning_count > 0:
+              raise SystemExit(f"Scheduled governance failed: freshness_warnings={warning_count}")
+          print("Scheduled governance passed: all_checks_valid=true, freshness_warnings=0")
+          PY
 
   test:
     runs-on: ubuntu-latest
