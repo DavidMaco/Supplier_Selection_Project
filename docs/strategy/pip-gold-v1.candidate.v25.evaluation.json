@@ -1,0 +1,37 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "traceability_valid": true,
+  "freshness_valid": true,
+  "policy_drift_valid": true,
+  "validator_contract_valid": true,
+  "strategy_tests_passed": true,
+  "fast_governance_gate_valid": true,
+  "path_aware_fast_gate_enabled": true,
+  "workflow_summary_parity_enabled": true,
+  "summary_logic_reused": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true,
+    "shared_summary_script_present": true,
+    "ci_yaml_summary_duplication_reduced": true,
+    "summary_encoding_fallback_supported": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Add unit tests for publish_ci_summary.py formatting and encoding fallback behavior.",
+    "Consider exporting summary fields as JSON artifact in addition to markdown step summary.",
+    "Add strategy-governance-fast summary fields for drift_ok and policy violation counts.",
+    "Pin paths-filter action version SHA for stronger supply-chain controls.",
+    "Extend summary script to support custom field inclusion from config for future governance KPIs."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}

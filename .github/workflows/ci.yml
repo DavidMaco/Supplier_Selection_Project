@@ -72,48 +72,19 @@ jobs:
       - name: Publish fast governance summary
         if: steps.changes.outputs.strategy == 'true'
         run: |
-          python - <<'PY'
-          import json
-          import os
-          from pathlib import Path
-
-          report = json.loads(Path("docs/strategy/ci-fast-validation.json").read_text(encoding="utf-8"))
-          freshness_warning_count = len(report.get("freshness_warnings", []))
-          freshness_violation_count = len(report.get("freshness_violations", []))
-          drift_ok = "true"
-
-          summary = [
-              "## Strategy Governance Fast Summary",
-              "",
-              "- Triggered: `true`",
-              f"- all_checks_valid: `{str(report.get('all_checks_valid', False)).lower()}`",
-              f"- schema_valid: `{str(report.get('schema_valid', False)).lower()}`",
-              f"- score_math_valid: `{str(report.get('score_math_valid', False)).lower()}`",
-              f"- traceability_ok: `{str(report.get('traceability_ok', False)).lower()}`",
-              f"- freshness_ok: `{str(report.get('freshness_ok', False)).lower()}`",
-              f"- freshness_warnings: `{freshness_warning_count}`",
-              f"- freshness_violations: `{freshness_violation_count}`",
-              f"- validator_version: `{report.get('validator_version', 'unknown')}`",
-          ]
-
-          summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
-          if summary_path:
-              with open(summary_path, "a", encoding="utf-8") as f:
-                  f.write("\n".join(summary) + "\n")
-          else:
-              print("\n".join(summary))
-          PY
+          python docs/strategy/publish_ci_summary.py \
+            --title "Strategy Governance Fast Summary" \
+            --triggered true \
+            --report docs/strategy/ci-fast-validation.json
 
       - name: No strategy changes
         if: steps.changes.outputs.strategy != 'true'
         run: |
           echo "No strategy governance file changes detected; skipping fast governance checks."
-          {
-            echo "## Strategy Governance Fast Summary"
-            echo
-            echo "- Triggered: \`false\`"
-            echo "- Reason: no matching strategy governance paths changed"
-          } >> "$GITHUB_STEP_SUMMARY"
+          python docs/strategy/publish_ci_summary.py \
+            --title "Strategy Governance Fast Summary" \
+            --triggered false \
+            --reason "no matching strategy governance paths changed"
 
   strategy-validation:
     runs-on: ubuntu-latest
@@ -166,34 +137,12 @@ jobs:
           print("Strategy validation passed: all_checks_valid=true")
           PY
 
-          - name: Publish strategy validation summary
-          run: |
-            python - <<'PY'
-            import json
-            import os
-            from pathlib import Path
-
-            report = json.loads(Path("docs/strategy/ci-validation.json").read_text(encoding="utf-8"))
-            summary = [
-              "## Strategy Validation Summary",
-              "",
-              f"- all_checks_valid: `{str(report.get('all_checks_valid', False)).lower()}`",
-              f"- schema_valid: `{str(report.get('schema_valid', False)).lower()}`",
-              f"- score_math_valid: `{str(report.get('score_math_valid', False)).lower()}`",
-              f"- traceability_ok: `{str(report.get('traceability_ok', False)).lower()}`",
-              f"- freshness_ok: `{str(report.get('freshness_ok', False)).lower()}`",
-              f"- freshness_warnings: `{len(report.get('freshness_warnings', []))}`",
-              f"- freshness_violations: `{len(report.get('freshness_violations', []))}`",
-              f"- validator_version: `{report.get('validator_version', 'unknown')}`",
-            ]
-
-            summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
-            if summary_path:
-              with open(summary_path, "a", encoding="utf-8") as f:
-                f.write("\n".join(summary) + "\n")
-            else:
-              print("\n".join(summary))
-            PY
+      - name: Publish strategy validation summary
+        run: |
+          python docs/strategy/publish_ci_summary.py \
+            --title "Strategy Validation Summary" \
+            --triggered true \
+            --report docs/strategy/ci-validation.json
 
   strategy-policy-tests:
     runs-on: ubuntu-latest
@@ -263,34 +212,12 @@ jobs:
           print("Scheduled governance passed: all_checks_valid=true, freshness_warnings=0")
           PY
 
-          - name: Publish scheduled governance summary
-          run: |
-            python - <<'PY'
-            import json
-            import os
-            from pathlib import Path
-
-            report = json.loads(Path("docs/strategy/ci-scheduled-validation.json").read_text(encoding="utf-8"))
-            summary = [
-              "## Strategy Scheduled Governance Summary",
-              "",
-              f"- all_checks_valid: `{str(report.get('all_checks_valid', False)).lower()}`",
-              f"- schema_valid: `{str(report.get('schema_valid', False)).lower()}`",
-              f"- score_math_valid: `{str(report.get('score_math_valid', False)).lower()}`",
-              f"- traceability_ok: `{str(report.get('traceability_ok', False)).lower()}`",
-              f"- freshness_ok: `{str(report.get('freshness_ok', False)).lower()}`",
-              f"- freshness_warnings: `{len(report.get('freshness_warnings', []))}`",
-              f"- freshness_violations: `{len(report.get('freshness_violations', []))}`",
-              f"- validator_version: `{report.get('validator_version', 'unknown')}`",
-            ]
-
-            summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
-            if summary_path:
-              with open(summary_path, "a", encoding="utf-8") as f:
-                f.write("\n".join(summary) + "\n")
-            else:
-              print("\n".join(summary))
-            PY
+      - name: Publish scheduled governance summary
+        run: |
+          python docs/strategy/publish_ci_summary.py \
+            --title "Strategy Scheduled Governance Summary" \
+            --triggered true \
+            --report docs/strategy/ci-scheduled-validation.json
 
   test:
     runs-on: ubuntu-latest

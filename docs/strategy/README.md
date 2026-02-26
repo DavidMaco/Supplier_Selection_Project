@@ -13,6 +13,7 @@ This folder contains an end-to-end prompt engineering and evaluation toolkit for
 - `check_traceability_policy_drift.py` — detects drift between candidate tag usage and configured traceability policy maps/enums.
 - `validator-output.contract.schema.json` — contract schema for validator JSON output.
 - `VALIDATOR_OUTPUT_CHANGELOG.md` — versioned notes for validator output field evolution.
+- `publish_ci_summary.py` — reusable workflow-summary writer for strategy CI jobs.
 
 ## Quick Start
 1. Generate a candidate JSON using `PIP_GOLD_PROMPT_V1.md`.
@@ -64,6 +65,7 @@ python docs/strategy/generate_evaluation_manifest.py --candidate docs/strategy/c
 - A monthly `strategy-governance-scheduled` job runs on cron (`0 6 1 * *`) and fails if any `freshness_warnings` are present.
 - Strategy and scheduled jobs now enforce traceability policy drift checks and validator output contract validation.
 - Fast, validation, and scheduled strategy jobs all publish comparable workflow summaries for reporting parity.
+- Summary publishing is centralized via `publish_ci_summary.py` to keep formatting consistent across jobs.
 
 ## Tests
 - Validator policy tests are in `tests/test_strategy_validator.py` and cover fallback behavior plus strict freshness failure modes.
