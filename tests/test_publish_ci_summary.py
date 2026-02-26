@@ -27,6 +27,10 @@ def _write_json(path: Path, payload: dict, encoding: str) -> None:
     path.write_text(json.dumps(payload), encoding=encoding)
 
 
+def _write_text(path: Path, content: str, encoding: str) -> None:
+    path.write_text(content, encoding=encoding)
+
+
 def test_build_summary_includes_reason_when_report_missing():
     lines = publish_ci_summary._build_summary(
         title="Strategy Governance Fast Summary",
@@ -104,5 +108,49 @@ def test_script_writes_to_github_step_summary_file():
         assert "## Strategy Validation Summary" in summary_text
         assert "all_checks_valid: `true`" in summary_text
         assert "validator_version: `1.7.0`" in summary_text
+    finally:
+        shutil.rmtree(work_dir, ignore_errors=True)
+
+
+def test_read_json_with_fallback_raises_on_invalid_json():
+    work_dir = _make_workspace_temp_dir()
+    invalid_path = work_dir / "invalid.json"
+
+    try:
+        _write_text(invalid_path, "not valid json", "utf-8")
+        try:
+            publish_ci_summary._read_json_with_fallback(invalid_path)
+            assert False, "Expected ValueError for invalid JSON"
+        except ValueError as exc:
+            assert "Unable to parse JSON report" in str(exc)
+    finally:
+        shutil.rmtree(work_dir, ignore_errors=True)
+
+
+def test_script_exits_nonzero_on_invalid_report_json():
+    work_dir = _make_workspace_temp_dir()
+    invalid_path = work_dir / "invalid.json"
+
+    try:
+        _write_text(invalid_path, "{invalid_json", "utf-8")
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT_PATH),
+                "--title",
+                "Strategy Validation Summary",
+                "--triggered",
+                "true",
+                "--report",
+                str(invalid_path),
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        assert result.returncode != 0
+        assert "Unable to parse JSON report" in result.stderr
     finally:
         shutil.rmtree(work_dir, ignore_errors=True)

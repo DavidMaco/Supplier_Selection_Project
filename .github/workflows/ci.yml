@@ -157,6 +157,36 @@ jobs:
       - name: Run strategy policy unit tests
         run: python -m pytest tests/test_strategy_validator.py -v --tb=short
 
+  strategy-summary-tests:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect summary-script changes
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            summary:
+              - 'docs/strategy/publish_ci_summary.py'
+              - 'tests/test_publish_ci_summary.py'
+              - '.github/workflows/ci.yml'
+
+      - name: Set up Python
+        if: steps.changes.outputs.summary == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run summary script tests
+        if: steps.changes.outputs.summary == 'true'
+        run: python -m pytest tests/test_publish_ci_summary.py -v --tb=short
+
+      - name: No summary-script changes
+        if: steps.changes.outputs.summary != 'true'
+        run: echo "No summary-script changes detected; skipping summary test job."
+
   strategy-governance-scheduled:
     if: github.event_name == 'schedule'
     runs-on: ubuntu-latest

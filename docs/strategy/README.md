@@ -62,6 +62,7 @@ python docs/strategy/generate_evaluation_manifest.py --candidate docs/strategy/c
 - `.github/workflows/ci.yml` includes a `strategy-validation` job.
 - The job runs `validate_pip_output.py` against `pip-gold-v1.candidate.json` and fails if `all_checks_valid` is not `true`.
 - The workflow also includes `strategy-policy-tests`, which executes `tests/test_strategy_validator.py`.
+- The workflow includes `strategy-summary-tests`, a path-filtered job for `publish_ci_summary.py` and its tests.
 - A monthly `strategy-governance-scheduled` job runs on cron (`0 6 1 * *`) and fails if any `freshness_warnings` are present.
 - Strategy and scheduled jobs now enforce traceability policy drift checks and validator output contract validation.
 - Fast, validation, and scheduled strategy jobs all publish comparable workflow summaries for reporting parity.
@@ -71,3 +72,4 @@ python docs/strategy/generate_evaluation_manifest.py --candidate docs/strategy/c
 - Validator policy tests are in `tests/test_strategy_validator.py` and cover fallback behavior plus strict freshness failure modes.
 - Drift-checker tests are in `tests/test_traceability_policy_drift.py` and cover pass/fail exit-code behavior for taxonomy/mapping drift.
 - Summary-script tests are in `tests/test_publish_ci_summary.py` and cover formatting plus encoding fallback behavior.
+- Summary-script tests also cover invalid JSON failure paths and non-zero CLI exits.
