@@ -1,0 +1,36 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "traceability_valid": true,
+  "freshness_valid": true,
+  "policy_drift_valid": true,
+  "validator_contract_valid": true,
+  "strategy_tests_passed": true,
+  "fast_governance_gate_valid": true,
+  "path_aware_fast_gate_enabled": true,
+  "workflow_summary_published": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true,
+    "fast_governance_summary_emitted": true,
+    "skip_path_summary_emitted": true,
+    "governance_gate_local_equivalent_passed": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Include policy drift status and violation counts directly in fast summary output for one-pane triage.",
+    "Add summary sections to strategy-validation and scheduled jobs for reporting consistency.",
+    "Publish summary links in PR comments through a lightweight bot integration.",
+    "Add CI assertion that GITHUB_STEP_SUMMARY write succeeds when job is triggered.",
+    "Track summary metric trends over time to detect governance quality drift."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}
