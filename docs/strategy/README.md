@@ -46,3 +46,7 @@ python docs/strategy/generate_evaluation_manifest.py --candidate docs/strategy/c
 - Investability thresholds are read from the candidate JSON scorecard, not hard-coded.
 - The starter file `pip-gold-v1.template.json` is a scaffold; it is expected to fail schema quality checks until filled.
 - The reproducibility manifest captures SHA-256 hashes for candidate/schema/config/validation artifacts and validator version.
+
+## CI Gate
+- `.github/workflows/ci.yml` includes a `strategy-validation` job.
+- The job runs `validate_pip_output.py` against `pip-gold-v1.candidate.json` and fails if `all_checks_valid` is not `true`.

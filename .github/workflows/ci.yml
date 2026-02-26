@@ -7,6 +7,38 @@ on:
     branches: [main]
 
 jobs:
+  strategy-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install strategy validator dependency
+        run: pip install jsonschema
+
+      - name: Run strategy validator
+        run: |
+          python docs/strategy/validate_pip_output.py \
+            --input docs/strategy/pip-gold-v1.candidate.json \
+            --schema docs/strategy/pip-gold-v1.schema.json \
+            --config docs/strategy/validator-config.json > docs/strategy/ci-validation.json
+
+      - name: Enforce all checks valid
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path("docs/strategy/ci-validation.json").read_text(encoding="utf-8"))
+          if not report.get("all_checks_valid", False):
+              raise SystemExit("Strategy validation failed: all_checks_valid=false")
+          print("Strategy validation passed: all_checks_valid=true")
+          PY
+
   test:
     runs-on: ubuntu-latest
     services:
