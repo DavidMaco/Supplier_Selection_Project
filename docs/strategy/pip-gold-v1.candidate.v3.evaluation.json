@@ -1,0 +1,25 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Lock scoring precision policy (e.g., 2-decimal computed score, 1-decimal declared score) and document rounding rule in readiness_scorecard metadata.",
+    "Add explicit evidence IDs and baseline comparators for each readiness_scorecard dimension to improve audit traceability.",
+    "Tie each risk_register trigger to a named monitoring source and alert SLA to strengthen operational enforceability.",
+    "Add quantitative dependency health indicators in roadmap_3_year to make dependency coherence continuously measurable.",
+    "Define investor diligence data room checklist with artifact owners and refresh cadence to keep investor_pack completeness durable."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}

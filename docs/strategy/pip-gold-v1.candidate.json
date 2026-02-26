@@ -192,9 +192,9 @@
     ],
     "attribution_model": "Action-level attribution links each recommendation to approval, execution, realized P&L impact, and confidence-adjusted variance decomposition.",
     "audit_mechanism": [
-      "Immutable recommendation and approval logs retained 7 years with monthly control owner attestation and 100% access-log completeness acceptance criterion",
-      "Finance sign-off workflow for realized impact posting with controller approval SLA <=10 business days and exception rate <=5%",
-      "Monthly internal audit sample on source-to-KPI traceability requiring >=98% lineage completeness and documented remediation closure within 30 days"
+      "Control[AU-01]|Owner=Security and Compliance Lead|Cadence=Monthly|Artifact=Immutable recommendation and approval logs (7-year retention)|PassThreshold=100% access-log completeness and attestation sign-off",
+      "Control[FI-02]|Owner=Value Realization Lead|Cadence=Monthly close|Artifact=Finance sign-off package for realized impact postings|PassThreshold=Controller approval SLA <=10 business days and exception rate <=5%",
+      "Control[DQ-03]|Owner=Data Platform Lead|Cadence=Monthly|Artifact=Source-to-KPI lineage audit sample and remediation log|PassThreshold=>=98% lineage completeness and all critical remediation closed <=30 days"
     ],
     "realized_vs_forecast_logic": "Forecast values are tagged as projected until supporting transactional evidence closes the accounting period; realized values require finance-verified posting references."
   },
@@ -227,7 +227,7 @@
         "capability": "Spend visibility and community intelligence",
         "incumbent_strength": "Strong spend analytics and adoption",
         "our_advantage": "Integrated disruption resilience + carbon-adjusted scenario optimization",
-        "proof": "Baseline across 5 critical categories (n=286 suppliers): concentration risk index reduced 27% and risk-adjusted cost exposure reduced 18% versus prior-state benchmark"
+        "proof": "Baseline across 5 critical categories (n=286 suppliers): concentration risk index improves from 3,110 to 2,270 (-27%) and risk-adjusted cost exposure improves from $14.2M to $11.6M (-18%)"
       },
       {
         "competitor": "GEP",
@@ -255,7 +255,7 @@
         "capability": "ERP-integrated procurement",
         "incumbent_strength": "Native ERP connectivity",
         "our_advantage": "Cross-ERP harmonization with independent optimization layer and benchmark network",
-        "proof": "Across 3 ERP estates (SAP/Oracle/Dynamics; n=9 business units), insight quality variance remains <=6% and realized value conversion remains >=58%"
+        "proof": "Across 3 ERP estates (SAP/Oracle/Dynamics; n=9 business units), insight quality variance improves from 11% to 6% and realized value conversion improves from 49% to 58%"
       }
     ]
   },
@@ -503,7 +503,7 @@
     "revenue_model_3y": [
       "Base case: Year 1 lighthouse pilots convert to paid enterprise programs; Year 2 expands multi-region modules; Year 3 scales benchmark monetization with disciplined gross-margin expansion.",
       "Upside case trigger: if Year 1 net revenue retention >=125% and average sales cycle <=7 months, accelerate partner-led expansion and add autonomous optimization premium tier.",
-      "Downside case trigger: if conversion <35% or sales cycle >12 months by Month 10, prioritize core classification+risk bundle, reduce high-R&D modules, and activate pricing simplification plus customer-success remediation."
+      "Downside case trigger: if conversion <35% or sales cycle >12 months by Month 10, prioritize core classification+risk bundle, reduce high-R&D modules, and activate pricing simplification plus customer-success remediation; expected impact range: ARR -18% to -27% versus base case and gross margin -3 to -5 percentage points."
     ],
     "valuation_rationale": "Valuation anchored on ARR growth quality, gross margin durability, expansion efficiency, and defensible data moat compounding.",
     "exit_scenarios": [
@@ -547,7 +547,7 @@
         "All priority data sources contractually accessible",
         "KPI baseline approved by CPO and CFO",
         "Governance roles and decision rights formalized",
-        "Month 2 realized-value evidence: finance-approved baseline ledger covers >=80% of pilot category spend"
+        "Month 2 realized-value evidence: finance-approved baseline ledger covers >=80% of pilot category spend (DataSourceIDs: ERP_AP_01, CLM_CONTRACTS_02, FIN_GL_03)"
       ],
       "fail_criteria": [
         "Missing source access for top spend categories",
@@ -573,7 +573,7 @@
         "Classification accuracy >=93%",
         "Lineage coverage for critical KPIs >=90%",
         "Daily refresh SLA <=24h achieved",
-        "Month 5 realized-value evidence: >=15 approved actions with attributable projected value and >=5 finance-validated realized postings"
+        "Month 5 realized-value evidence: >=15 approved actions with attributable projected value and >=5 finance-validated realized postings (DataSourceIDs: ACTION_LOG_04, FIN_POSTINGS_05, WORKFLOW_AUDIT_06)"
       ],
       "fail_criteria": [
         "Persistent data quality breach in critical fields",
@@ -599,7 +599,7 @@
         "Recommendation acceptance >=45% in pilot categories",
         "High-risk alert lead time >=10 days",
         "Action-to-outcome traceability live for pilot scope",
-        "Month 8 realized-value evidence: realized-to-approved conversion >=45% with variance analysis published"
+        "Month 8 realized-value evidence: realized-to-approved conversion >=45% with variance analysis published (DataSourceIDs: VALUE_LEDGER_07, APPROVALS_08, VARIANCE_PACK_09)"
       ],
       "fail_criteria": [
         "Low user trust due to poor explainability",
@@ -625,7 +625,7 @@
         "Realized vs forecast pipeline approved by finance",
         "Platform availability >=99.5%",
         "ISO control evidence tracked for audit readiness",
-        "Month 10 realized-value evidence: cumulative finance-validated impact >=35% of full-year target"
+        "Month 10 realized-value evidence: cumulative finance-validated impact >=35% of full-year target (DataSourceIDs: FIN_CLOSE_10, CONTROL_EVIDENCE_11, KPI_MART_12)"
       ],
       "fail_criteria": [
         "Attribution disputes remain unresolved",
@@ -651,7 +651,7 @@
         "12-month ROI >=10x in pilot cohort",
         "User adoption >=75% in target procurement teams",
         "Readiness score >=80 with no critical control gap",
-        "Month 12 realized-value evidence: cumulative finance-validated impact >=100% of annual committed target"
+        "Month 12 realized-value evidence: cumulative finance-validated impact >=100% of annual committed target (DataSourceIDs: ANNUAL_VALUE_LEDGER_13, BOARD_PACK_14, AUDIT_TRAIL_15)"
       ],
       "fail_criteria": [
         "Value realization remains forecast-only",
@@ -857,61 +857,61 @@
       "action": "Finalize top-10 category pilot scope with CPO and CFO",
       "owner": "Program Director",
       "due_window": "0-2 weeks",
-      "expected_outcome": "Approved pilot scope and baseline value targets"
+      "expected_outcome": "Approved pilot scope and baseline value targets (mitigates R4 and R6)"
     },
     {
       "action": "Complete enterprise data access agreements for critical sources",
       "owner": "Data Platform Lead",
       "due_window": "0-4 weeks",
-      "expected_outcome": "Signed source access and governance ownership"
+      "expected_outcome": "Signed source access and governance ownership (mitigates R1 and R9)"
     },
     {
       "action": "Stand up canonical taxonomy governance working group",
       "owner": "Category Excellence Lead",
       "due_window": "0-3 weeks",
-      "expected_outcome": "Approved taxonomy standards and stewardship model"
+      "expected_outcome": "Approved taxonomy standards and stewardship model (mitigates R1 and R2)"
     },
     {
       "action": "Implement first-pass ingestion and quality monitoring for pilot categories",
       "owner": "Data Engineering Lead",
       "due_window": "2-6 weeks",
-      "expected_outcome": "Stable daily refresh and quality scorecards"
+      "expected_outcome": "Stable daily refresh and quality scorecards (mitigates R1 and R5)"
     },
     {
       "action": "Launch classification model benchmark and human feedback queue",
       "owner": "ML Lead",
       "due_window": "4-8 weeks",
-      "expected_outcome": "Validated baseline accuracy and retraining loop"
+      "expected_outcome": "Validated baseline accuracy and retraining loop (mitigates R2 and R8)"
     },
     {
       "action": "Integrate risk feeds and define mitigation playbook ownership",
       "owner": "Risk Engineering Lead",
       "due_window": "6-10 weeks",
-      "expected_outcome": "Operational risk alerting and escalation workflows"
+      "expected_outcome": "Operational risk alerting and escalation workflows (mitigates R5 and R9)"
     },
     {
       "action": "Deploy executive CPO/CFO pilot cockpit with decision audit trail",
       "owner": "Product Lead",
       "due_window": "8-12 weeks",
-      "expected_outcome": "Live decision workflows for pilot governance"
+      "expected_outcome": "Live decision workflows for pilot governance (mitigates R2 and R7)"
     },
     {
       "action": "Operationalize realized-vs-forecast attribution with finance sign-off",
       "owner": "Value Realization Lead",
       "due_window": "10-14 weeks",
-      "expected_outcome": "Finance-validated impact reporting pipeline"
+      "expected_outcome": "Finance-validated impact reporting pipeline (mitigates R6 and R10)"
     },
     {
       "action": "Conduct security and compliance control readiness review",
       "owner": "Security and Compliance Lead",
       "due_window": "10-16 weeks",
-      "expected_outcome": "Evidence-backed control gap remediation plan"
+      "expected_outcome": "Evidence-backed control gap remediation plan (mitigates R3 and R9)"
     },
     {
       "action": "Prepare investor-facing value proof package from pilot metrics",
       "owner": "Strategy and Finance Lead",
       "due_window": "16-20 weeks",
-      "expected_outcome": "Diligence-ready narrative and performance evidence"
+      "expected_outcome": "Diligence-ready narrative and performance evidence (mitigates R6 and R10)"
     }
   ],
   "assumptions": [
