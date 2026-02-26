@@ -1,0 +1,30 @@
+{
+  "generated_at_utc": "2026-02-26T18:37:50.198068+00:00",
+  "artifacts": {
+    "candidate_path": "aegis-procurement\\docs\\strategy\\pip-gold-v1.candidate.json",
+    "candidate_sha256": "a1f79394d5a54574cffbbca43402956ef317d7f1870761342e9e465549eafbc6",
+    "schema_path": "aegis-procurement\\docs\\strategy\\pip-gold-v1.schema.json",
+    "schema_sha256": "addb739f663921b793318244492235fe662f034165e580670476f382d47a4593",
+    "config_path": "aegis-procurement\\docs\\strategy\\validator-config.json",
+    "config_sha256": "9031277d7d68e92d18c12e2c86c37cf51bd12d8612a88701b2587eba999834eb",
+    "validation_path": "aegis-procurement\\docs\\strategy\\pip-gold-v1.candidate.v8.validation.json",
+    "validation_sha256": "cd951b89c1f9984fe5e07cef2c350c15c3ce5e7be5ce5c47b9180988ae94bd77"
+  },
+  "validator": {
+    "version": "1.2.0",
+    "config_path_reported": "aegis-procurement\\docs\\strategy\\validator-config.json",
+    "rounding_policy": {
+      "computed_decimals": 2,
+      "declared_decimals": 1,
+      "score_tolerance": 0.5
+    }
+  },
+  "result_summary": {
+    "schema_valid": true,
+    "score_math_valid": true,
+    "computed_weighted_score": 83.85,
+    "declared_score": 83.9,
+    "declared_status": "Investable",
+    "expected_status": "Investable"
+  }
+}

@@ -1,0 +1,21 @@
+﻿{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "validator_version": "1.2.0",
+  "config_path": "aegis-procurement\\docs\\strategy\\validator-config.json",
+  "total_weight_matches": true,
+  "computed_total_weight": 100,
+  "declared_total_weight": 100,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "score_close": true,
+  "declared_status": "Investable",
+  "expected_status": "Investable",
+  "status_matches": true,
+  "rounding_policy": {
+    "computed_decimals": 2,
+    "declared_decimals": 1,
+    "score_tolerance": 0.5
+  }
+}

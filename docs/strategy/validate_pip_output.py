@@ -2,6 +2,8 @@ import argparse
 import json
 from pathlib import Path
 
+VALIDATOR_VERSION = "1.2.0"
+
 
 def _load_json(path: Path):
     with path.open("r", encoding="utf-8") as file:
@@ -110,6 +112,7 @@ def main():
         "schema_valid": schema_valid,
         "schema_errors": schema_errors,
         "score_math_valid": score_math_valid,
+        "validator_version": VALIDATOR_VERSION,
         "config_path": str(config_path),
         **score_results,
     }

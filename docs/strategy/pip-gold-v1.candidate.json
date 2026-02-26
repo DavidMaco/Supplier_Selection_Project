@@ -925,9 +925,7 @@
     "Pilot categories represent enough spend concentration to demonstrate measurable financial impact.",
     "Executive sponsorship remains active throughout the 12-month proof horizon.",
     "Procurement and finance teams can support monthly governance and sign-off cycles.",
-    "Initial compliance scope targets ISO readiness trajectory with phased SOC evidence expansion.",
-    "Score precision policy: computed weighted score rounded to 2 decimals and declared score rounded to 1 decimal using half-up rounding.",
-    "Status mapping formula: Investable if score >= investable_threshold (80); Red Flag if score <= red_flag_threshold (60); otherwise Borderline."
+    "Initial compliance scope targets ISO readiness trajectory with phased SOC evidence expansion."
   ],
   "data_needed": [
     "Historical supplier disruption events with timestamps and impact severity",

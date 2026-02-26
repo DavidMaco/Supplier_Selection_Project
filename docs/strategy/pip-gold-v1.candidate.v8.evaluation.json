@@ -1,0 +1,25 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Standardize evidence tags across scorecard, KPI claims, and roadmap dependencies with a controlled enum (not only in competitor proofs).",
+    "Add automated validation rules to require traceable evidence IDs/SourceTags for all externally-facing quantitative claims.",
+    "Tighten consistency checks between risk triggers and next-action outcomes via machine-checked RiskID linkage coverage.",
+    "Add schema-level pattern constraints for DataSourceID/EvidenceID formats to improve reproducibility and audit parsing.",
+    "Include a deterministic evidence index artifact per run (in addition to manifest) mapping each major claim to source, owner, and refresh cadence."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}
