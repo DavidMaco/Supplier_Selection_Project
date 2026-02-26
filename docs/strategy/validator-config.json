@@ -6,7 +6,9 @@
   },
   "traceability": {
     "strict_source_tags": true,
+    "strict_source_type_enum": true,
     "strict_evidence_ids": true,
+    "strict_evidence_prefix_enum": true,
     "strict_risk_linkage": true,
     "strict_freshness": true,
     "max_age_days": 365,
@@ -19,6 +21,14 @@
       "DataQualityAudit": 180,
       "ThirdPartyBenchmark": 270
     },
+    "allowed_source_types": [
+      "InternalAudit",
+      "FinanceSignoff",
+      "CustomerAttestation",
+      "PMOReport",
+      "DataQualityAudit",
+      "ThirdPartyBenchmark"
+    ],
     "evidence_prefix_max_age_days": {
       "BI": 120,
       "DA": 180,
@@ -29,6 +39,16 @@
       "CS": 120,
       "DM": 180
     },
+    "allowed_evidence_prefixes": [
+      "BI",
+      "DA",
+      "RR",
+      "SC",
+      "OR",
+      "AX",
+      "CS",
+      "DM"
+    ],
     "source_tag_pattern": "SourceTag=[A-Za-z]+:[A-Za-z0-9\\-]+",
     "evidence_id_pattern": "EvidenceID=[A-Z]{2}-\\d{2}",
     "data_as_of_pattern": "DataAsOf=\\d{4}-\\d{2}-\\d{2}"

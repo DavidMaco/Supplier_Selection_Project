@@ -28,7 +28,9 @@ def _base_payload(proof: str, evidence: str, date_context: str = "2026-02-26") -
 def _base_traceability_config() -> dict:
     return {
         "strict_source_tags": True,
+        "strict_source_type_enum": False,
         "strict_evidence_ids": True,
+        "strict_evidence_prefix_enum": False,
         "strict_risk_linkage": True,
         "strict_freshness": True,
         "max_age_days": 300,
@@ -37,10 +39,18 @@ def _base_traceability_config() -> dict:
             "FinanceSignoff": 120,
             "ThirdPartyBenchmark": 270,
         },
+        "allowed_source_types": [
+            "FinanceSignoff",
+            "ThirdPartyBenchmark",
+        ],
         "evidence_prefix_max_age_days": {
             "OR": 90,
             "BI": 120,
         },
+        "allowed_evidence_prefixes": [
+            "OR",
+            "BI",
+        ],
         "source_tag_pattern": r"SourceTag=[A-Za-z]+:[A-Za-z0-9\-]+",
         "evidence_id_pattern": r"EvidenceID=[A-Z]{2}-\d{2}",
         "data_as_of_pattern": r"DataAsOf=\d{4}-\d{2}-\d{2}",
@@ -115,3 +125,29 @@ def test_warning_and_diagnostics_present_near_threshold():
     assert "policy_type" in first
     assert "max_age_days" in first
     assert "age_days" in first
+
+
+def test_unknown_source_type_fails_when_strict_enum_enabled():
+    cfg = _base_traceability_config()
+    cfg["strict_source_type_enum"] = True
+    payload = _base_payload(
+        proof="SourceTag=UnknownSource:U-1|DataAsOf=2026-01-31",
+        evidence="EvidenceID=BI-01; DataAsOf=2026-01-31",
+    )
+    result = _run_traceability(payload, cfg)
+    assert result["traceability_ok"] is False
+    assert result["source_type_ok"] is False
+    assert any("SourceTag type not allowed" in v for v in result["source_type_violations"])
+
+
+def test_unknown_evidence_prefix_fails_when_strict_enum_enabled():
+    cfg = _base_traceability_config()
+    cfg["strict_evidence_prefix_enum"] = True
+    payload = _base_payload(
+        proof="SourceTag=FinanceSignoff:NEG-1|DataAsOf=2026-01-31",
+        evidence="EvidenceID=ZZ-01; DataAsOf=2026-01-31",
+    )
+    result = _run_traceability(payload, cfg)
+    assert result["traceability_ok"] is False
+    assert result["evidence_prefix_ok"] is False
+    assert any("prefix not allowed" in v for v in result["evidence_prefix_violations"])

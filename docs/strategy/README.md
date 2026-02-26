@@ -45,6 +45,7 @@ python docs/strategy/generate_evaluation_manifest.py --candidate docs/strategy/c
 - The validator enforces evidence freshness using `DataAsOf=YYYY-MM-DD` markers and max-age policy from `validator-config.json`.
 - Freshness policy supports source-specific (`SourceTag` type) and scorecard evidence-prefix-specific (`EvidenceID` prefix) max-age thresholds.
 - Validator output includes `freshness_warnings` (near-expiry) and `freshness_diagnostics` (applied policy metadata per checked field).
+- Validator can enforce strict allowed enums for `SourceTag` types and `EvidenceID` prefixes via `validator-config.json`.
 - The validator checks schema compliance and scorecard math/status consistency using `validator-config.json`.
 - Investability thresholds are read from the candidate JSON scorecard, not hard-coded.
 - The starter file `pip-gold-v1.template.json` is a scaffold; it is expected to fail schema quality checks until filled.

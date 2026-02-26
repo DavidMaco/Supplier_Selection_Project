@@ -4,7 +4,7 @@ import re
 from datetime import date
 from pathlib import Path
 
-VALIDATOR_VERSION = "1.6.0"
+VALIDATOR_VERSION = "1.7.0"
 
 
 def _load_json(path: Path):
@@ -120,11 +120,17 @@ def validate_traceability(payload: dict, config: dict) -> dict:
     strict_evidence_ids = bool(trace_cfg.get("strict_evidence_ids", False))
     strict_risk_linkage = bool(trace_cfg.get("strict_risk_linkage", False))
     strict_freshness = bool(trace_cfg.get("strict_freshness", False))
+    strict_source_type_enum = bool(trace_cfg.get("strict_source_type_enum", False))
+    strict_evidence_prefix_enum = bool(trace_cfg.get("strict_evidence_prefix_enum", False))
     max_age_days = int(trace_cfg.get("max_age_days", 365))
     warning_window_days = int(trace_cfg.get("freshness_warning_window_days", 30))
+    allowed_source_types = set(trace_cfg.get("allowed_source_types", []))
+    allowed_evidence_prefixes = set(trace_cfg.get("allowed_evidence_prefixes", []))
 
     source_tag_violations = []
+    source_type_violations = []
     evidence_id_violations = []
+    evidence_prefix_violations = []
     risk_linkage_violations = []
     freshness_violations = []
     freshness_warnings = []
@@ -146,6 +152,10 @@ def validate_traceability(payload: dict, config: dict) -> dict:
         source_match = re.search(r"SourceTag=([A-Za-z]+):[A-Za-z0-9\-]+", proof)
         if source_match:
             source_type = source_match.group(1)
+        if source_type and strict_source_type_enum and source_type not in allowed_source_types:
+            source_type_violations.append(
+                f"competitor_matrix[{idx}].proof SourceTag type not allowed: {source_type}"
+            )
         max_age_for_item = _max_age_for_source_type(trace_cfg, source_type, max_age_days)
 
         data_as_of_match = data_as_of_pattern.search(proof)
@@ -187,6 +197,10 @@ def validate_traceability(payload: dict, config: dict) -> dict:
         evidence_match = re.search(r"EvidenceID=([A-Z]{2})-\d{2}", evidence)
         if evidence_match:
             evidence_prefix = evidence_match.group(1)
+        if evidence_prefix and strict_evidence_prefix_enum and evidence_prefix not in allowed_evidence_prefixes:
+            evidence_prefix_violations.append(
+                f"readiness_scorecard.dimensions[{idx}].evidence prefix not allowed: {evidence_prefix}"
+            )
         max_age_for_item = _max_age_for_evidence_prefix(trace_cfg, evidence_prefix, max_age_days)
 
         data_as_of_match = data_as_of_pattern.search(evidence)
@@ -237,14 +251,20 @@ def validate_traceability(payload: dict, config: dict) -> dict:
             )
 
     source_tag_ok = len(source_tag_violations) == 0
+    source_type_ok = len(source_type_violations) == 0
     evidence_id_ok = len(evidence_id_violations) == 0
+    evidence_prefix_ok = len(evidence_prefix_violations) == 0
     risk_linkage_ok = len(risk_linkage_violations) == 0
     freshness_ok = len(freshness_violations) == 0
 
     traceability_ok = True
     if strict_source_tags and not source_tag_ok:
         traceability_ok = False
+    if strict_source_type_enum and not source_type_ok:
+        traceability_ok = False
     if strict_evidence_ids and not evidence_id_ok:
+        traceability_ok = False
+    if strict_evidence_prefix_enum and not evidence_prefix_ok:
         traceability_ok = False
     if strict_risk_linkage and not risk_linkage_ok:
         traceability_ok = False
@@ -254,11 +274,15 @@ def validate_traceability(payload: dict, config: dict) -> dict:
     return {
         "traceability_ok": traceability_ok,
         "source_tag_ok": source_tag_ok,
+        "source_type_ok": source_type_ok,
         "evidence_id_ok": evidence_id_ok,
+        "evidence_prefix_ok": evidence_prefix_ok,
         "risk_linkage_ok": risk_linkage_ok,
         "freshness_ok": freshness_ok,
         "source_tag_violations": source_tag_violations,
+        "source_type_violations": source_type_violations,
         "evidence_id_violations": evidence_id_violations,
+        "evidence_prefix_violations": evidence_prefix_violations,
         "risk_linkage_violations": risk_linkage_violations,
         "freshness_violations": freshness_violations,
         "freshness_warnings": freshness_warnings,

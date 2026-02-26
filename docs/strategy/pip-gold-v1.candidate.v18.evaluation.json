@@ -1,0 +1,30 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "traceability_valid": true,
+  "freshness_valid": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true,
+    "source_type_enum_enforced": true,
+    "evidence_prefix_enum_enforced": true,
+    "policy_diagnostics_exported": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Align allowed source types with schema-defined controlled vocabulary to remove dual maintenance.",
+    "Expose enum policy drift alerts when configured allowed lists diverge from observed evidence tags.",
+    "Add integration test asserting CI scheduled governance fails on unknown SourceTag type.",
+    "Add changelog section for validator output contract evolution to support downstream consumers.",
+    "Consider centralizing policy keys in a single governance constants file imported by validator and docs generation."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}
