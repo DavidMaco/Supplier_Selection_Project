@@ -1,8 +1,9 @@
 import argparse
 import json
+import re
 from pathlib import Path
 
-VALIDATOR_VERSION = "1.2.0"
+VALIDATOR_VERSION = "1.3.0"
 
 
 def _load_json(path: Path):
@@ -80,6 +81,77 @@ def validate_schema(payload: dict, schema: dict) -> tuple[bool, list[str]]:
     return False, schema_errors
 
 
+def _extract_risk_ids(payload: dict) -> set[str]:
+    risk_ids = set()
+    for row in payload.get("risk_register", []):
+        risk_text = str(row.get("risk", ""))
+        match = re.match(r"(R\d+):", risk_text)
+        if match:
+            risk_ids.add(match.group(1))
+    return risk_ids
+
+
+def validate_traceability(payload: dict, config: dict) -> dict:
+    trace_cfg = config.get("traceability", {})
+    source_tag_pattern = re.compile(trace_cfg.get("source_tag_pattern", r"SourceTag=[A-Za-z]+:[A-Za-z0-9\-]+"))
+    evidence_id_pattern = re.compile(trace_cfg.get("evidence_id_pattern", r"EvidenceID=[A-Z]{2}-\d{2}"))
+
+    strict_source_tags = bool(trace_cfg.get("strict_source_tags", False))
+    strict_evidence_ids = bool(trace_cfg.get("strict_evidence_ids", False))
+    strict_risk_linkage = bool(trace_cfg.get("strict_risk_linkage", False))
+
+    source_tag_violations = []
+    evidence_id_violations = []
+    risk_linkage_violations = []
+
+    for idx, row in enumerate(payload.get("differentiation_strategy", {}).get("competitor_matrix", []), start=1):
+        proof = str(row.get("proof", ""))
+        if not source_tag_pattern.search(proof):
+            source_tag_violations.append(f"competitor_matrix[{idx}].proof missing/invalid SourceTag")
+
+    for idx, row in enumerate(payload.get("readiness_scorecard", {}).get("dimensions", []), start=1):
+        evidence = str(row.get("evidence", ""))
+        if not evidence_id_pattern.search(evidence):
+            evidence_id_violations.append(f"readiness_scorecard.dimensions[{idx}].evidence missing/invalid EvidenceID")
+
+    valid_risk_ids = _extract_risk_ids(payload)
+    riskids_pattern = re.compile(r"\[RiskIDs=([A-Z0-9,]+)\]")
+    for idx, row in enumerate(payload.get("next_actions", []), start=1):
+        expected_outcome = str(row.get("expected_outcome", ""))
+        match = riskids_pattern.search(expected_outcome)
+        if not match:
+            risk_linkage_violations.append(f"next_actions[{idx}] missing RiskIDs tag")
+            continue
+        listed_ids = [item.strip() for item in match.group(1).split(",") if item.strip()]
+        unknown_ids = [item for item in listed_ids if item not in valid_risk_ids]
+        if unknown_ids:
+            risk_linkage_violations.append(
+                f"next_actions[{idx}] contains unknown RiskIDs: {', '.join(unknown_ids)}"
+            )
+
+    source_tag_ok = len(source_tag_violations) == 0
+    evidence_id_ok = len(evidence_id_violations) == 0
+    risk_linkage_ok = len(risk_linkage_violations) == 0
+
+    traceability_ok = True
+    if strict_source_tags and not source_tag_ok:
+        traceability_ok = False
+    if strict_evidence_ids and not evidence_id_ok:
+        traceability_ok = False
+    if strict_risk_linkage and not risk_linkage_ok:
+        traceability_ok = False
+
+    return {
+        "traceability_ok": traceability_ok,
+        "source_tag_ok": source_tag_ok,
+        "evidence_id_ok": evidence_id_ok,
+        "risk_linkage_ok": risk_linkage_ok,
+        "source_tag_violations": source_tag_violations,
+        "evidence_id_violations": evidence_id_violations,
+        "risk_linkage_violations": risk_linkage_violations,
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description="Validate PIP Gold output against schema and scorecard logic.")
     parser.add_argument("--input", required=True, help="Path to candidate output JSON")
@@ -105,16 +177,20 @@ def main():
 
     schema_valid, schema_errors = validate_schema(payload, schema)
     score_results = validate_scorecard(payload, config)
+    traceability_results = validate_traceability(payload, config)
 
     score_math_valid = score_results["total_weight_matches"] and score_results["score_close"] and score_results["status_matches"]
+    all_checks_valid = schema_valid and score_math_valid and traceability_results["traceability_ok"]
 
     result = {
         "schema_valid": schema_valid,
         "schema_errors": schema_errors,
         "score_math_valid": score_math_valid,
+        "all_checks_valid": all_checks_valid,
         "validator_version": VALIDATOR_VERSION,
         "config_path": str(config_path),
         **score_results,
+        **traceability_results,
     }
 
     print(json.dumps(result, indent=2))

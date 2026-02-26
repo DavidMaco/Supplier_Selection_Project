@@ -1,0 +1,28 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "traceability_valid": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true,
+    "traceability_enforcement_configured": true,
+    "riskid_linkage_machine_checked": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Add schema-level regex constraints for SourceTag/EvidenceID fields to complement validator enforcement.",
+    "Expand machine checks to verify one-to-one coverage between high-severity risks and mitigation owners in action plans.",
+    "Add freshness validation for external benchmarks (max data age threshold with warning status).",
+    "Introduce deterministic evidence index output to map each scored dimension to source, owner, and refresh cadence.",
+    "Add CI automation to fail pull requests when validator all_checks_valid is false."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}

@@ -4,6 +4,13 @@
     "declared_decimals": 1,
     "score_tolerance": 0.5
   },
+  "traceability": {
+    "strict_source_tags": true,
+    "strict_evidence_ids": true,
+    "strict_risk_linkage": true,
+    "source_tag_pattern": "SourceTag=[A-Za-z]+:[A-Za-z0-9\\-]+",
+    "evidence_id_pattern": "EvidenceID=[A-Z]{2}-\\d{2}"
+  },
   "status_mapping": {
     "investable_rule": "score >= investable_threshold",
     "red_flag_rule": "score <= red_flag_threshold",
