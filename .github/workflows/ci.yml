@@ -39,6 +39,19 @@ jobs:
           print("Strategy validation passed: all_checks_valid=true")
           PY
 
+  strategy-policy-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run strategy policy unit tests
+        run: python -m pytest tests/test_strategy_validator.py -v --tb=short
+
   test:
     runs-on: ubuntu-latest
     services:

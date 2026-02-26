@@ -52,6 +52,7 @@ python docs/strategy/generate_evaluation_manifest.py --candidate docs/strategy/c
 ## CI Gate
 - `.github/workflows/ci.yml` includes a `strategy-validation` job.
 - The job runs `validate_pip_output.py` against `pip-gold-v1.candidate.json` and fails if `all_checks_valid` is not `true`.
+- The workflow also includes `strategy-policy-tests`, which executes `tests/test_strategy_validator.py`.
 
 ## Tests
 - Validator policy tests are in `tests/test_strategy_validator.py` and cover fallback behavior plus strict freshness failure modes.
