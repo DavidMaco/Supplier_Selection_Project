@@ -1,0 +1,38 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "traceability_valid": true,
+  "freshness_valid": true,
+  "policy_drift_valid": true,
+  "validator_contract_valid": true,
+  "strategy_tests_passed": true,
+  "fast_governance_gate_valid": true,
+  "path_aware_fast_gate_enabled": true,
+  "workflow_summary_parity_enabled": true,
+  "summary_logic_reused": true,
+  "summary_script_tests_passed": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true,
+    "summary_script_test_coverage_added": true,
+    "encoding_fallback_covered": true,
+    "workflow_summary_output_covered": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Add negative tests for publish_ci_summary invalid JSON input handling and error messaging.",
+    "Add CI step to run only summary-script tests on workflow/script changes for faster feedback.",
+    "Add test coverage for append behavior when GITHUB_STEP_SUMMARY already contains content.",
+    "Consider exposing publish_ci_summary functions as a small library module for easier import testing.",
+    "Add a markdown snapshot test to guard summary formatting stability across future changes."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}
