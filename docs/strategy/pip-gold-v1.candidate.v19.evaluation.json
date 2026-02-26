@@ -1,0 +1,32 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "traceability_valid": true,
+  "freshness_valid": true,
+  "policy_drift_valid": true,
+  "validator_contract_valid": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true,
+    "policy_drift_checker_present": true,
+    "validator_output_contract_present": true,
+    "ci_contract_validation_enabled": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Add unit tests for check_traceability_policy_drift.py to assert violation scenarios and exit codes.",
+    "Version the validator output contract schema with explicit semantic version metadata.",
+    "Publish contract compatibility policy (backward-compatible vs breaking fields) in changelog.",
+    "Add CI step to archive ci-validation JSON artifact for post-failure debugging.",
+    "Introduce policy drift trend reporting over time for governance dashboards."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}

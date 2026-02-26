@@ -10,6 +10,9 @@ This folder contains an end-to-end prompt engineering and evaluation toolkit for
 - `validate_pip_output.py` — local schema and score consistency validator.
 - `validator-config.json` — single-source rounding and status-mapping rules for validator reproducibility.
 - `generate_evaluation_manifest.py` — reproducibility manifest generator (hashes + validator metadata).
+- `check_traceability_policy_drift.py` — detects drift between candidate tag usage and configured traceability policy maps/enums.
+- `validator-output.contract.schema.json` — contract schema for validator JSON output.
+- `VALIDATOR_OUTPUT_CHANGELOG.md` — versioned notes for validator output field evolution.
 
 ## Quick Start
 1. Generate a candidate JSON using `PIP_GOLD_PROMPT_V1.md`.
@@ -56,6 +59,7 @@ python docs/strategy/generate_evaluation_manifest.py --candidate docs/strategy/c
 - The job runs `validate_pip_output.py` against `pip-gold-v1.candidate.json` and fails if `all_checks_valid` is not `true`.
 - The workflow also includes `strategy-policy-tests`, which executes `tests/test_strategy_validator.py`.
 - A monthly `strategy-governance-scheduled` job runs on cron (`0 6 1 * *`) and fails if any `freshness_warnings` are present.
+- Strategy and scheduled jobs now enforce traceability policy drift checks and validator output contract validation.
 
 ## Tests
 - Validator policy tests are in `tests/test_strategy_validator.py` and cover fallback behavior plus strict freshness failure modes.

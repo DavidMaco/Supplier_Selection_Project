@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/pip-validator-output-v1.schema.json",
+  "title": "PIP Validator Output Contract",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_valid",
+    "schema_errors",
+    "score_math_valid",
+    "all_checks_valid",
+    "validator_version",
+    "computed_weighted_score",
+    "declared_score",
+    "traceability_ok",
+    "freshness_ok",
+    "freshness_violations",
+    "freshness_warnings",
+    "freshness_diagnostics"
+  ],
+  "properties": {
+    "schema_valid": { "type": "boolean" },
+    "schema_errors": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "score_math_valid": { "type": "boolean" },
+    "all_checks_valid": { "type": "boolean" },
+    "validator_version": { "type": "string" },
+    "computed_weighted_score": { "type": "number" },
+    "declared_score": { "type": "number" },
+    "traceability_ok": { "type": "boolean" },
+    "freshness_ok": { "type": "boolean" },
+    "source_type_ok": { "type": "boolean" },
+    "evidence_prefix_ok": { "type": "boolean" },
+    "freshness_violations": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "freshness_warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "freshness_diagnostics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["field", "policy_type", "policy_key", "max_age_days", "age_days"],
+        "properties": {
+          "field": { "type": "string" },
+          "policy_type": { "type": "string" },
+          "policy_key": { "type": "string" },
+          "max_age_days": { "type": "integer" },
+          "age_days": { "type": "integer" }
+        }
+      }
+    }
+  }
+}

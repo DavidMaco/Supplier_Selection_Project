@@ -22,12 +22,31 @@ jobs:
       - name: Install strategy validator dependency
         run: pip install jsonschema
 
+      - name: Check traceability policy drift
+        run: |
+          python docs/strategy/check_traceability_policy_drift.py \
+            --candidate docs/strategy/pip-gold-v1.candidate.json \
+            --config docs/strategy/validator-config.json
+
       - name: Run strategy validator
         run: |
           python docs/strategy/validate_pip_output.py \
             --input docs/strategy/pip-gold-v1.candidate.json \
             --schema docs/strategy/pip-gold-v1.schema.json \
             --config docs/strategy/validator-config.json > docs/strategy/ci-validation.json
+
+      - name: Validate validator output contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          output = json.loads(Path("docs/strategy/ci-validation.json").read_text(encoding="utf-8"))
+          contract = json.loads(Path("docs/strategy/validator-output.contract.schema.json").read_text(encoding="utf-8"))
+          jsonschema.Draft202012Validator(contract).validate(output)
+          print("Validator output contract check passed")
+          PY
 
       - name: Enforce all checks valid
         run: |
@@ -68,12 +87,31 @@ jobs:
       - name: Install strategy validator dependency
         run: pip install jsonschema
 
+      - name: Check traceability policy drift
+        run: |
+          python docs/strategy/check_traceability_policy_drift.py \
+            --candidate docs/strategy/pip-gold-v1.candidate.json \
+            --config docs/strategy/validator-config.json
+
       - name: Run strategy validator for governance check
         run: |
           python docs/strategy/validate_pip_output.py \
             --input docs/strategy/pip-gold-v1.candidate.json \
             --schema docs/strategy/pip-gold-v1.schema.json \
             --config docs/strategy/validator-config.json > docs/strategy/ci-scheduled-validation.json
+
+      - name: Validate validator output contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          output = json.loads(Path("docs/strategy/ci-scheduled-validation.json").read_text(encoding="utf-8"))
+          contract = json.loads(Path("docs/strategy/validator-output.contract.schema.json").read_text(encoding="utf-8"))
+          jsonschema.Draft202012Validator(contract).validate(output)
+          print("Scheduled validator output contract check passed")
+          PY
 
       - name: Enforce monthly governance thresholds
         run: |
