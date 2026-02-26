@@ -1,0 +1,28 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "traceability_valid": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true,
+    "validator_traceability_enforced": true,
+    "schema_traceability_enforced": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Add schema-level pattern for external DataSourceID fields when standardized in candidate outputs.",
+    "Add cross-field schema rules for scorecard-evidence to KPI claim mapping via explicit IDs.",
+    "Introduce CI checks to validate manifest freshness and prevent stale validation artifacts.",
+    "Expand RiskIDs schema to allow explicit severity-qualified tags while preserving validator compatibility.",
+    "Publish a traceability style guide to standardize SourceTag and EvidenceID authoring across contributors."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}

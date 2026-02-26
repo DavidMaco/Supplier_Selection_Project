@@ -151,7 +151,10 @@
               "capability": { "type": "string" },
               "incumbent_strength": { "type": "string" },
               "our_advantage": { "type": "string" },
-              "proof": { "type": "string" }
+              "proof": {
+                "type": "string",
+                "pattern": "SourceTag=[A-Za-z]+:[A-Za-z0-9\\-]+"
+              }
             }
           }
         }
@@ -293,7 +296,10 @@
               "name": { "type": "string" },
               "weight": { "type": "number", "minimum": 1, "maximum": 30 },
               "score": { "type": "number", "minimum": 0, "maximum": 100 },
-              "evidence": { "type": "string" }
+              "evidence": {
+                "type": "string",
+                "pattern": "EvidenceID=[A-Z]{2}-\\d{2}"
+              }
             }
           }
         },
@@ -312,7 +318,10 @@
         "additionalProperties": false,
         "required": ["risk", "probability", "impact", "mitigation", "owner", "trigger"],
         "properties": {
-          "risk": { "type": "string" },
+          "risk": {
+            "type": "string",
+            "pattern": "^R\\d+:"
+          },
           "probability": { "type": "string", "enum": ["Low", "Medium", "High"] },
           "impact": { "type": "string", "enum": ["Low", "Medium", "High", "Critical"] },
           "mitigation": { "type": "string" },
@@ -333,7 +342,10 @@
           "action": { "type": "string" },
           "owner": { "type": "string" },
           "due_window": { "type": "string" },
-          "expected_outcome": { "type": "string" }
+          "expected_outcome": {
+            "type": "string",
+            "pattern": "\\[RiskIDs=[A-Z0-9,]+\\]"
+          }
         }
       }
     },
