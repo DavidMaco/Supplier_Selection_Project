@@ -1,0 +1,30 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "traceability_valid": true,
+  "freshness_valid": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true,
+    "schema_traceability_enforced": true,
+    "source_specific_freshness_enforced": true,
+    "evidence_prefix_specific_freshness_enforced": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Add optional warning mode to report nearing-expiry evidence before hard-fail thresholds.",
+    "Emit per-item max-age policy source in validation output for easier auditability.",
+    "Add tests for unknown SourceTag types and unknown EvidenceID prefixes fallback behavior.",
+    "Align SourceTag type enum between schema and validator config to prevent drift.",
+    "Create scheduled CI job to detect policy threshold drift against governance standards."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}

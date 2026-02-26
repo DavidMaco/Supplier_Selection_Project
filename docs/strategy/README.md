@@ -43,6 +43,7 @@ python docs/strategy/generate_evaluation_manifest.py --candidate docs/strategy/c
 - The schema requires complete section coverage and explicit assumptions/data gaps.
 - The schema now enforces traceability regex patterns for `SourceTag`, `EvidenceID`, `risk` IDs (`R#:`), and `next_actions.expected_outcome` RiskIDs tags.
 - The validator enforces evidence freshness using `DataAsOf=YYYY-MM-DD` markers and max-age policy from `validator-config.json`.
+- Freshness policy supports source-specific (`SourceTag` type) and scorecard evidence-prefix-specific (`EvidenceID` prefix) max-age thresholds.
 - The validator checks schema compliance and scorecard math/status consistency using `validator-config.json`.
 - Investability thresholds are read from the candidate JSON scorecard, not hard-coded.
 - The starter file `pip-gold-v1.template.json` is a scaffold; it is expected to fail schema quality checks until filled.

@@ -4,7 +4,7 @@ import re
 from datetime import date
 from pathlib import Path
 
-VALIDATOR_VERSION = "1.4.0"
+VALIDATOR_VERSION = "1.5.0"
 
 
 def _load_json(path: Path):
@@ -92,6 +92,24 @@ def _extract_risk_ids(payload: dict) -> set[str]:
     return risk_ids
 
 
+def _max_age_for_source_type(trace_cfg: dict, source_type: str, default_max_age: int) -> int:
+    mapping = trace_cfg.get("source_type_max_age_days", {})
+    value = mapping.get(source_type)
+    try:
+        return int(value) if value is not None else default_max_age
+    except (TypeError, ValueError):
+        return default_max_age
+
+
+def _max_age_for_evidence_prefix(trace_cfg: dict, prefix: str, default_max_age: int) -> int:
+    mapping = trace_cfg.get("evidence_prefix_max_age_days", {})
+    value = mapping.get(prefix)
+    try:
+        return int(value) if value is not None else default_max_age
+    except (TypeError, ValueError):
+        return default_max_age
+
+
 def validate_traceability(payload: dict, config: dict) -> dict:
     trace_cfg = config.get("traceability", {})
     source_tag_pattern = re.compile(trace_cfg.get("source_tag_pattern", r"SourceTag=[A-Za-z]+:[A-Za-z0-9\-]+"))
@@ -120,6 +138,13 @@ def validate_traceability(payload: dict, config: dict) -> dict:
         proof = str(row.get("proof", ""))
         if not source_tag_pattern.search(proof):
             source_tag_violations.append(f"competitor_matrix[{idx}].proof missing/invalid SourceTag")
+
+        source_type = ""
+        source_match = re.search(r"SourceTag=([A-Za-z]+):[A-Za-z0-9\-]+", proof)
+        if source_match:
+            source_type = source_match.group(1)
+        max_age_for_item = _max_age_for_source_type(trace_cfg, source_type, max_age_days)
+
         data_as_of_match = data_as_of_pattern.search(proof)
         if not data_as_of_match:
             freshness_violations.append(f"competitor_matrix[{idx}].proof missing DataAsOf")
@@ -132,9 +157,9 @@ def validate_traceability(payload: dict, config: dict) -> dict:
                     freshness_violations.append(
                         f"competitor_matrix[{idx}].proof DataAsOf is in the future"
                     )
-                elif age_days > max_age_days:
+                elif age_days > max_age_for_item:
                     freshness_violations.append(
-                        f"competitor_matrix[{idx}].proof DataAsOf exceeds max age ({age_days}>{max_age_days} days)"
+                        f"competitor_matrix[{idx}].proof DataAsOf exceeds max age ({age_days}>{max_age_for_item} days)"
                     )
             except ValueError:
                 freshness_violations.append(f"competitor_matrix[{idx}].proof has invalid DataAsOf date")
@@ -143,6 +168,13 @@ def validate_traceability(payload: dict, config: dict) -> dict:
         evidence = str(row.get("evidence", ""))
         if not evidence_id_pattern.search(evidence):
             evidence_id_violations.append(f"readiness_scorecard.dimensions[{idx}].evidence missing/invalid EvidenceID")
+
+        evidence_prefix = ""
+        evidence_match = re.search(r"EvidenceID=([A-Z]{2})-\d{2}", evidence)
+        if evidence_match:
+            evidence_prefix = evidence_match.group(1)
+        max_age_for_item = _max_age_for_evidence_prefix(trace_cfg, evidence_prefix, max_age_days)
+
         data_as_of_match = data_as_of_pattern.search(evidence)
         if not data_as_of_match:
             freshness_violations.append(f"readiness_scorecard.dimensions[{idx}].evidence missing DataAsOf")
@@ -155,9 +187,9 @@ def validate_traceability(payload: dict, config: dict) -> dict:
                     freshness_violations.append(
                         f"readiness_scorecard.dimensions[{idx}].evidence DataAsOf is in the future"
                     )
-                elif age_days > max_age_days:
+                elif age_days > max_age_for_item:
                     freshness_violations.append(
-                        f"readiness_scorecard.dimensions[{idx}].evidence DataAsOf exceeds max age ({age_days}>{max_age_days} days)"
+                        f"readiness_scorecard.dimensions[{idx}].evidence DataAsOf exceeds max age ({age_days}>{max_age_for_item} days)"
                     )
             except ValueError:
                 freshness_violations.append(

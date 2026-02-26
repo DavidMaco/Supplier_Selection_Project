@@ -10,6 +10,24 @@
     "strict_risk_linkage": true,
     "strict_freshness": true,
     "max_age_days": 365,
+    "source_type_max_age_days": {
+      "InternalAudit": 180,
+      "FinanceSignoff": 120,
+      "CustomerAttestation": 180,
+      "PMOReport": 120,
+      "DataQualityAudit": 180,
+      "ThirdPartyBenchmark": 270
+    },
+    "evidence_prefix_max_age_days": {
+      "BI": 120,
+      "DA": 180,
+      "RR": 180,
+      "SC": 180,
+      "OR": 90,
+      "AX": 120,
+      "CS": 120,
+      "DM": 180
+    },
     "source_tag_pattern": "SourceTag=[A-Za-z]+:[A-Za-z0-9\\-]+",
     "evidence_id_pattern": "EvidenceID=[A-Z]{2}-\\d{2}",
     "data_as_of_pattern": "DataAsOf=\\d{4}-\\d{2}-\\d{2}"
