@@ -326,7 +326,7 @@
       "target": ">=95%",
       "elite": ">=97%",
       "mechanism": "Hybrid classification with active learning and taxonomy optimization",
-      "verification": "Weekly holdout and quarterly external audit"
+      "verification": "Weekly holdout and quarterly external audit; UncertaintyBand(best/base/worst)=97%/95%/93%"
     },
     {
       "metric": "Insight latency",
@@ -334,7 +334,7 @@
       "target": "<=5s",
       "elite": "<=2s",
       "mechanism": "Pre-computed aggregates + low-latency serving layer",
-      "verification": "Synthetic and production latency monitoring"
+      "verification": "Synthetic and production latency monitoring; UncertaintyBand(best/base/worst)=2s/5s/8s"
     },
     {
       "metric": "Enterprise full refresh",
@@ -342,7 +342,7 @@
       "target": "<=12h",
       "elite": "<=4h",
       "mechanism": "Incremental ingestion with event-driven reprocessing",
-      "verification": "Daily pipeline SLA reports"
+      "verification": "Daily pipeline SLA reports; UncertaintyBand(best/base/worst)=4h/12h/24h"
     },
     {
       "metric": "Identified savings on addressable spend",
@@ -350,7 +350,7 @@
       "target": ">=6%",
       "elite": ">=8%",
       "mechanism": "Prescriptive optimization and negotiation analytics",
-      "verification": "Finance-validated quarterly value realization review"
+      "verification": "Finance-validated quarterly value realization review; UncertaintyBand(best/base/worst)=8%/6%/3%"
     },
     {
       "metric": "ROI within 12 months",
@@ -358,7 +358,7 @@
       "target": ">=10x",
       "elite": ">=12x",
       "mechanism": "Phased deployment with high-value category prioritization",
-      "verification": "Investment committee model and realized benefit ledger"
+      "verification": "Investment committee model and realized benefit ledger; UncertaintyBand(best/base/worst)=12x/10x/6x"
     },
     {
       "metric": "User adoption in procurement org",
@@ -366,7 +366,7 @@
       "target": ">=75%",
       "elite": ">=85%",
       "mechanism": "Workflow-embedded recommendations and role-based training",
-      "verification": "Monthly active usage and decision conversion analytics"
+      "verification": "Monthly active usage and decision conversion analytics; UncertaintyBand(best/base/worst)=85%/75%/60%"
     },
     {
       "metric": "Risk exposure reduction",
@@ -374,7 +374,7 @@
       "target": ">=30%",
       "elite": ">=40%",
       "mechanism": "Early-warning risk scoring and mitigation playbooks",
-      "verification": "Quarterly resilience scorecard against baseline"
+      "verification": "Quarterly resilience scorecard against baseline; UncertaintyBand(best/base/worst)=40%/30%/15%"
     },
     {
       "metric": "Tail spend reduction",
@@ -382,7 +382,7 @@
       "target": ">=15%",
       "elite": ">=25%",
       "mechanism": "Supplier consolidation and policy-driven buying channels",
-      "verification": "Category-level spend concentration analysis"
+      "verification": "Category-level spend concentration analysis; UncertaintyBand(best/base/worst)=25%/15%/8%"
     }
   ],
   "implementation_deployment": {
@@ -550,8 +550,8 @@
         "Month 2 realized-value evidence: finance-approved baseline ledger covers >=80% of pilot category spend (DataSourceIDs: ERP_AP_01, CLM_CONTRACTS_02, FIN_GL_03)"
       ],
       "fail_criteria": [
-        "Missing source access for top spend categories",
-        "No executive agreement on value baseline"
+        "Missing source access for top spend categories | Rollback=reduce pilot to available categories and freeze non-critical integrations until access is restored",
+        "No executive agreement on value baseline | Rollback=run facilitated CPO-CFO baseline workshop and pause gate progression"
       ],
       "dependencies": [
         "Executive sponsorship commitment",
@@ -576,8 +576,8 @@
         "Month 5 realized-value evidence: >=15 approved actions with attributable projected value and >=5 finance-validated realized postings (DataSourceIDs: ACTION_LOG_04, FIN_POSTINGS_05, WORKFLOW_AUDIT_06)"
       ],
       "fail_criteria": [
-        "Persistent data quality breach in critical fields",
-        "Security controls not accepted by governance review"
+        "Persistent data quality breach in critical fields | Rollback=disable affected data products, execute remediation sprint, and re-baseline quality thresholds",
+        "Security controls not accepted by governance review | Rollback=hold production release and complete control-gap remediation plan"
       ],
       "dependencies": [
         "Identity integration with enterprise IdP",
@@ -602,8 +602,8 @@
         "Month 8 realized-value evidence: realized-to-approved conversion >=45% with variance analysis published (DataSourceIDs: VALUE_LEDGER_07, APPROVALS_08, VARIANCE_PACK_09)"
       ],
       "fail_criteria": [
-        "Low user trust due to poor explainability",
-        "Alert noise exceeds operational tolerance"
+        "Low user trust due to poor explainability | Rollback=revert to human-reviewed recommendation mode with expanded rationale outputs",
+        "Alert noise exceeds operational tolerance | Rollback=raise alert thresholds and re-tune risk model before next cycle"
       ],
       "dependencies": [
         "Risk data provider integration stability",
@@ -628,8 +628,8 @@
         "Month 10 realized-value evidence: cumulative finance-validated impact >=35% of full-year target (DataSourceIDs: FIN_CLOSE_10, CONTROL_EVIDENCE_11, KPI_MART_12)"
       ],
       "fail_criteria": [
-        "Attribution disputes remain unresolved",
-        "Repeated SLO breaches in executive workflows"
+        "Attribution disputes remain unresolved | Rollback=switch to conservative finance-approved attribution rule set until disputes close",
+        "Repeated SLO breaches in executive workflows | Rollback=throttle advanced modules and prioritize core reliability hotfixes"
       ],
       "dependencies": [
         "Finance operations integration",
@@ -654,8 +654,8 @@
         "Month 12 realized-value evidence: cumulative finance-validated impact >=100% of annual committed target (DataSourceIDs: ANNUAL_VALUE_LEDGER_13, BOARD_PACK_14, AUDIT_TRAIL_15)"
       ],
       "fail_criteria": [
-        "Value realization remains forecast-only",
-        "Expansion blocked by unresolved compliance constraints"
+        "Value realization remains forecast-only | Rollback=halt regional expansion and focus on execution conversion in current pilot scope",
+        "Expansion blocked by unresolved compliance constraints | Rollback=defer blocked regions and continue rollout only in compliant jurisdictions"
       ],
       "dependencies": [
         "Regional operating model alignment",
@@ -926,13 +926,15 @@
     "Executive sponsorship remains active throughout the 12-month proof horizon.",
     "Procurement and finance teams can support monthly governance and sign-off cycles.",
     "Initial compliance scope targets ISO readiness trajectory with phased SOC evidence expansion.",
-    "Score precision policy: computed weighted score rounded to 2 decimals and declared score rounded to 1 decimal using half-up rounding."
+    "Score precision policy: computed weighted score rounded to 2 decimals and declared score rounded to 1 decimal using half-up rounding.",
+    "Status mapping formula: Investable if score >= investable_threshold (80); Red Flag if score <= red_flag_threshold (60); otherwise Borderline."
   ],
   "data_needed": [
     "Historical supplier disruption events with timestamps and impact severity",
     "Contract clause corpus with renewal and pricing term metadata",
     "Category-level baseline savings performance and sourcing cycle benchmarks",
     "Entity-level carbon emission factors tied to supplier and logistics legs",
-    "Regional regulatory and data residency requirements for deployment jurisdictions"
+    "Regional regulatory and data residency requirements for deployment jurisdictions",
+    "Scorecard evidence cross-reference table: Business impact->BI-01/KPI_MART_12; Data and AI quality->DA-02/MODEL_MONITOR_04; Risk resilience->RR-03/WORKFLOW_AUDIT_06; Security and compliance->SC-04/CONTROL_EVIDENCE_11; Operational reliability->OR-05/PROGRAM_PLAN_PM_01; Adoption and UX->AX-06/PRODUCT_USAGE_03; Commercial scalability->CS-07/CRM_PIPELINE_06; Defensibility moat->DM-08/BENCHMARK_NETWORK_16"
   ]
 }

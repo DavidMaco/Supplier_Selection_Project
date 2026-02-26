@@ -1,0 +1,25 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "v6 resolves most prior non-blocking improvements (score precision policy, scorecard evidence cross-reference, KPI uncertainty bands, and gate-level rollback actions); retain this structure as a release baseline.",
+    "Add third-party validation source tags to competitor proof entries where available (e.g., analyst, audit, customer attestation IDs) to close the remaining v5 recommendation.",
+    "Promote status-mapping and rounding rules from assumptions into a dedicated evaluator/validator config artifact to ensure single-source reproducibility across versions.",
+    "Standardize competitor proof strings into a strict parseable key set (period, sample_n, baseline, current, delta, source_tag) for diligence automation.",
+    "Maintain explicit EvidenceID-to-artifact URI mapping outside candidate JSON (data room index) so investors can trace each readiness dimension to immutable evidence."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}
