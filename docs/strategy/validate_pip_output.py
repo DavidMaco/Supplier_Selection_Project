@@ -4,7 +4,7 @@ import re
 from datetime import date
 from pathlib import Path
 
-VALIDATOR_VERSION = "1.5.0"
+VALIDATOR_VERSION = "1.6.0"
 
 
 def _load_json(path: Path):
@@ -121,11 +121,14 @@ def validate_traceability(payload: dict, config: dict) -> dict:
     strict_risk_linkage = bool(trace_cfg.get("strict_risk_linkage", False))
     strict_freshness = bool(trace_cfg.get("strict_freshness", False))
     max_age_days = int(trace_cfg.get("max_age_days", 365))
+    warning_window_days = int(trace_cfg.get("freshness_warning_window_days", 30))
 
     source_tag_violations = []
     evidence_id_violations = []
     risk_linkage_violations = []
     freshness_violations = []
+    freshness_warnings = []
+    freshness_diagnostics = []
 
     context_date_raw = str(payload.get("meta", {}).get("date_context", ""))
     try:
@@ -153,6 +156,13 @@ def validate_traceability(payload: dict, config: dict) -> dict:
             try:
                 data_as_of_date = date.fromisoformat(data_as_of_raw)
                 age_days = (context_date - data_as_of_date).days
+                freshness_diagnostics.append({
+                    "field": f"competitor_matrix[{idx}].proof",
+                    "policy_type": "source_type" if source_type else "fallback",
+                    "policy_key": source_type if source_type else "global",
+                    "max_age_days": max_age_for_item,
+                    "age_days": age_days,
+                })
                 if age_days < 0:
                     freshness_violations.append(
                         f"competitor_matrix[{idx}].proof DataAsOf is in the future"
@@ -160,6 +170,10 @@ def validate_traceability(payload: dict, config: dict) -> dict:
                 elif age_days > max_age_for_item:
                     freshness_violations.append(
                         f"competitor_matrix[{idx}].proof DataAsOf exceeds max age ({age_days}>{max_age_for_item} days)"
+                    )
+                elif age_days >= max(0, max_age_for_item - warning_window_days):
+                    freshness_warnings.append(
+                        f"competitor_matrix[{idx}].proof DataAsOf nearing max age ({age_days}/{max_age_for_item} days)"
                     )
             except ValueError:
                 freshness_violations.append(f"competitor_matrix[{idx}].proof has invalid DataAsOf date")
@@ -183,6 +197,13 @@ def validate_traceability(payload: dict, config: dict) -> dict:
             try:
                 data_as_of_date = date.fromisoformat(data_as_of_raw)
                 age_days = (context_date - data_as_of_date).days
+                freshness_diagnostics.append({
+                    "field": f"readiness_scorecard.dimensions[{idx}].evidence",
+                    "policy_type": "evidence_prefix" if evidence_prefix else "fallback",
+                    "policy_key": evidence_prefix if evidence_prefix else "global",
+                    "max_age_days": max_age_for_item,
+                    "age_days": age_days,
+                })
                 if age_days < 0:
                     freshness_violations.append(
                         f"readiness_scorecard.dimensions[{idx}].evidence DataAsOf is in the future"
@@ -190,6 +211,10 @@ def validate_traceability(payload: dict, config: dict) -> dict:
                 elif age_days > max_age_for_item:
                     freshness_violations.append(
                         f"readiness_scorecard.dimensions[{idx}].evidence DataAsOf exceeds max age ({age_days}>{max_age_for_item} days)"
+                    )
+                elif age_days >= max(0, max_age_for_item - warning_window_days):
+                    freshness_warnings.append(
+                        f"readiness_scorecard.dimensions[{idx}].evidence DataAsOf nearing max age ({age_days}/{max_age_for_item} days)"
                     )
             except ValueError:
                 freshness_violations.append(
@@ -236,6 +261,8 @@ def validate_traceability(payload: dict, config: dict) -> dict:
         "evidence_id_violations": evidence_id_violations,
         "risk_linkage_violations": risk_linkage_violations,
         "freshness_violations": freshness_violations,
+        "freshness_warnings": freshness_warnings,
+        "freshness_diagnostics": freshness_diagnostics,
     }
 
 

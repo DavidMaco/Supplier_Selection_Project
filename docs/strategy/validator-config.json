@@ -10,6 +10,7 @@
     "strict_risk_linkage": true,
     "strict_freshness": true,
     "max_age_days": 365,
+    "freshness_warning_window_days": 30,
     "source_type_max_age_days": {
       "InternalAudit": 180,
       "FinanceSignoff": 120,

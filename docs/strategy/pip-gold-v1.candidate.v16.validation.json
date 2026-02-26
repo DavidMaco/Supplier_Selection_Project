@@ -1,0 +1,132 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "all_checks_valid": true,
+  "validator_version": "1.6.0",
+  "config_path": "docs\\strategy\\validator-config.json",
+  "total_weight_matches": true,
+  "computed_total_weight": 100,
+  "declared_total_weight": 100,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "score_close": true,
+  "declared_status": "Investable",
+  "expected_status": "Investable",
+  "status_matches": true,
+  "rounding_policy": {
+    "computed_decimals": 2,
+    "declared_decimals": 1,
+    "score_tolerance": 0.5
+  },
+  "traceability_ok": true,
+  "source_tag_ok": true,
+  "evidence_id_ok": true,
+  "risk_linkage_ok": true,
+  "freshness_ok": true,
+  "source_tag_violations": [],
+  "evidence_id_violations": [],
+  "risk_linkage_violations": [],
+  "freshness_violations": [],
+  "freshness_warnings": [],
+  "freshness_diagnostics": [
+    {
+      "field": "competitor_matrix[1].proof",
+      "policy_type": "source_type",
+      "policy_key": "CustomerAttestation",
+      "max_age_days": 180,
+      "age_days": 26
+    },
+    {
+      "field": "competitor_matrix[2].proof",
+      "policy_type": "source_type",
+      "policy_key": "InternalAudit",
+      "max_age_days": 180,
+      "age_days": 26
+    },
+    {
+      "field": "competitor_matrix[3].proof",
+      "policy_type": "source_type",
+      "policy_key": "ThirdPartyBenchmark",
+      "max_age_days": 270,
+      "age_days": 26
+    },
+    {
+      "field": "competitor_matrix[4].proof",
+      "policy_type": "source_type",
+      "policy_key": "FinanceSignoff",
+      "max_age_days": 120,
+      "age_days": 26
+    },
+    {
+      "field": "competitor_matrix[5].proof",
+      "policy_type": "source_type",
+      "policy_key": "PMOReport",
+      "max_age_days": 120,
+      "age_days": 26
+    },
+    {
+      "field": "competitor_matrix[6].proof",
+      "policy_type": "source_type",
+      "policy_key": "DataQualityAudit",
+      "max_age_days": 180,
+      "age_days": 26
+    },
+    {
+      "field": "readiness_scorecard.dimensions[1].evidence",
+      "policy_type": "evidence_prefix",
+      "policy_key": "BI",
+      "max_age_days": 120,
+      "age_days": 26
+    },
+    {
+      "field": "readiness_scorecard.dimensions[2].evidence",
+      "policy_type": "evidence_prefix",
+      "policy_key": "DA",
+      "max_age_days": 180,
+      "age_days": 26
+    },
+    {
+      "field": "readiness_scorecard.dimensions[3].evidence",
+      "policy_type": "evidence_prefix",
+      "policy_key": "RR",
+      "max_age_days": 180,
+      "age_days": 26
+    },
+    {
+      "field": "readiness_scorecard.dimensions[4].evidence",
+      "policy_type": "evidence_prefix",
+      "policy_key": "SC",
+      "max_age_days": 180,
+      "age_days": 26
+    },
+    {
+      "field": "readiness_scorecard.dimensions[5].evidence",
+      "policy_type": "evidence_prefix",
+      "policy_key": "OR",
+      "max_age_days": 90,
+      "age_days": 26
+    },
+    {
+      "field": "readiness_scorecard.dimensions[6].evidence",
+      "policy_type": "evidence_prefix",
+      "policy_key": "AX",
+      "max_age_days": 120,
+      "age_days": 26
+    },
+    {
+      "field": "readiness_scorecard.dimensions[7].evidence",
+      "policy_type": "evidence_prefix",
+      "policy_key": "CS",
+      "max_age_days": 120,
+      "age_days": 26
+    },
+    {
+      "field": "readiness_scorecard.dimensions[8].evidence",
+      "policy_type": "evidence_prefix",
+      "policy_key": "DM",
+      "max_age_days": 180,
+      "age_days": 26
+    }
+  ]
+}

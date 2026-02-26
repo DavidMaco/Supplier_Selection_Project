@@ -32,6 +32,7 @@ def _base_traceability_config() -> dict:
         "strict_risk_linkage": True,
         "strict_freshness": True,
         "max_age_days": 300,
+        "freshness_warning_window_days": 30,
         "source_type_max_age_days": {
             "FinanceSignoff": 120,
             "ThirdPartyBenchmark": 270,
@@ -98,3 +99,19 @@ def test_missing_data_as_of_fails_when_strict_freshness_enabled():
     assert result["freshness_ok"] is False
     assert any("competitor_matrix[1].proof missing DataAsOf" in v for v in result["freshness_violations"])
     assert any("readiness_scorecard.dimensions[1].evidence missing DataAsOf" in v for v in result["freshness_violations"])
+
+
+def test_warning_and_diagnostics_present_near_threshold():
+    payload = _base_payload(
+        proof="SourceTag=FinanceSignoff:NEG-1|DataAsOf=2025-11-08",
+        evidence="EvidenceID=BI-01; DataAsOf=2025-11-08",
+    )
+    result = _run_traceability(payload, _base_traceability_config())
+    assert result["freshness_ok"] is True
+    assert len(result["freshness_warnings"]) >= 1
+    assert len(result["freshness_diagnostics"]) == 2
+    first = result["freshness_diagnostics"][0]
+    assert "field" in first
+    assert "policy_type" in first
+    assert "max_age_days" in first
+    assert "age_days" in first

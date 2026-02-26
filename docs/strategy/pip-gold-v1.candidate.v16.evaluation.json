@@ -1,0 +1,30 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "traceability_valid": true,
+  "freshness_valid": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true,
+    "source_specific_freshness_enforced": true,
+    "near_expiry_warning_supported": true,
+    "policy_diagnostics_exported": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Add explicit CI assertion on freshness_warnings volume thresholds to catch stale drift early.",
+    "Emit diagnostics summary counts by policy_key for board-level governance dashboards.",
+    "Add regression tests for future-date DataAsOf with warning-window interactions.",
+    "Version pin strategy validator dependency set in CI to reduce nondeterminism.",
+    "Add changelog entries for validator contract fields to support downstream consumers."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}
