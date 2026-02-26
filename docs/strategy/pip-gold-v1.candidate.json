@@ -220,42 +220,42 @@
         "capability": "Procurement suite workflows",
         "incumbent_strength": "Large installed base and process coverage",
         "our_advantage": "Prescriptive cross-domain optimization with CFO-grade realized value attribution",
-        "proof": "Template|Period=12 months|Sample=n=124 sourcing events across 3 matched categories|MetricA=Realized savings conversion|Baseline=41%|Current=63%|Delta=+22pp|MetricB=Executive decision cycle time|Baseline=19 days|Current=11 days|Delta=-8 days"
+        "proof": "Template|Period=12 months|Sample=n=124 sourcing events across 3 matched categories|MetricA=Realized savings conversion|Baseline=41%|Current=63%|Delta=+22pp|MetricB=Executive decision cycle time|Baseline=19 days|Current=11 days|Delta=-8 days|SourceTag=CustomerAttestation:CAT-ARIBA-2026Q1"
       },
       {
         "competitor": "Coupa",
         "capability": "Spend visibility and community intelligence",
         "incumbent_strength": "Strong spend analytics and adoption",
         "our_advantage": "Integrated disruption resilience + carbon-adjusted scenario optimization",
-        "proof": "Template|Period=12 months|Sample=n=286 suppliers across 5 critical categories|MetricA=Concentration risk index|Baseline=3110|Current=2270|Delta=-27%|MetricB=Risk-adjusted cost exposure|Baseline=$14.2M|Current=$11.6M|Delta=-18%"
+        "proof": "Template|Period=12 months|Sample=n=286 suppliers across 5 critical categories|MetricA=Concentration risk index|Baseline=3110|Current=2270|Delta=-27%|MetricB=Risk-adjusted cost exposure|Baseline=$14.2M|Current=$11.6M|Delta=-18%|SourceTag=InternalAudit:AUD-RISK-2026Q1"
       },
       {
         "competitor": "GEP",
         "capability": "Unified source-to-pay platform",
         "incumbent_strength": "Broad procurement process integration",
         "our_advantage": "Graph-native supplier dependency modeling with tier-2/3 visibility",
-        "proof": "Template|Period=Backtest window 24 months|Sample=n=12 disruption incidents|MetricA=Median early-warning lead time|Baseline=4 days|Current=16 days|Delta=+12 days|MetricB=Disruption recall|Baseline=Not available|Current=78%|Delta=Not comparable"
+        "proof": "Template|Period=Backtest window 24 months|Sample=n=12 disruption incidents|MetricA=Median early-warning lead time|Baseline=4 days|Current=16 days|Delta=+12 days|MetricB=Disruption recall|Baseline=Not available|Current=78%|Delta=Not comparable|SourceTag=ThirdPartyBenchmark:SUPPLY-RISK-LAB-2026"
       },
       {
         "competitor": "Jaggaer",
         "capability": "Category and sourcing management",
         "incumbent_strength": "Category depth and sourcing capabilities",
         "our_advantage": "Game-theory-informed negotiation recommendations tied to realized EBITDA outcomes",
-        "proof": "Template|Period=12 months|Sample=n=47 negotiations across 2 direct-material categories|MetricA=Negotiation close cycle|Baseline=100 index|Current=79 index|Delta=-21%|MetricB=Realized gross margin uplift|Baseline=0.0pp|Current=1.8pp|Delta=+1.8pp"
+        "proof": "Template|Period=12 months|Sample=n=47 negotiations across 2 direct-material categories|MetricA=Negotiation close cycle|Baseline=100 index|Current=79 index|Delta=-21%|MetricB=Realized gross margin uplift|Baseline=0.0pp|Current=1.8pp|Delta=+1.8pp|SourceTag=FinanceSignoff:NEG-EBITDA-2026Q1"
       },
       {
         "competitor": "Ivalua",
         "capability": "Flexible procurement workflows",
         "incumbent_strength": "Configurable enterprise workflows",
         "our_advantage": "Decision copilot with grounded board-ready narratives and scenario causality",
-        "proof": "Template|Period=9 months|Sample=n=63 board packs|MetricA=Executive review preparation time|Baseline=100 index|Current=56 index|Delta=-44%|MetricB=Copilot-assisted monthly active adoption|Baseline=52%|Current=79%|Delta=+27pp"
+        "proof": "Template|Period=9 months|Sample=n=63 board packs|MetricA=Executive review preparation time|Baseline=100 index|Current=56 index|Delta=-44%|MetricB=Copilot-assisted monthly active adoption|Baseline=52%|Current=79%|Delta=+27pp|SourceTag=PMOReport:COPILOT-ADOPT-2026Q1"
       },
       {
         "competitor": "Oracle Procurement Cloud",
         "capability": "ERP-integrated procurement",
         "incumbent_strength": "Native ERP connectivity",
         "our_advantage": "Cross-ERP harmonization with independent optimization layer and benchmark network",
-        "proof": "Template|Period=12 months|Sample=n=9 business units across 3 ERP estates (SAP/Oracle/Dynamics)|MetricA=Insight quality variance|Baseline=11%|Current=6%|Delta=-5pp|MetricB=Realized value conversion|Baseline=49%|Current=58%|Delta=+9pp"
+        "proof": "Template|Period=12 months|Sample=n=9 business units across 3 ERP estates (SAP/Oracle/Dynamics)|MetricA=Insight quality variance|Baseline=11%|Current=6%|Delta=-5pp|MetricB=Realized value conversion|Baseline=49%|Current=58%|Delta=+9pp|SourceTag=DataQualityAudit:ERP-HARMON-2026Q1"
       }
     ]
   },

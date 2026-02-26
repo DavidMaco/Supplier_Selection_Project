@@ -1,0 +1,25 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Make validator-config the strict single source of truth by removing duplicated rounding/status-mapping policy text from assumptions.",
+    "Extend SourceTag coverage beyond competitor proofs to scorecard evidence and key KPI claims for uniform audit traceability.",
+    "Normalize SourceTag taxonomy (e.g., CustomerAttestation/InternalAudit/ThirdPartyBenchmark) with a controlled enum and ID format checks.",
+    "Add automated validator checks that enforce SourceTag presence on all externally-facing proof/evidence fields, not only competitor_matrix proofs.",
+    "Add a reproducibility artifact (evaluation manifest) that records candidate hash, schema hash, config hash, and validator version per run."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}

@@ -1,0 +1,12 @@
+{
+  "rounding": {
+    "computed_decimals": 2,
+    "declared_decimals": 1,
+    "score_tolerance": 0.5
+  },
+  "status_mapping": {
+    "investable_rule": "score >= investable_threshold",
+    "red_flag_rule": "score <= red_flag_threshold",
+    "borderline_rule": "otherwise"
+  }
+}
