@@ -1,0 +1,35 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "traceability_valid": true,
+  "freshness_valid": true,
+  "policy_drift_valid": true,
+  "validator_contract_valid": true,
+  "strategy_tests_passed": true,
+  "fast_governance_gate_valid": true,
+  "path_aware_fast_gate_enabled": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true,
+    "fast_governance_ci_job_present": true,
+    "path_filtering_enabled": true,
+    "governance_gate_local_equivalent_passed": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Add explicit workflow summary output showing whether path filter triggered governance checks.",
+    "Add integration test fixture to verify path-filter include patterns for newly added strategy files.",
+    "Consider separating workflow trigger paths from job-level path filter to reduce duplicate evaluation.",
+    "Archive ci-fast-validation JSON as an artifact on failures for quick diagnosis.",
+    "Measure median CI runtime reduction after path-aware filtering and track in changelog."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}

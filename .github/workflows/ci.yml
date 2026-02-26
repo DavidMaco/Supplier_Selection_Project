@@ -15,24 +15,40 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Detect strategy governance changes
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            strategy:
+              - 'docs/strategy/**'
+              - 'tests/test_strategy_validator.py'
+              - 'tests/test_traceability_policy_drift.py'
+              - '.github/workflows/ci.yml'
+
       - name: Set up Python
+        if: steps.changes.outputs.strategy == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
       - name: Install strategy governance dependencies
+        if: steps.changes.outputs.strategy == 'true'
         run: pip install jsonschema pytest
 
       - name: Run strategy governance tests
+        if: steps.changes.outputs.strategy == 'true'
         run: python -m pytest tests/test_strategy_validator.py tests/test_traceability_policy_drift.py -v --tb=short
 
       - name: Run policy drift check
+        if: steps.changes.outputs.strategy == 'true'
         run: |
           python docs/strategy/check_traceability_policy_drift.py \
             --candidate docs/strategy/pip-gold-v1.candidate.json \
             --config docs/strategy/validator-config.json
 
       - name: Run validator quick gate
+        if: steps.changes.outputs.strategy == 'true'
         run: |
           python docs/strategy/validate_pip_output.py \
             --input docs/strategy/pip-gold-v1.candidate.json \
@@ -40,6 +56,7 @@ jobs:
             --config docs/strategy/validator-config.json > docs/strategy/ci-fast-validation.json
 
       - name: Enforce quick gate thresholds
+        if: steps.changes.outputs.strategy == 'true'
         run: |
           python - <<'PY'
           import json
@@ -50,6 +67,10 @@ jobs:
               raise SystemExit("Fast governance gate failed: all_checks_valid=false")
           print("Fast governance gate passed")
           PY
+
+      - name: No strategy changes
+        if: steps.changes.outputs.strategy != 'true'
+        run: echo "No strategy governance file changes detected; skipping fast governance checks."
 
   strategy-validation:
     runs-on: ubuntu-latest
