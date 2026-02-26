@@ -1,0 +1,420 @@
+{
+  "meta": {
+    "date_context": "2026-02-26",
+    "target_market": "Fortune 500 global enterprises",
+    "proof_horizon_months": 12,
+    "compliance_anchor": [
+      "ISO 27001 path",
+      "SOC 2 Type II trajectory",
+      "GDPR baseline"
+    ],
+    "core_edges": [
+      "measurable savings uplift",
+      "risk resilience",
+      "sustainability performance",
+      "autonomous decision intelligence"
+    ]
+  },
+  "strategic_definition": {
+    "positioning": "",
+    "stakeholder_value": [
+      {
+        "stakeholder": "CPO",
+        "pain_points": [""],
+        "value_outcomes": [""]
+      },
+      {
+        "stakeholder": "CFO",
+        "pain_points": [""],
+        "value_outcomes": [""]
+      },
+      {
+        "stakeholder": "CEO/Board",
+        "pain_points": [""],
+        "value_outcomes": [""]
+      }
+    ],
+    "tam_sam_som": {
+      "tam_usd": 1,
+      "sam_usd": 1,
+      "som_usd": 1,
+      "method": ""
+    },
+    "incumbent_gap_analysis": ["", "", "", ""],
+    "category_statement": "Category-defining operating system for procurement decision intelligence at global enterprise scale."
+  },
+  "system_architecture": {
+    "data_layer": ["", "", "", "", "", "", "", ""],
+    "knowledge_graph": "",
+    "metadata_governance": ["", "", "", "", ""],
+    "security_rbac": ["", "", "", "", ""],
+    "integration_map": ["", "", "", "", "", "", "", ""]
+  },
+  "ai_intelligence_layer": {
+    "classification_engine": {
+      "design": "",
+      "key_methods": ["", "", ""],
+      "metrics": ["", "", ""],
+      "mechanism": "",
+      "verification": "",
+      "confidence": "Medium"
+    },
+    "prescriptive_engine": {
+      "design": "",
+      "key_methods": ["", "", ""],
+      "metrics": ["", "", ""],
+      "mechanism": "",
+      "verification": "",
+      "confidence": "Medium"
+    },
+    "risk_engine": {
+      "design": "",
+      "key_methods": ["", "", ""],
+      "metrics": ["", "", ""],
+      "mechanism": "",
+      "verification": "",
+      "confidence": "Medium"
+    },
+    "genai_copilot": {
+      "design": "",
+      "key_methods": ["", "", ""],
+      "metrics": ["", "", ""],
+      "mechanism": "",
+      "verification": "",
+      "confidence": "Medium"
+    }
+  },
+  "financial_impact_engine": {
+    "kpis": ["", "", "", "", ""],
+    "formulas": ["", "", "", "", ""],
+    "attribution_model": "",
+    "audit_mechanism": ["", "", ""],
+    "realized_vs_forecast_logic": ""
+  },
+  "differentiation_strategy": {
+    "moat_mechanisms": ["", "", "", ""],
+    "switching_costs": ["", "", ""],
+    "network_effects": ["", ""],
+    "competitor_matrix": [
+      {
+        "competitor": "",
+        "capability": "",
+        "incumbent_strength": "",
+        "our_advantage": "",
+        "proof": ""
+      },
+      {
+        "competitor": "",
+        "capability": "",
+        "incumbent_strength": "",
+        "our_advantage": "",
+        "proof": ""
+      },
+      {
+        "competitor": "",
+        "capability": "",
+        "incumbent_strength": "",
+        "our_advantage": "",
+        "proof": ""
+      },
+      {
+        "competitor": "",
+        "capability": "",
+        "incumbent_strength": "",
+        "our_advantage": "",
+        "proof": ""
+      },
+      {
+        "competitor": "",
+        "capability": "",
+        "incumbent_strength": "",
+        "our_advantage": "",
+        "proof": ""
+      },
+      {
+        "competitor": "",
+        "capability": "",
+        "incumbent_strength": "",
+        "our_advantage": "",
+        "proof": ""
+      }
+    ]
+  },
+  "innovation_layer": [
+    {
+      "innovation": "",
+      "description": "",
+      "replication_difficulty": "",
+      "proof_metric": ""
+    },
+    {
+      "innovation": "",
+      "description": "",
+      "replication_difficulty": "",
+      "proof_metric": ""
+    },
+    {
+      "innovation": "",
+      "description": "",
+      "replication_difficulty": "",
+      "proof_metric": ""
+    },
+    {
+      "innovation": "",
+      "description": "",
+      "replication_difficulty": "",
+      "proof_metric": ""
+    },
+    {
+      "innovation": "",
+      "description": "",
+      "replication_difficulty": "",
+      "proof_metric": ""
+    },
+    {
+      "innovation": "",
+      "description": "",
+      "replication_difficulty": "",
+      "proof_metric": ""
+    }
+  ],
+  "product_experience": {
+    "personas": ["", "", "", "", ""],
+    "ux_principles": ["", "", "", ""],
+    "latency_standard_seconds": 5,
+    "refresh_standard_hours": 24,
+    "decision_auditability": ["", "", ""]
+  },
+  "performance_standards": [
+    {
+      "metric": "",
+      "minimum": "",
+      "target": "",
+      "elite": "",
+      "mechanism": "",
+      "verification": ""
+    },
+    {
+      "metric": "",
+      "minimum": "",
+      "target": "",
+      "elite": "",
+      "mechanism": "",
+      "verification": ""
+    },
+    {
+      "metric": "",
+      "minimum": "",
+      "target": "",
+      "elite": "",
+      "mechanism": "",
+      "verification": ""
+    },
+    {
+      "metric": "",
+      "minimum": "",
+      "target": "",
+      "elite": "",
+      "mechanism": "",
+      "verification": ""
+    },
+    {
+      "metric": "",
+      "minimum": "",
+      "target": "",
+      "elite": "",
+      "mechanism": "",
+      "verification": ""
+    },
+    {
+      "metric": "",
+      "minimum": "",
+      "target": "",
+      "elite": "",
+      "mechanism": "",
+      "verification": ""
+    },
+    {
+      "metric": "",
+      "minimum": "",
+      "target": "",
+      "elite": "",
+      "mechanism": "",
+      "verification": ""
+    },
+    {
+      "metric": "",
+      "minimum": "",
+      "target": "",
+      "elite": "",
+      "mechanism": "",
+      "verification": ""
+    }
+  ],
+  "implementation_deployment": {
+    "phases": [
+      {
+        "phase": "Phase 1: Data discovery",
+        "goals": ["", ""],
+        "deliverables": ["", "", ""]
+      },
+      {
+        "phase": "Phase 2: Taxonomy alignment",
+        "goals": ["", ""],
+        "deliverables": ["", "", ""]
+      },
+      {
+        "phase": "Phase 3: ML training",
+        "goals": ["", ""],
+        "deliverables": ["", "", ""]
+      },
+      {
+        "phase": "Phase 4: Risk integration",
+        "goals": ["", ""],
+        "deliverables": ["", "", ""]
+      },
+      {
+        "phase": "Phase 5: Financial modeling integration",
+        "goals": ["", ""],
+        "deliverables": ["", "", ""]
+      },
+      {
+        "phase": "Phase 6: Executive deployment",
+        "goals": ["", ""],
+        "deliverables": ["", "", ""]
+      },
+      {
+        "phase": "Phase 7: Continuous optimization loop",
+        "goals": ["", ""],
+        "deliverables": ["", "", ""]
+      }
+    ],
+    "time_to_value_weeks": 12,
+    "change_management": ["", "", ""],
+    "stakeholder_alignment": ["", "", ""],
+    "training_adoption": ["", "", ""]
+  },
+  "commercial_investment_model": {
+    "pricing_model": ["", "", ""],
+    "unit_economics": {
+      "gross_margin_target_pct": 70,
+      "cac_ltv_logic": "",
+      "expansion_strategy": ""
+    },
+    "revenue_model_3y": ["", "", ""],
+    "valuation_rationale": "",
+    "exit_scenarios": ["", ""]
+  },
+  "global_scalability_compliance": ["", "", "", "", "", ""],
+  "board_investor_narrative": {
+    "category_pitch": "The operating system for enterprise procurement decision intelligence, turning spend into measurable EBITDA and resilience outcomes.",
+    "five_slide_outline": ["", "", "", "", ""],
+    "three_year_strategic_narrative": "",
+    "mission_critical_thesis": ""
+  },
+  "plan_12_month": [
+    {
+      "window": "0-2",
+      "objectives": ["", ""],
+      "deliverables": ["", "", ""],
+      "pass_criteria": ["", "", ""],
+      "fail_criteria": ["", ""],
+      "dependencies": ["", ""]
+    },
+    {
+      "window": "3-5",
+      "objectives": ["", ""],
+      "deliverables": ["", "", ""],
+      "pass_criteria": ["", "", ""],
+      "fail_criteria": ["", ""],
+      "dependencies": ["", ""]
+    },
+    {
+      "window": "6-8",
+      "objectives": ["", ""],
+      "deliverables": ["", "", ""],
+      "pass_criteria": ["", "", ""],
+      "fail_criteria": ["", ""],
+      "dependencies": ["", ""]
+    },
+    {
+      "window": "9-10",
+      "objectives": ["", ""],
+      "deliverables": ["", "", ""],
+      "pass_criteria": ["", "", ""],
+      "fail_criteria": ["", ""],
+      "dependencies": ["", ""]
+    },
+    {
+      "window": "11-12",
+      "objectives": ["", ""],
+      "deliverables": ["", "", ""],
+      "pass_criteria": ["", "", ""],
+      "fail_criteria": ["", ""],
+      "dependencies": ["", ""]
+    }
+  ],
+  "roadmap_3_year": [
+    {
+      "year": 1,
+      "strategic_objectives": ["", ""],
+      "milestones": ["", "", ""],
+      "dependencies": ["", ""]
+    },
+    {
+      "year": 2,
+      "strategic_objectives": ["", ""],
+      "milestones": ["", "", ""],
+      "dependencies": ["", ""]
+    },
+    {
+      "year": 3,
+      "strategic_objectives": ["", ""],
+      "milestones": ["", "", ""],
+      "dependencies": ["", ""]
+    }
+  ],
+  "readiness_scorecard": {
+    "dimensions": [
+      { "name": "Business impact", "weight": 15, "score": 0, "evidence": "" },
+      { "name": "Data and AI quality", "weight": 15, "score": 0, "evidence": "" },
+      { "name": "Risk resilience", "weight": 10, "score": 0, "evidence": "" },
+      { "name": "Security and compliance", "weight": 15, "score": 0, "evidence": "" },
+      { "name": "Operational reliability", "weight": 10, "score": 0, "evidence": "" },
+      { "name": "Adoption and UX", "weight": 10, "score": 0, "evidence": "" },
+      { "name": "Commercial scalability", "weight": 15, "score": 0, "evidence": "" },
+      { "name": "Defensibility moat", "weight": 10, "score": 0, "evidence": "" }
+    ],
+    "total_weight": 100,
+    "investable_threshold": 80,
+    "red_flag_threshold": 60,
+    "current_score": 0,
+    "status": "Red Flag"
+  },
+  "risk_register": [
+    { "risk": "", "probability": "Medium", "impact": "High", "mitigation": "", "owner": "", "trigger": "" },
+    { "risk": "", "probability": "Medium", "impact": "High", "mitigation": "", "owner": "", "trigger": "" },
+    { "risk": "", "probability": "Medium", "impact": "High", "mitigation": "", "owner": "", "trigger": "" },
+    { "risk": "", "probability": "Medium", "impact": "High", "mitigation": "", "owner": "", "trigger": "" },
+    { "risk": "", "probability": "Medium", "impact": "High", "mitigation": "", "owner": "", "trigger": "" },
+    { "risk": "", "probability": "Medium", "impact": "High", "mitigation": "", "owner": "", "trigger": "" },
+    { "risk": "", "probability": "Medium", "impact": "High", "mitigation": "", "owner": "", "trigger": "" },
+    { "risk": "", "probability": "Medium", "impact": "High", "mitigation": "", "owner": "", "trigger": "" },
+    { "risk": "", "probability": "Medium", "impact": "High", "mitigation": "", "owner": "", "trigger": "" },
+    { "risk": "", "probability": "Medium", "impact": "High", "mitigation": "", "owner": "", "trigger": "" }
+  ],
+  "next_actions": [
+    { "action": "", "owner": "", "due_window": "", "expected_outcome": "" },
+    { "action": "", "owner": "", "due_window": "", "expected_outcome": "" },
+    { "action": "", "owner": "", "due_window": "", "expected_outcome": "" },
+    { "action": "", "owner": "", "due_window": "", "expected_outcome": "" },
+    { "action": "", "owner": "", "due_window": "", "expected_outcome": "" },
+    { "action": "", "owner": "", "due_window": "", "expected_outcome": "" },
+    { "action": "", "owner": "", "due_window": "", "expected_outcome": "" },
+    { "action": "", "owner": "", "due_window": "", "expected_outcome": "" },
+    { "action": "", "owner": "", "due_window": "", "expected_outcome": "" },
+    { "action": "", "owner": "", "due_window": "", "expected_outcome": "" }
+  ],
+  "assumptions": ["", "", "", "", ""],
+  "data_needed": ["", "", "", "", ""]
+}

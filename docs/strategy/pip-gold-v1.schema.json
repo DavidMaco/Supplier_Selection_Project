@@ -1,0 +1,381 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/pip-gold-v1.schema.json",
+  "title": "Procurement Intelligence Platform Gold Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "meta",
+    "strategic_definition",
+    "system_architecture",
+    "ai_intelligence_layer",
+    "financial_impact_engine",
+    "differentiation_strategy",
+    "innovation_layer",
+    "product_experience",
+    "performance_standards",
+    "implementation_deployment",
+    "commercial_investment_model",
+    "global_scalability_compliance",
+    "board_investor_narrative",
+    "plan_12_month",
+    "roadmap_3_year",
+    "readiness_scorecard",
+    "risk_register",
+    "next_actions",
+    "assumptions",
+    "data_needed"
+  ],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["date_context", "target_market", "proof_horizon_months", "compliance_anchor", "core_edges"],
+      "properties": {
+        "date_context": { "type": "string", "const": "2026-02-26" },
+        "target_market": { "type": "string", "const": "Fortune 500 global enterprises" },
+        "proof_horizon_months": { "type": "integer", "const": 12 },
+        "compliance_anchor": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": ["ISO 27001 path", "SOC 2 Type II trajectory", "GDPR baseline"]
+          }
+        },
+        "core_edges": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "measurable savings uplift",
+              "risk resilience",
+              "sustainability performance",
+              "autonomous decision intelligence"
+            ]
+          }
+        }
+      }
+    },
+    "strategic_definition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["positioning", "stakeholder_value", "tam_sam_som", "incumbent_gap_analysis", "category_statement"],
+      "properties": {
+        "positioning": { "type": "string" },
+        "stakeholder_value": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["stakeholder", "pain_points", "value_outcomes"],
+            "additionalProperties": false,
+            "properties": {
+              "stakeholder": { "type": "string", "enum": ["CPO", "CFO", "CEO/Board"] },
+              "pain_points": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+              "value_outcomes": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+            }
+          }
+        },
+        "tam_sam_som": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tam_usd", "sam_usd", "som_usd", "method"],
+          "properties": {
+            "tam_usd": { "type": "number", "minimum": 1 },
+            "sam_usd": { "type": "number", "minimum": 1 },
+            "som_usd": { "type": "number", "minimum": 1 },
+            "method": { "type": "string" }
+          }
+        },
+        "incumbent_gap_analysis": { "type": "array", "minItems": 4, "items": { "type": "string" } },
+        "category_statement": { "type": "string", "minLength": 30 }
+      }
+    },
+    "system_architecture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["data_layer", "knowledge_graph", "metadata_governance", "security_rbac", "integration_map"],
+      "properties": {
+        "data_layer": { "type": "array", "minItems": 8, "items": { "type": "string" } },
+        "knowledge_graph": { "type": "string" },
+        "metadata_governance": { "type": "array", "minItems": 5, "items": { "type": "string" } },
+        "security_rbac": { "type": "array", "minItems": 5, "items": { "type": "string" } },
+        "integration_map": { "type": "array", "minItems": 8, "items": { "type": "string" } }
+      }
+    },
+    "ai_intelligence_layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["classification_engine", "prescriptive_engine", "risk_engine", "genai_copilot"],
+      "properties": {
+        "classification_engine": { "$ref": "#/$defs/capability_with_metrics" },
+        "prescriptive_engine": { "$ref": "#/$defs/capability_with_metrics" },
+        "risk_engine": { "$ref": "#/$defs/capability_with_metrics" },
+        "genai_copilot": { "$ref": "#/$defs/capability_with_metrics" }
+      }
+    },
+    "financial_impact_engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kpis", "formulas", "attribution_model", "audit_mechanism", "realized_vs_forecast_logic"],
+      "properties": {
+        "kpis": { "type": "array", "minItems": 5, "items": { "type": "string" } },
+        "formulas": { "type": "array", "minItems": 5, "items": { "type": "string" } },
+        "attribution_model": { "type": "string" },
+        "audit_mechanism": { "type": "array", "minItems": 3, "items": { "type": "string" } },
+        "realized_vs_forecast_logic": { "type": "string" }
+      }
+    },
+    "differentiation_strategy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["moat_mechanisms", "switching_costs", "network_effects", "competitor_matrix"],
+      "properties": {
+        "moat_mechanisms": { "type": "array", "minItems": 4, "items": { "type": "string" } },
+        "switching_costs": { "type": "array", "minItems": 3, "items": { "type": "string" } },
+        "network_effects": { "type": "array", "minItems": 2, "items": { "type": "string" } },
+        "competitor_matrix": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["competitor", "capability", "incumbent_strength", "our_advantage", "proof"],
+            "properties": {
+              "competitor": { "type": "string" },
+              "capability": { "type": "string" },
+              "incumbent_strength": { "type": "string" },
+              "our_advantage": { "type": "string" },
+              "proof": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "innovation_layer": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["innovation", "description", "replication_difficulty", "proof_metric"],
+        "properties": {
+          "innovation": { "type": "string" },
+          "description": { "type": "string" },
+          "replication_difficulty": { "type": "string" },
+          "proof_metric": { "type": "string" }
+        }
+      }
+    },
+    "product_experience": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["personas", "ux_principles", "latency_standard_seconds", "refresh_standard_hours", "decision_auditability"],
+      "properties": {
+        "personas": { "type": "array", "minItems": 5, "items": { "type": "string" } },
+        "ux_principles": { "type": "array", "minItems": 4, "items": { "type": "string" } },
+        "latency_standard_seconds": { "type": "number", "maximum": 5 },
+        "refresh_standard_hours": { "type": "number", "maximum": 24 },
+        "decision_auditability": { "type": "array", "minItems": 3, "items": { "type": "string" } }
+      }
+    },
+    "performance_standards": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["metric", "minimum", "target", "elite", "mechanism", "verification"],
+        "properties": {
+          "metric": { "type": "string" },
+          "minimum": { "type": "string" },
+          "target": { "type": "string" },
+          "elite": { "type": "string" },
+          "mechanism": { "type": "string" },
+          "verification": { "type": "string" }
+        }
+      }
+    },
+    "implementation_deployment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["phases", "time_to_value_weeks", "change_management", "stakeholder_alignment", "training_adoption"],
+      "properties": {
+        "phases": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "items": { "$ref": "#/$defs/phase_item" }
+        },
+        "time_to_value_weeks": { "type": "number", "maximum": 12 },
+        "change_management": { "type": "array", "minItems": 3, "items": { "type": "string" } },
+        "stakeholder_alignment": { "type": "array", "minItems": 3, "items": { "type": "string" } },
+        "training_adoption": { "type": "array", "minItems": 3, "items": { "type": "string" } }
+      }
+    },
+    "commercial_investment_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pricing_model", "unit_economics", "revenue_model_3y", "valuation_rationale", "exit_scenarios"],
+      "properties": {
+        "pricing_model": { "type": "array", "minItems": 3, "items": { "type": "string" } },
+        "unit_economics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["gross_margin_target_pct", "cac_ltv_logic", "expansion_strategy"],
+          "properties": {
+            "gross_margin_target_pct": { "type": "number", "minimum": 70 },
+            "cac_ltv_logic": { "type": "string" },
+            "expansion_strategy": { "type": "string" }
+          }
+        },
+        "revenue_model_3y": { "type": "array", "minItems": 3, "items": { "type": "string" } },
+        "valuation_rationale": { "type": "string" },
+        "exit_scenarios": { "type": "array", "minItems": 2, "items": { "type": "string" } }
+      }
+    },
+    "global_scalability_compliance": {
+      "type": "array",
+      "minItems": 6,
+      "items": { "type": "string" }
+    },
+    "board_investor_narrative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category_pitch", "five_slide_outline", "three_year_strategic_narrative", "mission_critical_thesis"],
+      "properties": {
+        "category_pitch": { "type": "string", "minLength": 40 },
+        "five_slide_outline": { "type": "array", "minItems": 5, "maxItems": 5, "items": { "type": "string" } },
+        "three_year_strategic_narrative": { "type": "string" },
+        "mission_critical_thesis": { "type": "string" }
+      }
+    },
+    "plan_12_month": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": { "$ref": "#/$defs/stage_gate_phase" }
+    },
+    "roadmap_3_year": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["year", "strategic_objectives", "milestones", "dependencies"],
+        "properties": {
+          "year": { "type": "integer", "minimum": 1, "maximum": 3 },
+          "strategic_objectives": { "type": "array", "minItems": 2, "items": { "type": "string" } },
+          "milestones": { "type": "array", "minItems": 3, "items": { "type": "string" } },
+          "dependencies": { "type": "array", "minItems": 2, "items": { "type": "string" } }
+        }
+      }
+    },
+    "readiness_scorecard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dimensions", "total_weight", "investable_threshold", "red_flag_threshold", "current_score", "status"],
+      "properties": {
+        "dimensions": {
+          "type": "array",
+          "minItems": 8,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "weight", "score", "evidence"],
+            "properties": {
+              "name": { "type": "string" },
+              "weight": { "type": "number", "minimum": 1, "maximum": 30 },
+              "score": { "type": "number", "minimum": 0, "maximum": 100 },
+              "evidence": { "type": "string" }
+            }
+          }
+        },
+        "total_weight": { "type": "number", "const": 100 },
+        "investable_threshold": { "type": "number", "minimum": 70, "maximum": 95 },
+        "red_flag_threshold": { "type": "number", "minimum": 30, "maximum": 69 },
+        "current_score": { "type": "number", "minimum": 0, "maximum": 100 },
+        "status": { "type": "string", "enum": ["Investable", "Borderline", "Red Flag"] }
+      }
+    },
+    "risk_register": {
+      "type": "array",
+      "minItems": 10,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["risk", "probability", "impact", "mitigation", "owner", "trigger"],
+        "properties": {
+          "risk": { "type": "string" },
+          "probability": { "type": "string", "enum": ["Low", "Medium", "High"] },
+          "impact": { "type": "string", "enum": ["Low", "Medium", "High", "Critical"] },
+          "mitigation": { "type": "string" },
+          "owner": { "type": "string" },
+          "trigger": { "type": "string" }
+        }
+      }
+    },
+    "next_actions": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 15,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["action", "owner", "due_window", "expected_outcome"],
+        "properties": {
+          "action": { "type": "string" },
+          "owner": { "type": "string" },
+          "due_window": { "type": "string" },
+          "expected_outcome": { "type": "string" }
+        }
+      }
+    },
+    "assumptions": { "type": "array", "minItems": 5, "items": { "type": "string" } },
+    "data_needed": { "type": "array", "minItems": 5, "items": { "type": "string" } }
+  },
+  "$defs": {
+    "capability_with_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["design", "key_methods", "metrics", "mechanism", "verification", "confidence"],
+      "properties": {
+        "design": { "type": "string" },
+        "key_methods": { "type": "array", "minItems": 3, "items": { "type": "string" } },
+        "metrics": { "type": "array", "minItems": 3, "items": { "type": "string" } },
+        "mechanism": { "type": "string" },
+        "verification": { "type": "string" },
+        "confidence": { "type": "string", "enum": ["Low", "Medium", "High"] }
+      }
+    },
+    "phase_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["phase", "goals", "deliverables"],
+      "properties": {
+        "phase": { "type": "string" },
+        "goals": { "type": "array", "minItems": 2, "items": { "type": "string" } },
+        "deliverables": { "type": "array", "minItems": 3, "items": { "type": "string" } }
+      }
+    },
+    "stage_gate_phase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["window", "objectives", "deliverables", "pass_criteria", "fail_criteria", "dependencies"],
+      "properties": {
+        "window": { "type": "string", "enum": ["0-2", "3-5", "6-8", "9-10", "11-12"] },
+        "objectives": { "type": "array", "minItems": 2, "items": { "type": "string" } },
+        "deliverables": { "type": "array", "minItems": 3, "items": { "type": "string" } },
+        "pass_criteria": { "type": "array", "minItems": 3, "items": { "type": "string" } },
+        "fail_criteria": { "type": "array", "minItems": 2, "items": { "type": "string" } },
+        "dependencies": { "type": "array", "minItems": 2, "items": { "type": "string" } }
+      }
+    }
+  }
+}
