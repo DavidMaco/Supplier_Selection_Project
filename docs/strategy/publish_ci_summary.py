@@ -8,8 +8,20 @@ def _to_bool_string(value: bool) -> str:
     return str(bool(value)).lower()
 
 
-def _build_summary(title: str, triggered: bool, report: dict | None, reason: str | None) -> list[str]:
+def _build_summary(
+    title: str,
+    triggered: bool,
+    report: dict | None,
+    reason: str | None,
+    path_filter_name: str | None,
+    path_filter_matched: bool | None,
+) -> list[str]:
     lines = [f"## {title}", "", f"- Triggered: `{_to_bool_string(triggered)}`"]
+
+    if path_filter_name:
+        lines.append(f"- Path Filter: `{path_filter_name}`")
+    if path_filter_matched is not None:
+        lines.append(f"- Path Filter Matched: `{_to_bool_string(path_filter_matched)}`")
 
     if reason:
         lines.append(f"- Reason: {reason}")
@@ -50,15 +62,32 @@ def main() -> None:
     parser.add_argument("--triggered", required=True, choices=["true", "false"], help="Whether checks were triggered")
     parser.add_argument("--report", required=False, help="Path to validator JSON report")
     parser.add_argument("--reason", required=False, help="Optional reason for skip or context")
+    parser.add_argument("--path-filter-name", required=False, help="Optional path-filter key name")
+    parser.add_argument(
+        "--path-filter-matched",
+        required=False,
+        choices=["true", "false"],
+        help="Optional path-filter match result",
+    )
     args = parser.parse_args()
 
     triggered = args.triggered == "true"
+    path_filter_matched = None
+    if args.path_filter_matched is not None:
+        path_filter_matched = args.path_filter_matched == "true"
     report = None
 
     if args.report:
         report = _read_json_with_fallback(Path(args.report))
 
-    summary_lines = _build_summary(args.title, triggered, report, args.reason)
+    summary_lines = _build_summary(
+        args.title,
+        triggered,
+        report,
+        args.reason,
+        args.path_filter_name,
+        path_filter_matched,
+    )
     summary_text = "\n".join(summary_lines) + "\n"
 
     summary_path = os.environ.get("GITHUB_STEP_SUMMARY")

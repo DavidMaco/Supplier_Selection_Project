@@ -75,6 +75,8 @@ jobs:
           python docs/strategy/publish_ci_summary.py \
             --title "Strategy Governance Fast Summary" \
             --triggered true \
+            --path-filter-name strategy \
+            --path-filter-matched "${{ steps.changes.outputs.strategy }}" \
             --report docs/strategy/ci-fast-validation.json
 
       - name: No strategy changes
@@ -84,6 +86,8 @@ jobs:
           python docs/strategy/publish_ci_summary.py \
             --title "Strategy Governance Fast Summary" \
             --triggered false \
+            --path-filter-name strategy \
+            --path-filter-matched "${{ steps.changes.outputs.strategy }}" \
             --reason "no matching strategy governance paths changed"
 
   strategy-validation:
