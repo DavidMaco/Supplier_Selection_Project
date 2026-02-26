@@ -1,0 +1,25 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Prior top-fix #1 is largely resolved; tighten remaining competitor rows by adding explicit pre/post baseline values (not only percentage deltas) for complete uniformity.",
+    "Prior top-fix #2 is resolved; keep monthly realized-value evidence targets and add explicit data source IDs per gate for audit traceability.",
+    "Prior top-fix #3 is resolved; extend risk-ID traceability from roadmap dependencies into next_actions to complete execution linkage.",
+    "Prior top-fix #4 is partially resolved; convert audit evidence from free-text bullets into structured control artifacts with explicit owner, cadence, and pass threshold per control.",
+    "Prior top-fix #5 is resolved; add quantified downside financial impact range (ARR/margin effect) to complement existing trigger thresholds and mitigations."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}

@@ -1,0 +1,25 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Quantify competitor proof claims with baseline, sample size, and measured uplift per competitor row.",
+    "Add explicit realized-value evidence targets by month (not only end-state thresholds) in the 12-month gates.",
+    "Link each Year 2/3 roadmap dependency to named risk_register IDs for tighter execution traceability.",
+    "Attach minimum audit evidence artifacts per compliance control (owner, cadence, acceptance criterion).",
+    "Provide explicit downside case in revenue_model_3y with trigger thresholds and mitigation actions."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}

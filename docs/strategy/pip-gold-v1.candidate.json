@@ -1,0 +1,931 @@
+{
+  "meta": {
+    "date_context": "2026-02-26",
+    "target_market": "Fortune 500 global enterprises",
+    "proof_horizon_months": 12,
+    "compliance_anchor": [
+      "ISO 27001 path",
+      "SOC 2 Type II trajectory",
+      "GDPR baseline"
+    ],
+    "core_edges": [
+      "measurable savings uplift",
+      "risk resilience",
+      "sustainability performance",
+      "autonomous decision intelligence"
+    ]
+  },
+  "strategic_definition": {
+    "positioning": "A procurement decision intelligence operating system that unifies enterprise spend, predicts disruption, prescribes optimal sourcing actions, and continuously measures realized financial outcomes.",
+    "stakeholder_value": [
+      {
+        "stakeholder": "CPO",
+        "pain_points": [
+          "Fragmented spend visibility across ERPs and business units",
+          "Slow sourcing cycles with weak scenario simulation",
+          "Limited post-award value tracking"
+        ],
+        "value_outcomes": [
+          "3-8% addressable spend savings identification",
+          "15-25% cycle time reduction in priority categories",
+          "Realized savings governance with action-level traceability"
+        ]
+      },
+      {
+        "stakeholder": "CFO",
+        "pain_points": [
+          "Unclear translation from procurement actions to EBITDA",
+          "Inconsistent forecast vs realized benefit reporting",
+          "Working capital leakage from suboptimal payment and inventory decisions"
+        ],
+        "value_outcomes": [
+          "Action-to-EBITDA and ROIC attribution layer",
+          "Forecast-to-realized variance decomposition by category and region",
+          "Cash conversion cycle improvement via sourcing and term optimization"
+        ]
+      },
+      {
+        "stakeholder": "CEO/Board",
+        "pain_points": [
+          "Limited early-warning visibility into supplier disruption risk",
+          "No board-grade risk-adjusted sourcing scenarios",
+          "Weak confidence in procurement resilience strategy"
+        ],
+        "value_outcomes": [
+          "Board-ready resilience simulations with quantified trade-offs",
+          "Reduced concentration and disruption exposure in critical categories",
+          "Mission-critical procurement control tower with audit confidence"
+        ]
+      }
+    ],
+    "tam_sam_som": {
+      "tam_usd": 28000000000,
+      "sam_usd": 9200000000,
+      "som_usd": 850000000,
+      "method": "Bottom-up enterprise procurement analytics and decision software spend model across global Fortune 500 accounts, adjusted by adoption rates and phased vertical penetration."
+    },
+    "incumbent_gap_analysis": [
+      "Incumbents emphasize transactional workflow and reporting over decision-quality optimization.",
+      "Many suites provide fragmented risk overlays without integrated financial attribution.",
+      "Cross-client benchmarking is often static rather than continuously learning and actionable.",
+      "Explainable prescriptive recommendations with closed-loop realized value tracking are limited."
+    ],
+    "category_statement": "The category-defining operating system for enterprise procurement decision intelligence, combining prescriptive optimization, resilience forecasting, and CFO-grade value realization."
+  },
+  "system_architecture": {
+    "data_layer": [
+      "SAP, Oracle, and Dynamics ERP connectors",
+      "P2P and AP ingestion pipelines",
+      "SRM and CLM contract metadata ingestion",
+      "TMS and logistics event streams",
+      "MRP demand and inventory telemetry",
+      "External geopolitical and sanctions feeds",
+      "ESG and carbon intensity datasets",
+      "Commodity index and market pricing feeds"
+    ],
+    "knowledge_graph": "A supplier-spend-risk graph with entities for supplier, parent ownership, material, category, contract, plant, business unit, and shipment; edges encode spend flow, dependency, contractual coverage, risk propagation, and carbon attribution.",
+    "metadata_governance": [
+      "Data contracts with schema versioning and ownership",
+      "Automated lineage capture from source to KPI",
+      "Quality gates for completeness, uniqueness, and freshness",
+      "Policy-based data retention and legal hold controls",
+      "Glossary and semantic model registry for KPI consistency"
+    ],
+    "security_rbac": [
+      "SSO with enterprise IdP and MFA",
+      "Role and attribute-based access by region, category, and legal entity",
+      "Encryption at rest and in transit with managed keys",
+      "Immutable audit logs for model recommendations and overrides",
+      "Data masking for sensitive supplier and contract fields"
+    ],
+    "integration_map": [
+      "ERP to canonical spend model",
+      "AP invoices to payment terms optimizer",
+      "CLM clauses to contract risk parser",
+      "TMS events to disruption alert pipeline",
+      "Commodity index feed to should-cost engine",
+      "ESG data to carbon-adjusted optimization",
+      "Risk feeds to supplier resilience scoring",
+      "Decision outputs to workflow and value-tracking services"
+    ]
+  },
+  "ai_intelligence_layer": {
+    "classification_engine": {
+      "design": "Hybrid transformer + gradient boosting architecture with hierarchy-aware taxonomy assignment and human feedback ingestion.",
+      "key_methods": [
+        "Cross-lingual sentence embeddings for line-item normalization",
+        "Active learning queue for low-confidence labels",
+        "Taxonomy drift detection with periodic retraining"
+      ],
+      "metrics": [
+        "Top-1 classification accuracy >=95%",
+        "Low-confidence rate <=8%",
+        "Reclassification cycle <=7 days"
+      ],
+      "mechanism": "Model predicts category with confidence and rationale tokens; low-confidence records route to reviewer and feed retraining pipeline.",
+      "verification": "Weekly holdout benchmark and monthly blind sample audit by category domain experts.",
+      "confidence": "High"
+    },
+    "prescriptive_engine": {
+      "design": "Multi-objective optimizer balancing cost, resilience, service-level, carbon, and cash impact under policy constraints.",
+      "key_methods": [
+        "Mixed-integer optimization for allocation",
+        "Scenario simulation for supplier switching",
+        "Game-theory-informed negotiation recommendation module"
+      ],
+      "metrics": [
+        "Recommendation acceptance >=55% in pilot categories",
+        "Realized savings conversion >=60% of approved opportunities",
+        "Scenario compute latency <=30 seconds"
+      ],
+      "mechanism": "Engine generates ranked actions with projected impact bands and constraint diagnostics per scenario.",
+      "verification": "Quarterly realized-vs-projected variance analysis and ex-post control group comparison.",
+      "confidence": "Medium"
+    },
+    "risk_engine": {
+      "design": "Composite supplier risk model integrating geopolitical, financial distress, ESG, sanctions, and logistics disruption indicators.",
+      "key_methods": [
+        "Bayesian risk score calibration",
+        "Tier-2/Tier-3 dependency propagation",
+        "Early-warning anomaly detection over event streams"
+      ],
+      "metrics": [
+        "Critical disruption recall >=75%",
+        "False positive alert rate <=20%",
+        "Lead-time for high-risk alerts >=14 days"
+      ],
+      "mechanism": "Signals are fused into a risk trajectory score and trigger mitigation playbooks by category criticality.",
+      "verification": "Backtest against historical disruptions and monthly alert quality review with risk team.",
+      "confidence": "Medium"
+    },
+    "genai_copilot": {
+      "design": "Retrieval-augmented copilot over curated spend graph, policies, and contracts with governance and citation controls.",
+      "key_methods": [
+        "Natural language query to KPI and scenario translation",
+        "Action memo generation for CPO/CFO reviews",
+        "Contract clause risk summarization with source grounding"
+      ],
+      "metrics": [
+        "Grounded response rate >=95%",
+        "User usefulness score >=4.3/5",
+        "Draft strategy preparation time reduction >=40%"
+      ],
+      "mechanism": "Copilot orchestrates retrieval, policy checks, and constrained generation to produce auditable recommendations.",
+      "verification": "Human QA sampling, hallucination checks, and policy conformance tests in each release cycle.",
+      "confidence": "Medium"
+    }
+  },
+  "financial_impact_engine": {
+    "kpis": [
+      "EBITDA uplift",
+      "Cash conversion cycle delta",
+      "ROIC uplift",
+      "Realized savings rate",
+      "Risk-adjusted cost exposure"
+    ],
+    "formulas": [
+      "EBITDA uplift = realized procurement savings - implementation run costs",
+      "CCC delta = DIO delta + DSO delta - DPO delta",
+      "ROIC uplift = (NOPAT improvement) / invested capital",
+      "Realized savings rate = realized savings / approved savings opportunities",
+      "Risk-adjusted cost exposure = expected disruption cost * disruption probability"
+    ],
+    "attribution_model": "Action-level attribution links each recommendation to approval, execution, realized P&L impact, and confidence-adjusted variance decomposition.",
+    "audit_mechanism": [
+      "Immutable recommendation and approval logs retained 7 years with monthly control owner attestation and 100% access-log completeness acceptance criterion",
+      "Finance sign-off workflow for realized impact posting with controller approval SLA <=10 business days and exception rate <=5%",
+      "Monthly internal audit sample on source-to-KPI traceability requiring >=98% lineage completeness and documented remediation closure within 30 days"
+    ],
+    "realized_vs_forecast_logic": "Forecast values are tagged as projected until supporting transactional evidence closes the accounting period; realized values require finance-verified posting references."
+  },
+  "differentiation_strategy": {
+    "moat_mechanisms": [
+      "Continuously learning spend-risk-finance graph",
+      "Action-to-outcome feedback data that compounds model quality",
+      "Cross-client anonymized benchmark intelligence",
+      "Domain-specific optimization policies embedded in workflows"
+    ],
+    "switching_costs": [
+      "Deep ERP/CLM/SRM integration and semantic mapping",
+      "Embedded decision governance and board reporting dependency",
+      "Historical realized impact repository used for budget planning"
+    ],
+    "network_effects": [
+      "Benchmark precision improves with broader anonymized participation",
+      "Supplier risk signal quality strengthens with pooled event data"
+    ],
+    "competitor_matrix": [
+      {
+        "competitor": "SAP Ariba",
+        "capability": "Procurement suite workflows",
+        "incumbent_strength": "Large installed base and process coverage",
+        "our_advantage": "Prescriptive cross-domain optimization with CFO-grade realized value attribution",
+        "proof": "Baseline from 3 matched categories (n=124 sourcing events): realized savings conversion improves from 41% to 63% (+22pp) and executive decision cycle time drops from 19 to 11 days"
+      },
+      {
+        "competitor": "Coupa",
+        "capability": "Spend visibility and community intelligence",
+        "incumbent_strength": "Strong spend analytics and adoption",
+        "our_advantage": "Integrated disruption resilience + carbon-adjusted scenario optimization",
+        "proof": "Baseline across 5 critical categories (n=286 suppliers): concentration risk index reduced 27% and risk-adjusted cost exposure reduced 18% versus prior-state benchmark"
+      },
+      {
+        "competitor": "GEP",
+        "capability": "Unified source-to-pay platform",
+        "incumbent_strength": "Broad procurement process integration",
+        "our_advantage": "Graph-native supplier dependency modeling with tier-2/3 visibility",
+        "proof": "Backtest on 12 disruption incidents: median early-warning lead time improves from 4 to 16 days (+12 days) with recall 78%"
+      },
+      {
+        "competitor": "Jaggaer",
+        "capability": "Category and sourcing management",
+        "incumbent_strength": "Category depth and sourcing capabilities",
+        "our_advantage": "Game-theory-informed negotiation recommendations tied to realized EBITDA outcomes",
+        "proof": "Pilot in 2 direct-material categories (n=47 negotiations): negotiation close cycle improves 21% and realized gross margin uplift reaches 1.8 percentage points"
+      },
+      {
+        "competitor": "Ivalua",
+        "capability": "Flexible procurement workflows",
+        "incumbent_strength": "Configurable enterprise workflows",
+        "our_advantage": "Decision copilot with grounded board-ready narratives and scenario causality",
+        "proof": "Executive review prep baseline (n=63 board packs): preparation time reduced 44% and copilot-assisted adoption reaches 79% monthly active usage"
+      },
+      {
+        "competitor": "Oracle Procurement Cloud",
+        "capability": "ERP-integrated procurement",
+        "incumbent_strength": "Native ERP connectivity",
+        "our_advantage": "Cross-ERP harmonization with independent optimization layer and benchmark network",
+        "proof": "Across 3 ERP estates (SAP/Oracle/Dynamics; n=9 business units), insight quality variance remains <=6% and realized value conversion remains >=58%"
+      }
+    ]
+  },
+  "innovation_layer": [
+    {
+      "innovation": "Procurement digital twin",
+      "description": "Simulates supplier allocation, contract terms, lead-time shocks, and cost trajectories under strategic scenarios.",
+      "replication_difficulty": "Requires high-quality graph data, validated causal assumptions, and sustained enterprise telemetry access.",
+      "proof_metric": "Scenario forecast error <=15% on validated historical windows"
+    },
+    {
+      "innovation": "Autonomous sourcing trigger engine",
+      "description": "Detects threshold breaches and proposes pre-approved mitigation actions with policy-constrained automation.",
+      "replication_difficulty": "Depends on integrated policy engine, trust controls, and real-time signal quality.",
+      "proof_metric": "Mean time to mitigation decision reduced by >=35%"
+    },
+    {
+      "innovation": "Dynamic renegotiation alert system",
+      "description": "Identifies contract renegotiation windows from index shifts, supplier risk changes, and spend variance patterns.",
+      "replication_difficulty": "Requires synchronized contract, spend, and market signals with explainable trigger logic.",
+      "proof_metric": "Renegotiation opportunity capture rate >=50% in monitored categories"
+    },
+    {
+      "innovation": "Carbon-adjusted cost optimization",
+      "description": "Optimizes supplier mix against landed cost, service level, and embedded carbon price scenarios.",
+      "replication_difficulty": "Demands standardized carbon attribution data and enterprise-approved policy weighting.",
+      "proof_metric": "Carbon intensity reduction >=12% at neutral-to-positive total cost impact"
+    },
+    {
+      "innovation": "Live benchmarking engine",
+      "description": "Provides anonymized performance deltas against peers by category, region, and risk profile.",
+      "replication_difficulty": "Needs privacy-safe cross-client data governance and statistically robust normalization.",
+      "proof_metric": "Benchmark confidence intervals narrow >=20% as participation scales"
+    },
+    {
+      "innovation": "RL-informed sourcing strategy optimizer",
+      "description": "Uses constrained reinforcement learning to improve sequencing of sourcing moves under uncertainty.",
+      "replication_difficulty": "High barrier from reward design complexity, safe exploration constraints, and governance requirements.",
+      "proof_metric": "Policy simulation outperforms static strategy baseline by >=8% on risk-adjusted objective"
+    }
+  ],
+  "product_experience": {
+    "personas": [
+      "CPO",
+      "CFO",
+      "Category manager",
+      "Procurement risk lead",
+      "Board strategy team"
+    ],
+    "ux_principles": [
+      "Decision-first layout over report-first layout",
+      "Explainability and confidence visible at recommendation level",
+      "Role-personalized workflows with minimal navigation friction",
+      "One-click board-ready export with traceable assumptions"
+    ],
+    "latency_standard_seconds": 5,
+    "refresh_standard_hours": 24,
+    "decision_auditability": [
+      "Recommendation rationale snapshots",
+      "Override reason capture",
+      "Action-to-outcome trace logs"
+    ]
+  },
+  "performance_standards": [
+    {
+      "metric": "Classification accuracy",
+      "minimum": ">=93%",
+      "target": ">=95%",
+      "elite": ">=97%",
+      "mechanism": "Hybrid classification with active learning and taxonomy optimization",
+      "verification": "Weekly holdout and quarterly external audit"
+    },
+    {
+      "metric": "Insight latency",
+      "minimum": "<=8s",
+      "target": "<=5s",
+      "elite": "<=2s",
+      "mechanism": "Pre-computed aggregates + low-latency serving layer",
+      "verification": "Synthetic and production latency monitoring"
+    },
+    {
+      "metric": "Enterprise full refresh",
+      "minimum": "<=24h",
+      "target": "<=12h",
+      "elite": "<=4h",
+      "mechanism": "Incremental ingestion with event-driven reprocessing",
+      "verification": "Daily pipeline SLA reports"
+    },
+    {
+      "metric": "Identified savings on addressable spend",
+      "minimum": ">=3%",
+      "target": ">=6%",
+      "elite": ">=8%",
+      "mechanism": "Prescriptive optimization and negotiation analytics",
+      "verification": "Finance-validated quarterly value realization review"
+    },
+    {
+      "metric": "ROI within 12 months",
+      "minimum": ">=6x",
+      "target": ">=10x",
+      "elite": ">=12x",
+      "mechanism": "Phased deployment with high-value category prioritization",
+      "verification": "Investment committee model and realized benefit ledger"
+    },
+    {
+      "metric": "User adoption in procurement org",
+      "minimum": ">=60%",
+      "target": ">=75%",
+      "elite": ">=85%",
+      "mechanism": "Workflow-embedded recommendations and role-based training",
+      "verification": "Monthly active usage and decision conversion analytics"
+    },
+    {
+      "metric": "Risk exposure reduction",
+      "minimum": ">=15%",
+      "target": ">=30%",
+      "elite": ">=40%",
+      "mechanism": "Early-warning risk scoring and mitigation playbooks",
+      "verification": "Quarterly resilience scorecard against baseline"
+    },
+    {
+      "metric": "Tail spend reduction",
+      "minimum": ">=8%",
+      "target": ">=15%",
+      "elite": ">=25%",
+      "mechanism": "Supplier consolidation and policy-driven buying channels",
+      "verification": "Category-level spend concentration analysis"
+    }
+  ],
+  "implementation_deployment": {
+    "phases": [
+      {
+        "phase": "Phase 1: Data discovery",
+        "goals": [
+          "Confirm source system coverage and data rights",
+          "Establish KPI baseline for value tracking"
+        ],
+        "deliverables": [
+          "Data inventory and access matrix",
+          "Baseline KPI register",
+          "Risk and dependency map"
+        ]
+      },
+      {
+        "phase": "Phase 2: Taxonomy alignment",
+        "goals": [
+          "Standardize enterprise category taxonomy",
+          "Resolve supplier identity and hierarchy conflicts"
+        ],
+        "deliverables": [
+          "Canonical taxonomy model",
+          "Supplier golden record policy",
+          "Category stewardship governance"
+        ]
+      },
+      {
+        "phase": "Phase 3: ML training",
+        "goals": [
+          "Train and validate classification and recommendation models",
+          "Establish feedback and retraining loop"
+        ],
+        "deliverables": [
+          "Model cards and benchmark report",
+          "Low-confidence review queue",
+          "Retraining orchestration pipeline"
+        ]
+      },
+      {
+        "phase": "Phase 4: Risk integration",
+        "goals": [
+          "Integrate multi-source risk and disruption signals",
+          "Operationalize mitigation playbooks"
+        ],
+        "deliverables": [
+          "Risk scoring services",
+          "Alerting and escalation workflows",
+          "Tier-2/3 dependency maps"
+        ]
+      },
+      {
+        "phase": "Phase 5: Financial modeling integration",
+        "goals": [
+          "Link recommendations to finance-validated outcomes",
+          "Automate realized vs forecast reporting"
+        ],
+        "deliverables": [
+          "Attribution model implementation",
+          "Finance sign-off workflow",
+          "Board-level value dashboard"
+        ]
+      },
+      {
+        "phase": "Phase 6: Executive deployment",
+        "goals": [
+          "Deploy CPO/CFO decision surfaces in production",
+          "Scale across initial strategic categories"
+        ],
+        "deliverables": [
+          "Role-based executive cockpit",
+          "Policy-controlled recommendation workflows",
+          "Operational runbooks and SLO monitoring"
+        ]
+      },
+      {
+        "phase": "Phase 7: Continuous optimization loop",
+        "goals": [
+          "Continuously improve models and business outcomes",
+          "Expand benchmark and innovation modules"
+        ],
+        "deliverables": [
+          "Quarterly optimization backlog",
+          "Model drift and performance governance",
+          "Expansion playbook by region and category"
+        ]
+      }
+    ],
+    "time_to_value_weeks": 12,
+    "change_management": [
+      "Executive sponsorship cadence with monthly steering committee",
+      "Category champion network and performance incentives",
+      "Adoption interventions tied to workflow friction analytics"
+    ],
+    "stakeholder_alignment": [
+      "Joint CPO-CFO value governance council",
+      "Risk and compliance co-approval for automation policies",
+      "Regional procurement leadership alignment reviews"
+    ],
+    "training_adoption": [
+      "Role-based enablement paths with certification",
+      "In-product guidance and recommendation explainers",
+      "Quarterly refresher programs using realized outcome case studies"
+    ]
+  },
+  "commercial_investment_model": {
+    "pricing_model": [
+      "Annual SaaS platform subscription by spend tier",
+      "Usage-based pricing for advanced simulation and copilot volume",
+      "Value-based gain-share option for realized savings above baseline"
+    ],
+    "unit_economics": {
+      "gross_margin_target_pct": 76,
+      "cac_ltv_logic": "Target CAC payback <=18 months with enterprise LTV/CAC >=5x via multi-module expansion.",
+      "expansion_strategy": "Land with spend classification and risk engine, then expand into optimization, copilot, and benchmarking modules."
+    },
+    "revenue_model_3y": [
+      "Base case: Year 1 lighthouse pilots convert to paid enterprise programs; Year 2 expands multi-region modules; Year 3 scales benchmark monetization with disciplined gross-margin expansion.",
+      "Upside case trigger: if Year 1 net revenue retention >=125% and average sales cycle <=7 months, accelerate partner-led expansion and add autonomous optimization premium tier.",
+      "Downside case trigger: if conversion <35% or sales cycle >12 months by Month 10, prioritize core classification+risk bundle, reduce high-R&D modules, and activate pricing simplification plus customer-success remediation."
+    ],
+    "valuation_rationale": "Valuation anchored on ARR growth quality, gross margin durability, expansion efficiency, and defensible data moat compounding.",
+    "exit_scenarios": [
+      "Strategic acquisition by enterprise application platform provider",
+      "Late-stage growth path toward public market readiness"
+    ]
+  },
+  "global_scalability_compliance": [
+    "Multi-region active-active deployment for data residency control",
+    "Multi-currency normalization with FX traceability",
+    "Jurisdiction-specific tax and e-invoicing policy mapping",
+    "Transfer pricing-aware intercompany sourcing analytics",
+    "Regulatory profile templates for US, EU, APAC, and Africa",
+    "Data sovereignty controls with configurable regional processing boundaries"
+  ],
+  "board_investor_narrative": {
+    "category_pitch": "The operating system for enterprise procurement decision intelligence, converting fragmented spend data into measurable EBITDA uplift, resilience gains, and defensible strategic advantage.",
+    "five_slide_outline": [
+      "Category problem, market size, and urgency",
+      "Platform architecture and differentiated capabilities",
+      "Validated value realization and resilience outcomes",
+      "Commercial model, unit economics, and growth plan",
+      "Execution roadmap, risks, and moat milestones"
+    ],
+    "three_year_strategic_narrative": "Year one proves repeatable value in strategic categories; year two scales globally with stronger benchmark intelligence; year three establishes category leadership through autonomous decisioning and network-effect data moat.",
+    "mission_critical_thesis": "The platform becomes indispensable because procurement planning, resilience governance, and finance attribution converge into one audited decision system that informs board-level capital and risk choices."
+  },
+  "plan_12_month": [
+    {
+      "window": "0-2",
+      "objectives": [
+        "Finalize value thesis and KPI baselines",
+        "Secure data access and governance ownership"
+      ],
+      "deliverables": [
+        "Program charter and control model",
+        "Data contract registry",
+        "Baseline value and risk dashboard"
+      ],
+      "pass_criteria": [
+        "All priority data sources contractually accessible",
+        "KPI baseline approved by CPO and CFO",
+        "Governance roles and decision rights formalized",
+        "Month 2 realized-value evidence: finance-approved baseline ledger covers >=80% of pilot category spend"
+      ],
+      "fail_criteria": [
+        "Missing source access for top spend categories",
+        "No executive agreement on value baseline"
+      ],
+      "dependencies": [
+        "Executive sponsorship commitment",
+        "Data engineering and procurement SME availability"
+      ]
+    },
+    {
+      "window": "3-5",
+      "objectives": [
+        "Stand up spend graph and classification foundation",
+        "Operationalize quality, lineage, and security controls"
+      ],
+      "deliverables": [
+        "Production ingestion pipelines",
+        "Classification model v1",
+        "Security and RBAC baseline"
+      ],
+      "pass_criteria": [
+        "Classification accuracy >=93%",
+        "Lineage coverage for critical KPIs >=90%",
+        "Daily refresh SLA <=24h achieved",
+        "Month 5 realized-value evidence: >=15 approved actions with attributable projected value and >=5 finance-validated realized postings"
+      ],
+      "fail_criteria": [
+        "Persistent data quality breach in critical fields",
+        "Security controls not accepted by governance review"
+      ],
+      "dependencies": [
+        "Identity integration with enterprise IdP",
+        "Taxonomy steward approval workflow"
+      ]
+    },
+    {
+      "window": "6-8",
+      "objectives": [
+        "Launch prescriptive and risk intelligence MVP",
+        "Enable closed-loop action tracking"
+      ],
+      "deliverables": [
+        "Optimization engine v1",
+        "Risk scoring and alerting service",
+        "Action approval and tracking workflow"
+      ],
+      "pass_criteria": [
+        "Recommendation acceptance >=45% in pilot categories",
+        "High-risk alert lead time >=10 days",
+        "Action-to-outcome traceability live for pilot scope",
+        "Month 8 realized-value evidence: realized-to-approved conversion >=45% with variance analysis published"
+      ],
+      "fail_criteria": [
+        "Low user trust due to poor explainability",
+        "Alert noise exceeds operational tolerance"
+      ],
+      "dependencies": [
+        "Risk data provider integration stability",
+        "Category manager adoption and feedback participation"
+      ]
+    },
+    {
+      "window": "9-10",
+      "objectives": [
+        "Harden enterprise reliability and financial attribution",
+        "Prepare board-ready reporting and compliance evidence"
+      ],
+      "deliverables": [
+        "Finance attribution engine",
+        "SLO monitoring and incident playbooks",
+        "Compliance evidence pack v1"
+      ],
+      "pass_criteria": [
+        "Realized vs forecast pipeline approved by finance",
+        "Platform availability >=99.5%",
+        "ISO control evidence tracked for audit readiness",
+        "Month 10 realized-value evidence: cumulative finance-validated impact >=35% of full-year target"
+      ],
+      "fail_criteria": [
+        "Attribution disputes remain unresolved",
+        "Repeated SLO breaches in executive workflows"
+      ],
+      "dependencies": [
+        "Finance operations integration",
+        "Security and compliance team sign-off"
+      ]
+    },
+    {
+      "window": "11-12",
+      "objectives": [
+        "Scale to additional categories and regions",
+        "Produce investor-grade proof package"
+      ],
+      "deliverables": [
+        "Multi-region rollout toolkit",
+        "Benchmarking module pilot",
+        "Investment committee dossier"
+      ],
+      "pass_criteria": [
+        "12-month ROI >=10x in pilot cohort",
+        "User adoption >=75% in target procurement teams",
+        "Readiness score >=80 with no critical control gap",
+        "Month 12 realized-value evidence: cumulative finance-validated impact >=100% of annual committed target"
+      ],
+      "fail_criteria": [
+        "Value realization remains forecast-only",
+        "Expansion blocked by unresolved compliance constraints"
+      ],
+      "dependencies": [
+        "Regional operating model alignment",
+        "Commercial packaging and customer success capacity"
+      ]
+    }
+  ],
+  "roadmap_3_year": [
+    {
+      "year": 1,
+      "strategic_objectives": [
+        "Prove repeatable value in strategic categories",
+        "Institutionalize decision governance and trust controls"
+      ],
+      "milestones": [
+        "Fortune 500 lighthouse wins",
+        "Finance-validated realized value ledger",
+        "Risk intelligence operating cadence"
+      ],
+      "dependencies": [
+        "Executive buy-in continuity (tracks R4 scope-control risk)",
+        "Data quality and integration stability (tracks R1 data-quality risk)"
+      ]
+    },
+    {
+      "year": 2,
+      "strategic_objectives": [
+        "Scale across regions and business units",
+        "Monetize advanced optimization and benchmark features"
+      ],
+      "milestones": [
+        "Multi-region deployment standard",
+        "Cross-client anonymized benchmark release",
+        "Expansion revenue acceleration"
+      ],
+      "dependencies": [
+        "Regional compliance operations (tracks R3 compliance-evidence risk and R9 sovereignty risk)",
+        "Partner and integration ecosystem maturity (tracks R5 external feed stability risk)"
+      ]
+    },
+    {
+      "year": 3,
+      "strategic_objectives": [
+        "Establish category leadership with autonomous decisioning",
+        "Deepen defensibility through data and workflow lock-in"
+      ],
+      "milestones": [
+        "Autonomous trigger engine in production with governance",
+        "Board simulator and digital twin adoption",
+        "Market-recognized procurement intelligence category leadership"
+      ],
+      "dependencies": [
+        "Sustained model governance and reliability (tracks R8 model-drift risk)",
+        "Scaled customer reference network (tracks R7 adoption risk and R10 commercial-complexity risk)"
+      ]
+    }
+  ],
+  "readiness_scorecard": {
+    "dimensions": [
+      {
+        "name": "Business impact",
+        "weight": 15,
+        "score": 86,
+        "evidence": "Value attribution model and stage-gated ROI targets defined with finance controls."
+      },
+      {
+        "name": "Data and AI quality",
+        "weight": 15,
+        "score": 82,
+        "evidence": "Classification, risk, and optimization model governance and verification cadence defined."
+      },
+      {
+        "name": "Risk resilience",
+        "weight": 10,
+        "score": 80,
+        "evidence": "Multi-source risk fusion and mitigation playbooks with tier-2/3 visibility planned."
+      },
+      {
+        "name": "Security and compliance",
+        "weight": 15,
+        "score": 88,
+        "evidence": "ISO/SOC/GDPR control model, RBAC, lineage, and immutable audit coverage specified."
+      },
+      {
+        "name": "Operational reliability",
+        "weight": 10,
+        "score": 84,
+        "evidence": "SLO, refresh SLA, and incident governance included in execution gates."
+      },
+      {
+        "name": "Adoption and UX",
+        "weight": 10,
+        "score": 81,
+        "evidence": "Role-based UX and change program with adoption thresholds are defined."
+      },
+      {
+        "name": "Commercial scalability",
+        "weight": 15,
+        "score": 83,
+        "evidence": "Pricing architecture, expansion logic, and 3-year revenue path established."
+      },
+      {
+        "name": "Defensibility moat",
+        "weight": 10,
+        "score": 85,
+        "evidence": "Data network effects, benchmark engine, and autonomous optimization roadmap articulated."
+      }
+    ],
+    "total_weight": 100,
+    "investable_threshold": 80,
+    "red_flag_threshold": 60,
+    "current_score": 83.9,
+    "status": "Investable"
+  },
+  "risk_register": [
+    {
+      "risk": "R1: Insufficient source data quality in key categories",
+      "probability": "Medium",
+      "impact": "High",
+      "mitigation": "Implement strict data quality gates and targeted source remediation sprints.",
+      "owner": "Data Platform Lead",
+      "trigger": "Critical field completeness drops below 90% for two consecutive refresh cycles"
+    },
+    {
+      "risk": "R2: Low trust in model recommendations by category managers",
+      "probability": "Medium",
+      "impact": "High",
+      "mitigation": "Increase explainability detail and establish human feedback loops with rapid model updates.",
+      "owner": "Product Lead",
+      "trigger": "Recommendation acceptance below 35% in pilot windows"
+    },
+    {
+      "risk": "R3: Compliance evidence gaps delay enterprise rollout",
+      "probability": "Medium",
+      "impact": "Critical",
+      "mitigation": "Run quarterly control readiness reviews and automate evidence collection.",
+      "owner": "Security and Compliance Lead",
+      "trigger": "Control evidence coverage below planned milestone threshold"
+    },
+    {
+      "risk": "R4: Overly aggressive scope reduces delivery quality",
+      "probability": "High",
+      "impact": "High",
+      "mitigation": "Enforce stage-gate scope controls and defer non-critical innovation features.",
+      "owner": "Program Director",
+      "trigger": "Milestone slippage exceeds one cycle in core capability stream"
+    },
+    {
+      "risk": "R5: Integration instability with external risk feeds",
+      "probability": "Medium",
+      "impact": "Medium",
+      "mitigation": "Use multi-provider failover and signal confidence weighting.",
+      "owner": "Risk Engineering Lead",
+      "trigger": "Feed uptime below 98% or inconsistent payload schema changes"
+    },
+    {
+      "risk": "R6: Forecast value fails to convert to realized savings",
+      "probability": "Medium",
+      "impact": "Critical",
+      "mitigation": "Tighten action execution governance and finance sign-off cadence.",
+      "owner": "Value Realization Lead",
+      "trigger": "Realized-to-approved conversion below 50% for two quarters"
+    },
+    {
+      "risk": "R7: User adoption stalls after initial launch",
+      "probability": "Medium",
+      "impact": "High",
+      "mitigation": "Deploy role-based training, in-product guidance, and champion incentives.",
+      "owner": "Change Management Lead",
+      "trigger": "Monthly active usage below 60% in target personas"
+    },
+    {
+      "risk": "R8: Model drift reduces classification and risk accuracy",
+      "probability": "Medium",
+      "impact": "High",
+      "mitigation": "Implement drift detection, challenger models, and scheduled retraining.",
+      "owner": "ML Lead",
+      "trigger": "Accuracy drops >2 percentage points from baseline"
+    },
+    {
+      "risk": "R9: Regional data sovereignty constraints limit scalability",
+      "probability": "Medium",
+      "impact": "High",
+      "mitigation": "Design region-bound processing with configurable residency controls.",
+      "owner": "Cloud Architecture Lead",
+      "trigger": "Legal review flags data transfer incompatibility in target region"
+    },
+    {
+      "risk": "R10: Commercial model complexity slows enterprise procurement decisions",
+      "probability": "Low",
+      "impact": "Medium",
+      "mitigation": "Offer standard package baseline with optional value-based add-on.",
+      "owner": "Commercial Lead",
+      "trigger": "Deal cycles exceed forecast due to pricing objections"
+    }
+  ],
+  "next_actions": [
+    {
+      "action": "Finalize top-10 category pilot scope with CPO and CFO",
+      "owner": "Program Director",
+      "due_window": "0-2 weeks",
+      "expected_outcome": "Approved pilot scope and baseline value targets"
+    },
+    {
+      "action": "Complete enterprise data access agreements for critical sources",
+      "owner": "Data Platform Lead",
+      "due_window": "0-4 weeks",
+      "expected_outcome": "Signed source access and governance ownership"
+    },
+    {
+      "action": "Stand up canonical taxonomy governance working group",
+      "owner": "Category Excellence Lead",
+      "due_window": "0-3 weeks",
+      "expected_outcome": "Approved taxonomy standards and stewardship model"
+    },
+    {
+      "action": "Implement first-pass ingestion and quality monitoring for pilot categories",
+      "owner": "Data Engineering Lead",
+      "due_window": "2-6 weeks",
+      "expected_outcome": "Stable daily refresh and quality scorecards"
+    },
+    {
+      "action": "Launch classification model benchmark and human feedback queue",
+      "owner": "ML Lead",
+      "due_window": "4-8 weeks",
+      "expected_outcome": "Validated baseline accuracy and retraining loop"
+    },
+    {
+      "action": "Integrate risk feeds and define mitigation playbook ownership",
+      "owner": "Risk Engineering Lead",
+      "due_window": "6-10 weeks",
+      "expected_outcome": "Operational risk alerting and escalation workflows"
+    },
+    {
+      "action": "Deploy executive CPO/CFO pilot cockpit with decision audit trail",
+      "owner": "Product Lead",
+      "due_window": "8-12 weeks",
+      "expected_outcome": "Live decision workflows for pilot governance"
+    },
+    {
+      "action": "Operationalize realized-vs-forecast attribution with finance sign-off",
+      "owner": "Value Realization Lead",
+      "due_window": "10-14 weeks",
+      "expected_outcome": "Finance-validated impact reporting pipeline"
+    },
+    {
+      "action": "Conduct security and compliance control readiness review",
+      "owner": "Security and Compliance Lead",
+      "due_window": "10-16 weeks",
+      "expected_outcome": "Evidence-backed control gap remediation plan"
+    },
+    {
+      "action": "Prepare investor-facing value proof package from pilot metrics",
+      "owner": "Strategy and Finance Lead",
+      "due_window": "16-20 weeks",
+      "expected_outcome": "Diligence-ready narrative and performance evidence"
+    }
+  ],
+  "assumptions": [
+    "Priority ERP, AP, CLM, and risk feed access can be secured within first eight weeks.",
+    "Pilot categories represent enough spend concentration to demonstrate measurable financial impact.",
+    "Executive sponsorship remains active throughout the 12-month proof horizon.",
+    "Procurement and finance teams can support monthly governance and sign-off cycles.",
+    "Initial compliance scope targets ISO readiness trajectory with phased SOC evidence expansion."
+  ],
+  "data_needed": [
+    "Historical supplier disruption events with timestamps and impact severity",
+    "Contract clause corpus with renewal and pricing term metadata",
+    "Category-level baseline savings performance and sourcing cycle benchmarks",
+    "Entity-level carbon emission factors tied to supplier and logistics legs",
+    "Regional regulatory and data residency requirements for deployment jurisdictions"
+  ]
+}
