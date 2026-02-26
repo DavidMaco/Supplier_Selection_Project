@@ -63,6 +63,7 @@ python docs/strategy/generate_evaluation_manifest.py --candidate docs/strategy/c
 - The workflow also includes `strategy-policy-tests`, which executes `tests/test_strategy_validator.py`.
 - A monthly `strategy-governance-scheduled` job runs on cron (`0 6 1 * *`) and fails if any `freshness_warnings` are present.
 - Strategy and scheduled jobs now enforce traceability policy drift checks and validator output contract validation.
+- Fast, validation, and scheduled strategy jobs all publish comparable workflow summaries for reporting parity.
 
 ## Tests
 - Validator policy tests are in `tests/test_strategy_validator.py` and cover fallback behavior plus strict freshness failure modes.

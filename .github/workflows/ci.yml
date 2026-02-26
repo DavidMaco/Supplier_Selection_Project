@@ -166,6 +166,35 @@ jobs:
           print("Strategy validation passed: all_checks_valid=true")
           PY
 
+          - name: Publish strategy validation summary
+          run: |
+            python - <<'PY'
+            import json
+            import os
+            from pathlib import Path
+
+            report = json.loads(Path("docs/strategy/ci-validation.json").read_text(encoding="utf-8"))
+            summary = [
+              "## Strategy Validation Summary",
+              "",
+              f"- all_checks_valid: `{str(report.get('all_checks_valid', False)).lower()}`",
+              f"- schema_valid: `{str(report.get('schema_valid', False)).lower()}`",
+              f"- score_math_valid: `{str(report.get('score_math_valid', False)).lower()}`",
+              f"- traceability_ok: `{str(report.get('traceability_ok', False)).lower()}`",
+              f"- freshness_ok: `{str(report.get('freshness_ok', False)).lower()}`",
+              f"- freshness_warnings: `{len(report.get('freshness_warnings', []))}`",
+              f"- freshness_violations: `{len(report.get('freshness_violations', []))}`",
+              f"- validator_version: `{report.get('validator_version', 'unknown')}`",
+            ]
+
+            summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+            if summary_path:
+              with open(summary_path, "a", encoding="utf-8") as f:
+                f.write("\n".join(summary) + "\n")
+            else:
+              print("\n".join(summary))
+            PY
+
   strategy-policy-tests:
     runs-on: ubuntu-latest
     steps:
@@ -233,6 +262,35 @@ jobs:
               raise SystemExit(f"Scheduled governance failed: freshness_warnings={warning_count}")
           print("Scheduled governance passed: all_checks_valid=true, freshness_warnings=0")
           PY
+
+          - name: Publish scheduled governance summary
+          run: |
+            python - <<'PY'
+            import json
+            import os
+            from pathlib import Path
+
+            report = json.loads(Path("docs/strategy/ci-scheduled-validation.json").read_text(encoding="utf-8"))
+            summary = [
+              "## Strategy Scheduled Governance Summary",
+              "",
+              f"- all_checks_valid: `{str(report.get('all_checks_valid', False)).lower()}`",
+              f"- schema_valid: `{str(report.get('schema_valid', False)).lower()}`",
+              f"- score_math_valid: `{str(report.get('score_math_valid', False)).lower()}`",
+              f"- traceability_ok: `{str(report.get('traceability_ok', False)).lower()}`",
+              f"- freshness_ok: `{str(report.get('freshness_ok', False)).lower()}`",
+              f"- freshness_warnings: `{len(report.get('freshness_warnings', []))}`",
+              f"- freshness_violations: `{len(report.get('freshness_violations', []))}`",
+              f"- validator_version: `{report.get('validator_version', 'unknown')}`",
+            ]
+
+            summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+            if summary_path:
+              with open(summary_path, "a", encoding="utf-8") as f:
+                f.write("\n".join(summary) + "\n")
+            else:
+              print("\n".join(summary))
+            PY
 
   test:
     runs-on: ubuntu-latest

@@ -1,0 +1,36 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "traceability_valid": true,
+  "freshness_valid": true,
+  "policy_drift_valid": true,
+  "validator_contract_valid": true,
+  "strategy_tests_passed": true,
+  "fast_governance_gate_valid": true,
+  "path_aware_fast_gate_enabled": true,
+  "workflow_summary_parity_enabled": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true,
+    "fast_summary_published": true,
+    "validation_summary_published": true,
+    "scheduled_summary_published": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Add shared summary helper script to avoid repeating summary formatting logic across workflow jobs.",
+    "Include drift_ok and policy violation counts directly in validation and scheduled summaries.",
+    "Add CI lint check for workflow summary markdown formatting consistency.",
+    "Publish summary metrics as workflow outputs to support downstream automations.",
+    "Track summary field evolution in VALIDATOR_OUTPUT_CHANGELOG for reporting consumers."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}
