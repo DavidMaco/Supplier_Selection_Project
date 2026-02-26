@@ -1,0 +1,25 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Add explicit formula text for status mapping (Investable/Borderline/Red Flag) inside readiness_scorecard for fully self-contained evaluation logic.",
+    "Include a compact cross-reference table linking each scorecard dimension to exact evidence artifacts and data source IDs for faster diligence traceability.",
+    "Quantify uncertainty bands for each major KPI target (best/base/worst) to strengthen investor downside stress-test readiness.",
+    "Extend competitor proof entries with third-party validation source tags where available to improve external credibility.",
+    "Add explicit gate-level rollback/contingency actions for each plan_12_month fail_criteria to improve execution resilience."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}
