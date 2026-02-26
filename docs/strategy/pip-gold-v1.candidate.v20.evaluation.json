@@ -1,0 +1,33 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "traceability_valid": true,
+  "freshness_valid": true,
+  "policy_drift_valid": true,
+  "validator_contract_valid": true,
+  "strategy_tests_passed": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true,
+    "drift_checker_tests_present": true,
+    "drift_checker_failure_modes_tested": true,
+    "ci_policy_gates_present": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Add CI job that runs only strategy governance tests for faster feedback on policy-related changes.",
+    "Add negative contract test to verify CI fails on missing required validator output fields.",
+    "Refactor drift checker to expose pure functions for direct unit testing without subprocess invocation.",
+    "Track test coverage for strategy governance scripts and publish coverage trend in CI summary.",
+    "Add golden fixtures for candidate/config pairs to standardize policy-drift regression scenarios."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}

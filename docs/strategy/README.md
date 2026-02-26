@@ -63,3 +63,4 @@ python docs/strategy/generate_evaluation_manifest.py --candidate docs/strategy/c
 
 ## Tests
 - Validator policy tests are in `tests/test_strategy_validator.py` and cover fallback behavior plus strict freshness failure modes.
+- Drift-checker tests are in `tests/test_traceability_policy_drift.py` and cover pass/fail exit-code behavior for taxonomy/mapping drift.
