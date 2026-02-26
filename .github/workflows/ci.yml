@@ -9,6 +9,48 @@ on:
     - cron: "0 6 1 * *"
 
 jobs:
+  strategy-governance-fast:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install strategy governance dependencies
+        run: pip install jsonschema pytest
+
+      - name: Run strategy governance tests
+        run: python -m pytest tests/test_strategy_validator.py tests/test_traceability_policy_drift.py -v --tb=short
+
+      - name: Run policy drift check
+        run: |
+          python docs/strategy/check_traceability_policy_drift.py \
+            --candidate docs/strategy/pip-gold-v1.candidate.json \
+            --config docs/strategy/validator-config.json
+
+      - name: Run validator quick gate
+        run: |
+          python docs/strategy/validate_pip_output.py \
+            --input docs/strategy/pip-gold-v1.candidate.json \
+            --schema docs/strategy/pip-gold-v1.schema.json \
+            --config docs/strategy/validator-config.json > docs/strategy/ci-fast-validation.json
+
+      - name: Enforce quick gate thresholds
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path("docs/strategy/ci-fast-validation.json").read_text(encoding="utf-8"))
+          if not report.get("all_checks_valid", False):
+              raise SystemExit("Fast governance gate failed: all_checks_valid=false")
+          print("Fast governance gate passed")
+          PY
+
   strategy-validation:
     runs-on: ubuntu-latest
     steps:

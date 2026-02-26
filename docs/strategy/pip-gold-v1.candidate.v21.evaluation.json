@@ -1,0 +1,34 @@
+{
+  "schema_valid": true,
+  "schema_errors": [],
+  "score_math_valid": true,
+  "traceability_valid": true,
+  "freshness_valid": true,
+  "policy_drift_valid": true,
+  "validator_contract_valid": true,
+  "strategy_tests_passed": true,
+  "fast_governance_gate_valid": true,
+  "computed_weighted_score": 83.85,
+  "declared_score": 83.9,
+  "status_consistency": "pass",
+  "quality_checks": {
+    "metric_mechanism_verification_present": true,
+    "realized_vs_forecast_separated": true,
+    "stage_gates_present": true,
+    "investor_pack_complete": true,
+    "global_compliance_complete": true,
+    "fast_governance_ci_job_present": true,
+    "fast_governance_local_equivalent_passed": true,
+    "policy_and_validator_gates_integrated": true
+  },
+  "critical_gaps": [],
+  "top_5_fixes": [
+    "Add path-based workflow triggers so strategy-governance-fast runs only when strategy artifacts or tests change.",
+    "Publish CI timing telemetry to quantify fast-job feedback improvements over full pipeline.",
+    "Archive ci-fast-validation output as workflow artifact for easier triage on failures.",
+    "Add branch protection recommendation requiring strategy-governance-fast for governance-sensitive PRs.",
+    "Consider splitting fast-governance checks into a reusable composite action for maintainability."
+  ],
+  "go_no_go": "GO",
+  "confidence": "High"
+}

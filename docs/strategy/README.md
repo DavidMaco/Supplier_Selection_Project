@@ -55,6 +55,7 @@ python docs/strategy/generate_evaluation_manifest.py --candidate docs/strategy/c
 - The reproducibility manifest captures SHA-256 hashes for candidate/schema/config/validation artifacts and validator version.
 
 ## CI Gate
+- `.github/workflows/ci.yml` includes a `strategy-governance-fast` job for quick non-scheduled checks (tests + drift + validator gate).
 - `.github/workflows/ci.yml` includes a `strategy-validation` job.
 - The job runs `validate_pip_output.py` against `pip-gold-v1.candidate.json` and fails if `all_checks_valid` is not `true`.
 - The workflow also includes `strategy-policy-tests`, which executes `tests/test_strategy_validator.py`.
