@@ -176,7 +176,9 @@ jobs:
           filters: |
             summary:
               - 'docs/strategy/publish_ci_summary.py'
+              - 'docs/strategy/check_summary_title_prefix.py'
               - 'tests/test_publish_ci_summary.py'
+              - 'tests/test_summary_title_prefix_guard.py'
               - '.github/workflows/ci.yml'
 
       - name: Set up Python
@@ -184,9 +186,15 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Enforce strategy summary title prefix
+        run: |
+          python docs/strategy/check_summary_title_prefix.py \
+            --workflow .github/workflows/ci.yml \
+            --prefix "Strategy CI |"
+
       - name: Run summary script tests
         if: steps.changes.outputs.summary == 'true'
-        run: python -m pytest tests/test_publish_ci_summary.py -v --tb=short
+        run: python -m pytest tests/test_publish_ci_summary.py tests/test_summary_title_prefix_guard.py -v --tb=short
 
       - name: Publish summary-tests summary
         if: steps.changes.outputs.summary == 'true'
