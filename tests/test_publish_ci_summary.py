@@ -142,15 +142,20 @@ def test_read_json_with_fallback_supports_utf8_sig_and_utf16():
         shutil.rmtree(work_dir, ignore_errors=True)
 
 
-def test_assert_summary_title_raises_on_mismatch():
+@pytest.mark.parametrize(
+    ("title", "should_raise"),
+    [
+        ("Strategy CI | Fast Governance", True),
+        ("Strategy CI | Validation", False),
+    ],
+)
+def test_assert_summary_title(title: str, should_raise: bool):
     summary_text = "## Strategy CI | Validation\n"
-    with pytest.raises(AssertionError):
-        _assert_summary_title(summary_text, "Strategy CI | Fast Governance")
-
-
-def test_assert_summary_title_passes_on_match():
-    summary_text = "## Strategy CI | Validation\n"
-    _assert_summary_title(summary_text, "Strategy CI | Validation")
+    if should_raise:
+        with pytest.raises(AssertionError):
+            _assert_summary_title(summary_text, title)
+        return
+    _assert_summary_title(summary_text, title)
 
 
 @pytest.mark.parametrize(
