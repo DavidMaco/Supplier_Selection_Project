@@ -115,6 +115,11 @@ def test_assert_summary_title_raises_on_mismatch():
         _assert_summary_title(summary_text, "Strategy CI | Fast Governance")
 
 
+def test_assert_summary_title_passes_on_match():
+    summary_text = "## Strategy CI | Validation\n"
+    _assert_summary_title(summary_text, "Strategy CI | Validation")
+
+
 def test_script_writes_to_github_step_summary_file():
     work_dir = _make_workspace_temp_dir()
     report_path = work_dir / "report.json"
