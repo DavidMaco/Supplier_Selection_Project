@@ -36,6 +36,10 @@ def _assert_guard_summary_fields(summary_text: str, expected_fields: dict[str, s
         assert f"{field}: `{value}`" in summary_text
 
 
+def _assert_summary_title(summary_text: str, title: str) -> None:
+    assert f"## {title}" in summary_text
+
+
 EXPECTED_GUARD_FIELDS_DETAIL = {
     "title_prefix_ok": "false",
     "required_prefix": "Strategy CI |",
@@ -152,7 +156,7 @@ def test_script_writes_to_github_step_summary_file():
 
         assert result.returncode == 0
         summary_text = summary_path.read_text(encoding="utf-8")
-        assert "## Strategy Validation Summary" in summary_text
+        _assert_summary_title(summary_text, "Strategy Validation Summary")
         assert "Path Filter: `strategy`" in summary_text
         assert "Path Filter Matched: `true`" in summary_text
         assert "Path Filter Matched Count: `3`" in summary_text
@@ -230,7 +234,7 @@ def test_script_enforces_guard_consistency_and_exits_nonzero_on_mismatch():
         assert "Guard consistency check failed" in result.stderr
 
         summary_text = summary_path.read_text(encoding="utf-8")
-        assert "## Strategy CI | Summary Title Guard" in summary_text
+        _assert_summary_title(summary_text, "Strategy CI | Summary Title Guard")
         _assert_guard_summary_fields(summary_text, EXPECTED_GUARD_FIELDS_MISMATCH)
     finally:
         shutil.rmtree(work_dir, ignore_errors=True)
@@ -280,7 +284,7 @@ def test_script_enforces_guard_consistency_and_succeeds_on_match():
         assert result.returncode == 0
 
         summary_text = summary_path.read_text(encoding="utf-8")
-        assert "## Strategy CI | Summary Title Guard" in summary_text
+        _assert_summary_title(summary_text, "Strategy CI | Summary Title Guard")
         _assert_guard_summary_fields(summary_text, EXPECTED_GUARD_FIELDS_POSITIVE)
     finally:
         shutil.rmtree(work_dir, ignore_errors=True)
