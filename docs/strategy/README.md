@@ -68,6 +68,7 @@ python docs/strategy/generate_evaluation_manifest.py --candidate docs/strategy/c
 - Strategy and scheduled jobs now enforce traceability policy drift checks and validator output contract validation.
 - Fast, validation, and scheduled strategy jobs all publish comparable workflow summaries for reporting parity.
 - Summary publishing is centralized via `publish_ci_summary.py` to keep formatting consistent across jobs.
+- Summary titles are normalized as `Strategy CI | <Job>` for easier dashboard filtering and scanability.
 
 ## Tests
 - Validator policy tests are in `tests/test_strategy_validator.py` and cover fallback behavior plus strict freshness failure modes.

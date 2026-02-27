@@ -73,7 +73,7 @@ jobs:
         if: steps.changes.outputs.strategy == 'true'
         run: |
           python docs/strategy/publish_ci_summary.py \
-            --title "Strategy Governance Fast Summary" \
+            --title "Strategy CI | Fast Governance" \
             --triggered true \
             --path-filter-name strategy \
             --path-filter-matched "${{ steps.changes.outputs.strategy }}" \
@@ -85,7 +85,7 @@ jobs:
         run: |
           echo "No strategy governance file changes detected; skipping fast governance checks."
           python docs/strategy/publish_ci_summary.py \
-            --title "Strategy Governance Fast Summary" \
+            --title "Strategy CI | Fast Governance" \
             --triggered false \
             --path-filter-name strategy \
             --path-filter-matched "${{ steps.changes.outputs.strategy }}" \
@@ -146,7 +146,7 @@ jobs:
       - name: Publish strategy validation summary
         run: |
           python docs/strategy/publish_ci_summary.py \
-            --title "Strategy Validation Summary" \
+            --title "Strategy CI | Validation" \
             --triggered true \
             --report docs/strategy/ci-validation.json
 
@@ -192,7 +192,7 @@ jobs:
         if: steps.changes.outputs.summary == 'true'
         run: |
           python docs/strategy/publish_ci_summary.py \
-            --title "Strategy Summary Tests Summary" \
+            --title "Strategy CI | Summary Tests" \
             --triggered true \
             --path-filter-name summary \
             --path-filter-matched "${{ steps.changes.outputs.summary }}" \
@@ -204,7 +204,7 @@ jobs:
         run: |
           echo "No summary-script changes detected; skipping summary test job."
           python docs/strategy/publish_ci_summary.py \
-            --title "Strategy Summary Tests Summary" \
+            --title "Strategy CI | Summary Tests" \
             --triggered false \
             --path-filter-name summary \
             --path-filter-matched "${{ steps.changes.outputs.summary }}" \
@@ -269,7 +269,7 @@ jobs:
       - name: Publish scheduled governance summary
         run: |
           python docs/strategy/publish_ci_summary.py \
-            --title "Strategy Scheduled Governance Summary" \
+            --title "Strategy CI | Scheduled Governance" \
             --triggered true \
             --report docs/strategy/ci-scheduled-validation.json
 
