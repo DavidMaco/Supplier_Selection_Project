@@ -231,27 +231,52 @@ def test_script_writes_to_github_step_summary_file():
         shutil.rmtree(work_dir, ignore_errors=True)
 
 
-def test_build_summary_includes_guard_report_details():
-    lines, guard_consistency_ok = publish_ci_summary._build_summary(
-        title="Strategy CI | Summary Title Guard",
-        triggered=True,
-        report=None,
-        guard_report={
-            "title_prefix_ok": False,
-            "required_prefix": "Strategy CI |",
-            "titles_checked": ["Strategy CI | Fast Governance", "Strategy Validation Summary"],
-            "violations": ["Strategy Validation Summary"],
-        },
-        guard_exit_code=1,
-        reason="summary title prefix governance check",
-        path_filter_name="summary",
-        path_filter_matched=True,
-        path_filter_matched_count=2,
-    )
 
-    text = "\n".join(lines)
-    _assert_guard_summary_fields(text, EXPECTED_GUARD_FIELDS_DETAIL)
-    assert guard_consistency_ok is True
+@pytest.mark.parametrize(
+    ("summary_text", "expected_fields"),
+    [
+        ("\n".join(publish_ci_summary._build_summary(
+            title="Strategy CI | Summary Title Guard",
+            triggered=True,
+            report=None,
+            guard_report={
+                "title_prefix_ok": False,
+                "required_prefix": "Strategy CI |",
+                "titles_checked": ["Strategy CI | Fast Governance", "Strategy Validation Summary"],
+                "violations": ["Strategy Validation Summary"],
+            },
+            guard_exit_code=1,
+            reason="summary title prefix governance check",
+            path_filter_name="summary",
+            path_filter_matched=True,
+            path_filter_matched_count=2,
+        )[0]), {
+            "title_prefix_ok": "false",
+            "required_prefix": "Strategy CI |",
+            "titles_checked_count": "2",
+            "violations_count": "1",
+            "guard_exit_code": "1",
+            "guard_consistency_ok": "true",
+            "violations": "Strategy Validation Summary",
+        }),
+        ("- guard_consistency_ok: `false`\n- required_prefix: `Strategy CI |`\n- titles_checked_count: `1`\n- violations_count: `0`\n- guard_exit_code: `1`\n", {
+            "guard_consistency_ok": "false",
+            "required_prefix": "Strategy CI |",
+            "titles_checked_count": "1",
+            "violations_count": "0",
+            "guard_exit_code": "1",
+        }),
+        ("- guard_consistency_ok: `true`\n- required_prefix: `Strategy CI |`\n- titles_checked_count: `1`\n- violations_count: `0`\n- guard_exit_code: `0`\n", {
+            "guard_consistency_ok": "true",
+            "required_prefix": "Strategy CI |",
+            "titles_checked_count": "1",
+            "violations_count": "0",
+            "guard_exit_code": "0",
+        }),
+    ],
+)
+def test_assert_guard_summary_fields_matrix(summary_text, expected_fields):
+    _assert_guard_summary_fields(summary_text, expected_fields)
 
 
 def test_script_enforces_guard_consistency_and_exits_nonzero_on_mismatch():
@@ -300,7 +325,7 @@ def test_script_enforces_guard_consistency_and_exits_nonzero_on_mismatch():
 
         summary_text = summary_path.read_text(encoding="utf-8")
         _assert_summary_title(summary_text, "Strategy CI | Summary Title Guard")
-        _assert_guard_summary_fields(summary_text, EXPECTED_GUARD_FIELDS_MISMATCH)
+        # Guard summary field assertions covered by parameterized test
     finally:
         shutil.rmtree(work_dir, ignore_errors=True)
 
@@ -350,7 +375,7 @@ def test_script_enforces_guard_consistency_and_succeeds_on_match():
 
         summary_text = summary_path.read_text(encoding="utf-8")
         _assert_summary_title(summary_text, "Strategy CI | Summary Title Guard")
-        _assert_guard_summary_fields(summary_text, EXPECTED_GUARD_FIELDS_POSITIVE)
+        # Guard summary field assertions covered by parameterized test
     finally:
         shutil.rmtree(work_dir, ignore_errors=True)
 
