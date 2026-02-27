@@ -7,6 +7,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+import pytest
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_PATH = ROOT / "docs" / "strategy" / "publish_ci_summary.py"
@@ -105,6 +107,12 @@ def test_read_json_with_fallback_supports_utf8_sig_and_utf16():
         assert parsed_utf16["validator_version"] == "1.7.0"
     finally:
         shutil.rmtree(work_dir, ignore_errors=True)
+
+
+def test_assert_summary_title_raises_on_mismatch():
+    summary_text = "## Strategy CI | Validation\n"
+    with pytest.raises(AssertionError):
+        _assert_summary_title(summary_text, "Strategy CI | Fast Governance")
 
 
 def test_script_writes_to_github_step_summary_file():
