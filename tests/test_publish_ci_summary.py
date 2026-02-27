@@ -210,6 +210,56 @@ def test_script_enforces_guard_consistency_and_exits_nonzero_on_mismatch():
         shutil.rmtree(work_dir, ignore_errors=True)
 
 
+def test_script_enforces_guard_consistency_and_succeeds_on_match():
+    work_dir = _make_workspace_temp_dir()
+    guard_report_path = work_dir / "guard-report.json"
+    summary_path = work_dir / "summary.md"
+
+    try:
+        _write_json(
+            guard_report_path,
+            {
+                "title_prefix_ok": True,
+                "required_prefix": "Strategy CI |",
+                "titles_checked": ["Strategy CI | Validation"],
+                "violations": [],
+            },
+            "utf-8",
+        )
+
+        env = os.environ.copy()
+        env["GITHUB_STEP_SUMMARY"] = str(summary_path)
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT_PATH),
+                "--title",
+                "Strategy CI | Summary Title Guard",
+                "--triggered",
+                "true",
+                "--guard-report",
+                str(guard_report_path),
+                "--guard-exit-code",
+                "0",
+                "--enforce-guard-consistency",
+                "true",
+            ],
+            capture_output=True,
+            text=True,
+            env=env,
+            check=False,
+        )
+
+        assert result.returncode == 0
+
+        summary_text = summary_path.read_text(encoding="utf-8")
+        assert "## Strategy CI | Summary Title Guard" in summary_text
+        assert "guard_consistency_ok: `true`" in summary_text
+    finally:
+        shutil.rmtree(work_dir, ignore_errors=True)
+
+
 def test_read_json_with_fallback_raises_on_invalid_json():
     work_dir = _make_workspace_temp_dir()
     invalid_path = work_dir / "invalid.json"
