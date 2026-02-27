@@ -180,7 +180,6 @@ jobs:
               - '.github/workflows/ci.yml'
 
       - name: Set up Python
-        if: steps.changes.outputs.summary == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -189,9 +188,28 @@ jobs:
         if: steps.changes.outputs.summary == 'true'
         run: python -m pytest tests/test_publish_ci_summary.py -v --tb=short
 
+      - name: Publish summary-tests summary
+        if: steps.changes.outputs.summary == 'true'
+        run: |
+          python docs/strategy/publish_ci_summary.py \
+            --title "Strategy Summary Tests Summary" \
+            --triggered true \
+            --path-filter-name summary \
+            --path-filter-matched "${{ steps.changes.outputs.summary }}" \
+            --path-filter-matched-count "${{ steps.changes.outputs.summary_count }}" \
+            --reason "summary-script changes detected; summary tests executed"
+
       - name: No summary-script changes
         if: steps.changes.outputs.summary != 'true'
-        run: echo "No summary-script changes detected; skipping summary test job."
+        run: |
+          echo "No summary-script changes detected; skipping summary test job."
+          python docs/strategy/publish_ci_summary.py \
+            --title "Strategy Summary Tests Summary" \
+            --triggered false \
+            --path-filter-name summary \
+            --path-filter-matched "${{ steps.changes.outputs.summary }}" \
+            --path-filter-matched-count "${{ steps.changes.outputs.summary_count }}" \
+            --reason "no matching summary-script paths changed"
 
   strategy-governance-scheduled:
     if: github.event_name == 'schedule'

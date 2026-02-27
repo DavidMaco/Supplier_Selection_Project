@@ -63,6 +63,7 @@ python docs/strategy/generate_evaluation_manifest.py --candidate docs/strategy/c
 - The job runs `validate_pip_output.py` against `pip-gold-v1.candidate.json` and fails if `all_checks_valid` is not `true`.
 - The workflow also includes `strategy-policy-tests`, which executes `tests/test_strategy_validator.py`.
 - The workflow includes `strategy-summary-tests`, a path-filtered job for `publish_ci_summary.py` and its tests.
+- `strategy-summary-tests` now also publishes a compact triggered/skipped workflow summary with path-filter visibility parity.
 - A monthly `strategy-governance-scheduled` job runs on cron (`0 6 1 * *`) and fails if any `freshness_warnings` are present.
 - Strategy and scheduled jobs now enforce traceability policy drift checks and validator output contract validation.
 - Fast, validation, and scheduled strategy jobs all publish comparable workflow summaries for reporting parity.
