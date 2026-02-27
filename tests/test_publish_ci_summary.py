@@ -42,6 +42,17 @@ def _assert_summary_title(summary_text: str, title: str) -> None:
     assert f"## {title}" in summary_text
 
 
+def _assert_path_filter_fields(
+    summary_text: str,
+    name: str,
+    matched: str,
+    matched_count: str,
+) -> None:
+    assert f"Path Filter: `{name}`" in summary_text
+    assert f"Path Filter Matched: `{matched}`" in summary_text
+    assert f"Path Filter Matched Count: `{matched_count}`" in summary_text
+
+
 EXPECTED_GUARD_FIELDS_DETAIL = {
     "title_prefix_ok": "false",
     "required_prefix": "Strategy CI |",
@@ -83,9 +94,7 @@ def test_build_summary_includes_reason_when_report_missing():
     )
     text = "\n".join(lines)
     assert "Triggered: `false`" in text
-    assert "Path Filter: `strategy`" in text
-    assert "Path Filter Matched: `false`" in text
-    assert "Path Filter Matched Count: `0`" in text
+    _assert_path_filter_fields(text, name="strategy", matched="false", matched_count="0")
     assert "Reason: no matching strategy governance paths changed" in text
     assert guard_consistency_ok is None
 
@@ -170,9 +179,7 @@ def test_script_writes_to_github_step_summary_file():
         assert result.returncode == 0
         summary_text = summary_path.read_text(encoding="utf-8")
         _assert_summary_title(summary_text, "Strategy Validation Summary")
-        assert "Path Filter: `strategy`" in summary_text
-        assert "Path Filter Matched: `true`" in summary_text
-        assert "Path Filter Matched Count: `3`" in summary_text
+        _assert_path_filter_fields(summary_text, name="strategy", matched="true", matched_count="3")
         assert "all_checks_valid: `true`" in summary_text
         assert "validator_version: `1.7.0`" in summary_text
     finally:
