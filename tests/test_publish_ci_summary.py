@@ -210,7 +210,16 @@ def test_script_enforces_guard_consistency_and_exits_nonzero_on_mismatch():
 
         summary_text = summary_path.read_text(encoding="utf-8")
         assert "## Strategy CI | Summary Title Guard" in summary_text
-        assert "guard_consistency_ok: `false`" in summary_text
+        _assert_guard_summary_fields(
+            summary_text,
+            {
+                "guard_consistency_ok": "false",
+                "required_prefix": "Strategy CI |",
+                "titles_checked_count": "1",
+                "violations_count": "0",
+                "guard_exit_code": "1",
+            },
+        )
     finally:
         shutil.rmtree(work_dir, ignore_errors=True)
 
