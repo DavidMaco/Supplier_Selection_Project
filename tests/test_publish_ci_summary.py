@@ -79,6 +79,24 @@ EXPECTED_GUARD_FIELDS_POSITIVE = {
     "guard_exit_code": "0",
 }
 
+EXPECTED_PATH_FILTER_FIELDS_SKIPPED = {
+    "name": "strategy",
+    "matched": "false",
+    "matched_count": "0",
+}
+
+EXPECTED_PATH_FILTER_FIELDS_POSITIVE = {
+    "name": "strategy",
+    "matched": "true",
+    "matched_count": "3",
+}
+
+EXPECTED_PATH_FILTER_FIELDS_MISMATCH = {
+    "name": "summary",
+    "matched": "false",
+    "matched_count": "0",
+}
+
 
 def test_build_summary_includes_reason_when_report_missing():
     lines, guard_consistency_ok = publish_ci_summary._build_summary(
@@ -94,7 +112,7 @@ def test_build_summary_includes_reason_when_report_missing():
     )
     text = "\n".join(lines)
     assert "Triggered: `false`" in text
-    _assert_path_filter_fields(text, name="strategy", matched="false", matched_count="0")
+    _assert_path_filter_fields(text, **EXPECTED_PATH_FILTER_FIELDS_SKIPPED)
     assert "Reason: no matching strategy governance paths changed" in text
     assert guard_consistency_ok is None
 
@@ -132,12 +150,12 @@ def test_assert_summary_title_passes_on_match():
 def test_assert_path_filter_fields_raises_on_mismatch():
     summary_text = "- Path Filter: `strategy`\n- Path Filter Matched: `true`\n- Path Filter Matched Count: `3`\n"
     with pytest.raises(AssertionError):
-        _assert_path_filter_fields(summary_text, name="summary", matched="false", matched_count="0")
+        _assert_path_filter_fields(summary_text, **EXPECTED_PATH_FILTER_FIELDS_MISMATCH)
 
 
 def test_assert_path_filter_fields_passes_on_match():
     summary_text = "- Path Filter: `strategy`\n- Path Filter Matched: `true`\n- Path Filter Matched Count: `3`\n"
-    _assert_path_filter_fields(summary_text, name="strategy", matched="true", matched_count="3")
+    _assert_path_filter_fields(summary_text, **EXPECTED_PATH_FILTER_FIELDS_POSITIVE)
 
 
 def test_script_writes_to_github_step_summary_file():
@@ -190,7 +208,7 @@ def test_script_writes_to_github_step_summary_file():
         assert result.returncode == 0
         summary_text = summary_path.read_text(encoding="utf-8")
         _assert_summary_title(summary_text, "Strategy Validation Summary")
-        _assert_path_filter_fields(summary_text, name="strategy", matched="true", matched_count="3")
+        _assert_path_filter_fields(summary_text, **EXPECTED_PATH_FILTER_FIELDS_POSITIVE)
         assert "all_checks_valid: `true`" in summary_text
         assert "validator_version: `1.7.0`" in summary_text
     finally:
