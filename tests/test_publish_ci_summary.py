@@ -257,6 +257,8 @@ def test_script_enforces_guard_consistency_and_succeeds_on_match():
         assert "## Strategy CI | Summary Title Guard" in summary_text
         assert "guard_consistency_ok: `true`" in summary_text
         assert "titles_checked_count: `1`" in summary_text
+        assert "violations_count: `0`" in summary_text
+        assert "guard_exit_code: `0`" in summary_text
     finally:
         shutil.rmtree(work_dir, ignore_errors=True)
 
