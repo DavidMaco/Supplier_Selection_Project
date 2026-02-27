@@ -32,7 +32,7 @@ def _write_text(path: Path, content: str, encoding: str) -> None:
 
 
 def test_build_summary_includes_reason_when_report_missing():
-    lines = publish_ci_summary._build_summary(
+    lines, guard_consistency_ok = publish_ci_summary._build_summary(
         title="Strategy Governance Fast Summary",
         triggered=False,
         report=None,
@@ -49,6 +49,7 @@ def test_build_summary_includes_reason_when_report_missing():
     assert "Path Filter Matched: `false`" in text
     assert "Path Filter Matched Count: `0`" in text
     assert "Reason: no matching strategy governance paths changed" in text
+    assert guard_consistency_ok is None
 
 
 def test_read_json_with_fallback_supports_utf8_sig_and_utf16():
@@ -130,7 +131,7 @@ def test_script_writes_to_github_step_summary_file():
 
 
 def test_build_summary_includes_guard_report_details():
-    lines = publish_ci_summary._build_summary(
+    lines, guard_consistency_ok = publish_ci_summary._build_summary(
         title="Strategy CI | Summary Title Guard",
         triggered=True,
         report=None,
@@ -153,7 +154,60 @@ def test_build_summary_includes_guard_report_details():
     assert "titles_checked_count: `2`" in text
     assert "violations_count: `1`" in text
     assert "guard_exit_code: `1`" in text
+    assert "guard_consistency_ok: `true`" in text
     assert "violations: `Strategy Validation Summary`" in text
+    assert guard_consistency_ok is True
+
+
+def test_script_enforces_guard_consistency_and_exits_nonzero_on_mismatch():
+    work_dir = _make_workspace_temp_dir()
+    guard_report_path = work_dir / "guard-report.json"
+    summary_path = work_dir / "summary.md"
+
+    try:
+        _write_json(
+            guard_report_path,
+            {
+                "title_prefix_ok": True,
+                "required_prefix": "Strategy CI |",
+                "titles_checked": ["Strategy CI | Validation"],
+                "violations": [],
+            },
+            "utf-8",
+        )
+
+        env = os.environ.copy()
+        env["GITHUB_STEP_SUMMARY"] = str(summary_path)
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT_PATH),
+                "--title",
+                "Strategy CI | Summary Title Guard",
+                "--triggered",
+                "true",
+                "--guard-report",
+                str(guard_report_path),
+                "--guard-exit-code",
+                "1",
+                "--enforce-guard-consistency",
+                "true",
+            ],
+            capture_output=True,
+            text=True,
+            env=env,
+            check=False,
+        )
+
+        assert result.returncode != 0
+        assert "Guard consistency check failed" in result.stderr
+
+        summary_text = summary_path.read_text(encoding="utf-8")
+        assert "## Strategy CI | Summary Title Guard" in summary_text
+        assert "guard_consistency_ok: `false`" in summary_text
+    finally:
+        shutil.rmtree(work_dir, ignore_errors=True)
 
 
 def test_read_json_with_fallback_raises_on_invalid_json():

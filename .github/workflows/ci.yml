@@ -209,6 +209,7 @@ jobs:
             --path-filter-matched-count "${{ steps.changes.outputs.summary_count }}" \
             --guard-report docs/strategy/ci-summary-title-guard.json \
             --guard-exit-code "${{ steps.summary_title_guard.outputs.guard_exit_code }}" \
+            --enforce-guard-consistency true \
             --reason "summary title prefix governance check"
 
       - name: Run summary script tests

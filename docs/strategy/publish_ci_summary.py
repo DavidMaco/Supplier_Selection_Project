@@ -18,7 +18,7 @@ def _build_summary(
     path_filter_name: str | None,
     path_filter_matched: bool | None,
     path_filter_matched_count: int | None,
-) -> list[str]:
+) -> tuple[list[str], bool | None]:
     lines = [f"## {title}", "", f"- Triggered: `{_to_bool_string(triggered)}`"]
 
     if path_filter_name:
@@ -33,6 +33,11 @@ def _build_summary(
 
     if guard_report is not None:
         title_prefix_ok = bool(guard_report.get("title_prefix_ok", False))
+        guard_consistency_ok = None
+        if guard_exit_code is not None:
+            expected_prefix_ok = guard_exit_code == 0
+            guard_consistency_ok = title_prefix_ok == expected_prefix_ok
+
         lines.extend(
             [
                 f"- title_prefix_ok: `{_to_bool_string(title_prefix_ok)}`",
@@ -44,15 +49,17 @@ def _build_summary(
 
         if guard_exit_code is not None:
             lines.append(f"- guard_exit_code: `{guard_exit_code}`")
+        if guard_consistency_ok is not None:
+            lines.append(f"- guard_consistency_ok: `{_to_bool_string(guard_consistency_ok)}`")
 
         violations = guard_report.get("violations", [])
         if violations:
             lines.append(f"- violations: `{' | '.join(violations)}`")
 
-        return lines
+        return lines, guard_consistency_ok
 
     if report is None:
-        return lines
+        return lines, None
 
     lines.extend(
         [
@@ -67,7 +74,7 @@ def _build_summary(
         ]
     )
 
-    return lines
+    return lines, None
 
 
 def _read_json_with_fallback(path: Path) -> dict:
@@ -88,6 +95,13 @@ def main() -> None:
     parser.add_argument("--report", required=False, help="Path to validator JSON report")
     parser.add_argument("--guard-report", required=False, help="Path to summary-title guard JSON report")
     parser.add_argument("--guard-exit-code", required=False, type=int, help="Summary-title guard process exit code")
+    parser.add_argument(
+        "--enforce-guard-consistency",
+        required=False,
+        choices=["true", "false"],
+        default="false",
+        help="Fail when guard_exit_code and title_prefix_ok are inconsistent",
+    )
     parser.add_argument("--reason", required=False, help="Optional reason for skip or context")
     parser.add_argument("--path-filter-name", required=False, help="Optional path-filter key name")
     parser.add_argument(
@@ -116,7 +130,7 @@ def main() -> None:
     if args.guard_report:
         guard_report = _read_json_with_fallback(Path(args.guard_report))
 
-    summary_lines = _build_summary(
+    summary_lines, guard_consistency_ok = _build_summary(
         args.title,
         triggered,
         report,
@@ -135,6 +149,10 @@ def main() -> None:
             file.write(summary_text)
     else:
         print(summary_text)
+
+    enforce_guard_consistency = args.enforce_guard_consistency == "true"
+    if enforce_guard_consistency and guard_consistency_ok is False:
+        raise SystemExit("Guard consistency check failed: guard_exit_code and title_prefix_ok are inconsistent")
 
 
 if __name__ == "__main__":

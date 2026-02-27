@@ -66,6 +66,7 @@ python docs/strategy/generate_evaluation_manifest.py --candidate docs/strategy/c
 - `strategy-summary-tests` now also publishes a compact triggered/skipped workflow summary with path-filter visibility parity.
 - `strategy-summary-tests` enforces a summary-title prefix guard (`Strategy CI |`) via `check_summary_title_prefix.py`.
 - `strategy-summary-tests` publishes a dedicated `Strategy CI | Summary Title Guard` entry with guard pass/fail details for triage.
+- Guard summary publishing enforces consistency between `guard_exit_code` and `title_prefix_ok` and fails on mismatch.
 - A monthly `strategy-governance-scheduled` job runs on cron (`0 6 1 * *`) and fails if any `freshness_warnings` are present.
 - Strategy and scheduled jobs now enforce traceability policy drift checks and validator output contract validation.
 - Fast, validation, and scheduled strategy jobs all publish comparable workflow summaries for reporting parity.
