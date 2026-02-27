@@ -97,6 +97,12 @@ EXPECTED_PATH_FILTER_FIELDS_MISMATCH = {
     "matched_count": "0",
 }
 
+SUMMARY_TEXT_PATH_FILTER_POSITIVE = (
+    "- Path Filter: `strategy`\n"
+    "- Path Filter Matched: `true`\n"
+    "- Path Filter Matched Count: `3`\n"
+)
+
 
 def test_build_summary_includes_reason_when_report_missing():
     lines, guard_consistency_ok = publish_ci_summary._build_summary(
@@ -148,13 +154,13 @@ def test_assert_summary_title_passes_on_match():
 
 
 def test_assert_path_filter_fields_raises_on_mismatch():
-    summary_text = "- Path Filter: `strategy`\n- Path Filter Matched: `true`\n- Path Filter Matched Count: `3`\n"
+    summary_text = SUMMARY_TEXT_PATH_FILTER_POSITIVE
     with pytest.raises(AssertionError):
         _assert_path_filter_fields(summary_text, **EXPECTED_PATH_FILTER_FIELDS_MISMATCH)
 
 
 def test_assert_path_filter_fields_passes_on_match():
-    summary_text = "- Path Filter: `strategy`\n- Path Filter Matched: `true`\n- Path Filter Matched Count: `3`\n"
+    summary_text = SUMMARY_TEXT_PATH_FILTER_POSITIVE
     _assert_path_filter_fields(summary_text, **EXPECTED_PATH_FILTER_FIELDS_POSITIVE)
 
 
