@@ -153,15 +153,20 @@ def test_assert_summary_title_passes_on_match():
     _assert_summary_title(summary_text, "Strategy CI | Validation")
 
 
-def test_assert_path_filter_fields_raises_on_mismatch():
+@pytest.mark.parametrize(
+    ("expected_fields", "should_raise"),
+    [
+        (EXPECTED_PATH_FILTER_FIELDS_MISMATCH, True),
+        (EXPECTED_PATH_FILTER_FIELDS_POSITIVE, False),
+    ],
+)
+def test_assert_path_filter_fields(expected_fields: dict[str, str], should_raise: bool):
     summary_text = SUMMARY_TEXT_PATH_FILTER_POSITIVE
-    with pytest.raises(AssertionError):
-        _assert_path_filter_fields(summary_text, **EXPECTED_PATH_FILTER_FIELDS_MISMATCH)
-
-
-def test_assert_path_filter_fields_passes_on_match():
-    summary_text = SUMMARY_TEXT_PATH_FILTER_POSITIVE
-    _assert_path_filter_fields(summary_text, **EXPECTED_PATH_FILTER_FIELDS_POSITIVE)
+    if should_raise:
+        with pytest.raises(AssertionError):
+            _assert_path_filter_fields(summary_text, **expected_fields)
+        return
+    _assert_path_filter_fields(summary_text, **expected_fields)
 
 
 def test_script_writes_to_github_step_summary_file():
