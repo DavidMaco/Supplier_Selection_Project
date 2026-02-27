@@ -31,6 +31,11 @@ def _write_text(path: Path, content: str, encoding: str) -> None:
     path.write_text(content, encoding=encoding)
 
 
+def _assert_guard_summary_fields(summary_text: str, expected_fields: dict[str, str]) -> None:
+    for field, value in expected_fields.items():
+        assert f"{field}: `{value}`" in summary_text
+
+
 def test_build_summary_includes_reason_when_report_missing():
     lines, guard_consistency_ok = publish_ci_summary._build_summary(
         title="Strategy Governance Fast Summary",
@@ -255,11 +260,16 @@ def test_script_enforces_guard_consistency_and_succeeds_on_match():
 
         summary_text = summary_path.read_text(encoding="utf-8")
         assert "## Strategy CI | Summary Title Guard" in summary_text
-        assert "guard_consistency_ok: `true`" in summary_text
-        assert "required_prefix: `Strategy CI |`" in summary_text
-        assert "titles_checked_count: `1`" in summary_text
-        assert "violations_count: `0`" in summary_text
-        assert "guard_exit_code: `0`" in summary_text
+        _assert_guard_summary_fields(
+            summary_text,
+            {
+                "guard_consistency_ok": "true",
+                "required_prefix": "Strategy CI |",
+                "titles_checked_count": "1",
+                "violations_count": "0",
+                "guard_exit_code": "0",
+            },
+        )
     finally:
         shutil.rmtree(work_dir, ignore_errors=True)
 
