@@ -135,6 +135,11 @@ def test_assert_path_filter_fields_raises_on_mismatch():
         _assert_path_filter_fields(summary_text, name="summary", matched="false", matched_count="0")
 
 
+def test_assert_path_filter_fields_passes_on_match():
+    summary_text = "- Path Filter: `strategy`\n- Path Filter Matched: `true`\n- Path Filter Matched Count: `3`\n"
+    _assert_path_filter_fields(summary_text, name="strategy", matched="true", matched_count="3")
+
+
 def test_script_writes_to_github_step_summary_file():
     work_dir = _make_workspace_temp_dir()
     report_path = work_dir / "report.json"
