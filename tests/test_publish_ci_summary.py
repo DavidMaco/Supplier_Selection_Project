@@ -39,11 +39,13 @@ def test_build_summary_includes_reason_when_report_missing():
         reason="no matching strategy governance paths changed",
         path_filter_name="strategy",
         path_filter_matched=False,
+        path_filter_matched_count=0,
     )
     text = "\n".join(lines)
     assert "Triggered: `false`" in text
     assert "Path Filter: `strategy`" in text
     assert "Path Filter Matched: `false`" in text
+    assert "Path Filter Matched Count: `0`" in text
     assert "Reason: no matching strategy governance paths changed" in text
 
 
@@ -102,6 +104,8 @@ def test_script_writes_to_github_step_summary_file():
                 "strategy",
                 "--path-filter-matched",
                 "true",
+                "--path-filter-matched-count",
+                "3",
                 "--report",
                 str(report_path),
             ],
@@ -116,6 +120,7 @@ def test_script_writes_to_github_step_summary_file():
         assert "## Strategy Validation Summary" in summary_text
         assert "Path Filter: `strategy`" in summary_text
         assert "Path Filter Matched: `true`" in summary_text
+        assert "Path Filter Matched Count: `3`" in summary_text
         assert "all_checks_valid: `true`" in summary_text
         assert "validator_version: `1.7.0`" in summary_text
     finally:

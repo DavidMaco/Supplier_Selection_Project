@@ -15,6 +15,7 @@ def _build_summary(
     reason: str | None,
     path_filter_name: str | None,
     path_filter_matched: bool | None,
+    path_filter_matched_count: int | None,
 ) -> list[str]:
     lines = [f"## {title}", "", f"- Triggered: `{_to_bool_string(triggered)}`"]
 
@@ -22,6 +23,8 @@ def _build_summary(
         lines.append(f"- Path Filter: `{path_filter_name}`")
     if path_filter_matched is not None:
         lines.append(f"- Path Filter Matched: `{_to_bool_string(path_filter_matched)}`")
+    if path_filter_matched_count is not None:
+        lines.append(f"- Path Filter Matched Count: `{path_filter_matched_count}`")
 
     if reason:
         lines.append(f"- Reason: {reason}")
@@ -69,6 +72,12 @@ def main() -> None:
         choices=["true", "false"],
         help="Optional path-filter match result",
     )
+    parser.add_argument(
+        "--path-filter-matched-count",
+        required=False,
+        type=int,
+        help="Optional path-filter matched file count",
+    )
     args = parser.parse_args()
 
     triggered = args.triggered == "true"
@@ -87,6 +96,7 @@ def main() -> None:
         args.reason,
         args.path_filter_name,
         path_filter_matched,
+        args.path_filter_matched_count,
     )
     summary_text = "\n".join(summary_lines) + "\n"
 

@@ -58,7 +58,7 @@ python docs/strategy/generate_evaluation_manifest.py --candidate docs/strategy/c
 ## CI Gate
 - `.github/workflows/ci.yml` includes a `strategy-governance-fast` job for quick non-scheduled checks (tests + drift + validator gate).
 - `strategy-governance-fast` uses path filtering and runs heavy checks only when strategy-governance files/tests change.
-- `strategy-governance-fast` publishes a workflow summary showing triggered/skipped state, path-filter match visibility, and key validation metrics.
+- `strategy-governance-fast` publishes a workflow summary showing triggered/skipped state, path-filter match visibility (including matched-count), and key validation metrics.
 - `.github/workflows/ci.yml` includes a `strategy-validation` job.
 - The job runs `validate_pip_output.py` against `pip-gold-v1.candidate.json` and fails if `all_checks_valid` is not `true`.
 - The workflow also includes `strategy-policy-tests`, which executes `tests/test_strategy_validator.py`.

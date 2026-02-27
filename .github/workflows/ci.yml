@@ -77,6 +77,7 @@ jobs:
             --triggered true \
             --path-filter-name strategy \
             --path-filter-matched "${{ steps.changes.outputs.strategy }}" \
+            --path-filter-matched-count "${{ steps.changes.outputs.strategy_count }}" \
             --report docs/strategy/ci-fast-validation.json
 
       - name: No strategy changes
@@ -88,6 +89,7 @@ jobs:
             --triggered false \
             --path-filter-name strategy \
             --path-filter-matched "${{ steps.changes.outputs.strategy }}" \
+            --path-filter-matched-count "${{ steps.changes.outputs.strategy_count }}" \
             --reason "no matching strategy governance paths changed"
 
   strategy-validation:
