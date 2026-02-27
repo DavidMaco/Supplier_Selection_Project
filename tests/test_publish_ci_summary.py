@@ -36,6 +36,8 @@ def test_build_summary_includes_reason_when_report_missing():
         title="Strategy Governance Fast Summary",
         triggered=False,
         report=None,
+        guard_report=None,
+        guard_exit_code=None,
         reason="no matching strategy governance paths changed",
         path_filter_name="strategy",
         path_filter_matched=False,
@@ -125,6 +127,33 @@ def test_script_writes_to_github_step_summary_file():
         assert "validator_version: `1.7.0`" in summary_text
     finally:
         shutil.rmtree(work_dir, ignore_errors=True)
+
+
+def test_build_summary_includes_guard_report_details():
+    lines = publish_ci_summary._build_summary(
+        title="Strategy CI | Summary Title Guard",
+        triggered=True,
+        report=None,
+        guard_report={
+            "title_prefix_ok": False,
+            "required_prefix": "Strategy CI |",
+            "titles_checked": ["Strategy CI | Fast Governance", "Strategy Validation Summary"],
+            "violations": ["Strategy Validation Summary"],
+        },
+        guard_exit_code=1,
+        reason="summary title prefix governance check",
+        path_filter_name="summary",
+        path_filter_matched=True,
+        path_filter_matched_count=2,
+    )
+
+    text = "\n".join(lines)
+    assert "title_prefix_ok: `false`" in text
+    assert "required_prefix: `Strategy CI |`" in text
+    assert "titles_checked_count: `2`" in text
+    assert "violations_count: `1`" in text
+    assert "guard_exit_code: `1`" in text
+    assert "violations: `Strategy Validation Summary`" in text
 
 
 def test_read_json_with_fallback_raises_on_invalid_json():

@@ -186,11 +186,30 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Enforce strategy summary title prefix
+      - name: Run strategy summary title prefix guard
+        id: summary_title_guard
+        continue-on-error: true
         run: |
+          set +e
           python docs/strategy/check_summary_title_prefix.py \
             --workflow .github/workflows/ci.yml \
-            --prefix "Strategy CI |"
+            --prefix "Strategy CI |" > docs/strategy/ci-summary-title-guard.json
+          guard_exit=$?
+          echo "guard_exit_code=${guard_exit}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Publish summary-title guard summary
+        if: always()
+        run: |
+          python docs/strategy/publish_ci_summary.py \
+            --title "Strategy CI | Summary Title Guard" \
+            --triggered true \
+            --path-filter-name summary \
+            --path-filter-matched "${{ steps.changes.outputs.summary }}" \
+            --path-filter-matched-count "${{ steps.changes.outputs.summary_count }}" \
+            --guard-report docs/strategy/ci-summary-title-guard.json \
+            --guard-exit-code "${{ steps.summary_title_guard.outputs.guard_exit_code }}" \
+            --reason "summary title prefix governance check"
 
       - name: Run summary script tests
         if: steps.changes.outputs.summary == 'true'
@@ -218,6 +237,14 @@ jobs:
             --path-filter-matched "${{ steps.changes.outputs.summary }}" \
             --path-filter-matched-count "${{ steps.changes.outputs.summary_count }}" \
             --reason "no matching summary-script paths changed"
+
+      - name: Enforce strategy summary title prefix
+        if: always()
+        run: |
+          if [ "${{ steps.summary_title_guard.outputs.guard_exit_code }}" != "0" ]; then
+            echo "Strategy summary title prefix guard failed."
+            exit 1
+          fi
 
   strategy-governance-scheduled:
     if: github.event_name == 'schedule'

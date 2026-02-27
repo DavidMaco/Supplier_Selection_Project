@@ -12,6 +12,8 @@ def _build_summary(
     title: str,
     triggered: bool,
     report: dict | None,
+    guard_report: dict | None,
+    guard_exit_code: int | None,
     reason: str | None,
     path_filter_name: str | None,
     path_filter_matched: bool | None,
@@ -28,6 +30,26 @@ def _build_summary(
 
     if reason:
         lines.append(f"- Reason: {reason}")
+
+    if guard_report is not None:
+        title_prefix_ok = bool(guard_report.get("title_prefix_ok", False))
+        lines.extend(
+            [
+                f"- title_prefix_ok: `{_to_bool_string(title_prefix_ok)}`",
+                f"- required_prefix: `{guard_report.get('required_prefix', 'unknown')}`",
+                f"- titles_checked_count: `{len(guard_report.get('titles_checked', []))}`",
+                f"- violations_count: `{len(guard_report.get('violations', []))}`",
+            ]
+        )
+
+        if guard_exit_code is not None:
+            lines.append(f"- guard_exit_code: `{guard_exit_code}`")
+
+        violations = guard_report.get("violations", [])
+        if violations:
+            lines.append(f"- violations: `{' | '.join(violations)}`")
+
+        return lines
 
     if report is None:
         return lines
@@ -64,6 +86,8 @@ def main() -> None:
     parser.add_argument("--title", required=True, help="Summary title")
     parser.add_argument("--triggered", required=True, choices=["true", "false"], help="Whether checks were triggered")
     parser.add_argument("--report", required=False, help="Path to validator JSON report")
+    parser.add_argument("--guard-report", required=False, help="Path to summary-title guard JSON report")
+    parser.add_argument("--guard-exit-code", required=False, type=int, help="Summary-title guard process exit code")
     parser.add_argument("--reason", required=False, help="Optional reason for skip or context")
     parser.add_argument("--path-filter-name", required=False, help="Optional path-filter key name")
     parser.add_argument(
@@ -85,14 +109,19 @@ def main() -> None:
     if args.path_filter_matched is not None:
         path_filter_matched = args.path_filter_matched == "true"
     report = None
+    guard_report = None
 
     if args.report:
         report = _read_json_with_fallback(Path(args.report))
+    if args.guard_report:
+        guard_report = _read_json_with_fallback(Path(args.guard_report))
 
     summary_lines = _build_summary(
         args.title,
         triggered,
         report,
+        guard_report,
+        args.guard_exit_code,
         args.reason,
         args.path_filter_name,
         path_filter_matched,
