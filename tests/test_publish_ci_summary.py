@@ -154,13 +154,18 @@ def test_build_summary_includes_guard_report_details():
     )
 
     text = "\n".join(lines)
-    assert "title_prefix_ok: `false`" in text
-    assert "required_prefix: `Strategy CI |`" in text
-    assert "titles_checked_count: `2`" in text
-    assert "violations_count: `1`" in text
-    assert "guard_exit_code: `1`" in text
-    assert "guard_consistency_ok: `true`" in text
-    assert "violations: `Strategy Validation Summary`" in text
+    _assert_guard_summary_fields(
+        text,
+        {
+            "title_prefix_ok": "false",
+            "required_prefix": "Strategy CI |",
+            "titles_checked_count": "2",
+            "violations_count": "1",
+            "guard_exit_code": "1",
+            "guard_consistency_ok": "true",
+            "violations": "Strategy Validation Summary",
+        },
+    )
     assert guard_consistency_ok is True
 
 
