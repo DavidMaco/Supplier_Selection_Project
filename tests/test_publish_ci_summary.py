@@ -36,6 +36,33 @@ def _assert_guard_summary_fields(summary_text: str, expected_fields: dict[str, s
         assert f"{field}: `{value}`" in summary_text
 
 
+EXPECTED_GUARD_FIELDS_DETAIL = {
+    "title_prefix_ok": "false",
+    "required_prefix": "Strategy CI |",
+    "titles_checked_count": "2",
+    "violations_count": "1",
+    "guard_exit_code": "1",
+    "guard_consistency_ok": "true",
+    "violations": "Strategy Validation Summary",
+}
+
+EXPECTED_GUARD_FIELDS_MISMATCH = {
+    "guard_consistency_ok": "false",
+    "required_prefix": "Strategy CI |",
+    "titles_checked_count": "1",
+    "violations_count": "0",
+    "guard_exit_code": "1",
+}
+
+EXPECTED_GUARD_FIELDS_POSITIVE = {
+    "guard_consistency_ok": "true",
+    "required_prefix": "Strategy CI |",
+    "titles_checked_count": "1",
+    "violations_count": "0",
+    "guard_exit_code": "0",
+}
+
+
 def test_build_summary_includes_reason_when_report_missing():
     lines, guard_consistency_ok = publish_ci_summary._build_summary(
         title="Strategy Governance Fast Summary",
@@ -154,18 +181,7 @@ def test_build_summary_includes_guard_report_details():
     )
 
     text = "\n".join(lines)
-    _assert_guard_summary_fields(
-        text,
-        {
-            "title_prefix_ok": "false",
-            "required_prefix": "Strategy CI |",
-            "titles_checked_count": "2",
-            "violations_count": "1",
-            "guard_exit_code": "1",
-            "guard_consistency_ok": "true",
-            "violations": "Strategy Validation Summary",
-        },
-    )
+    _assert_guard_summary_fields(text, EXPECTED_GUARD_FIELDS_DETAIL)
     assert guard_consistency_ok is True
 
 
@@ -215,16 +231,7 @@ def test_script_enforces_guard_consistency_and_exits_nonzero_on_mismatch():
 
         summary_text = summary_path.read_text(encoding="utf-8")
         assert "## Strategy CI | Summary Title Guard" in summary_text
-        _assert_guard_summary_fields(
-            summary_text,
-            {
-                "guard_consistency_ok": "false",
-                "required_prefix": "Strategy CI |",
-                "titles_checked_count": "1",
-                "violations_count": "0",
-                "guard_exit_code": "1",
-            },
-        )
+        _assert_guard_summary_fields(summary_text, EXPECTED_GUARD_FIELDS_MISMATCH)
     finally:
         shutil.rmtree(work_dir, ignore_errors=True)
 
@@ -274,16 +281,7 @@ def test_script_enforces_guard_consistency_and_succeeds_on_match():
 
         summary_text = summary_path.read_text(encoding="utf-8")
         assert "## Strategy CI | Summary Title Guard" in summary_text
-        _assert_guard_summary_fields(
-            summary_text,
-            {
-                "guard_consistency_ok": "true",
-                "required_prefix": "Strategy CI |",
-                "titles_checked_count": "1",
-                "violations_count": "0",
-                "guard_exit_code": "0",
-            },
-        )
+        _assert_guard_summary_fields(summary_text, EXPECTED_GUARD_FIELDS_POSITIVE)
     finally:
         shutil.rmtree(work_dir, ignore_errors=True)
 
