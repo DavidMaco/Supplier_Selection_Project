@@ -38,6 +38,7 @@ Design a world-class, category-defining Procurement Spend Intelligence Platform 
 10. Commercial & Investment Model
 11. Global Scalability & Compliance
 12. Board & Investor Narrative
+13. Red Team Analysis
 
 ## Mandatory Rigor Rules
 - Every major claim must include: metric + mechanism + verification method
@@ -45,8 +46,18 @@ Design a world-class, category-defining Procurement Spend Intelligence Platform 
 - Include dependencies, critical path, and top risks with mitigations
 - Provide confidence level and assumptions for uncertain claims
 - Avoid generic statements; every recommendation must be executable
+- Market sizing (TAM/SAM/SOM) must specify methodology, at least one cited comparable transaction or third-party source, and state the sensitivity range of the estimate
+
+## Red Team Requirement
+Include a dedicated `red_team` section with:
+- At minimum 5 strongest failure arguments against the platform's thesis
+- Each argument must include: the failure mode, probability assessment, supporting evidence or precedent, and the honest rebuttal (which may be "we have no current mitigation")
+- At least one argument must challenge the core differentiation claim
+- At least one argument must address market timing or adoption risk
+- The section must be written as if by a hostile but fair institutional investor conducting adversarial due diligence
 
 ## Output Contract
+- Include `data_provenance` in meta: "synthetic" if evidence is generated, "production" if from real deployments, "mixed" if both
 - Include two plans:
   - Plan A: 12-month executable stage-gated plan (with pass/fail criteria)
   - Plan B: 3-year strategic roadmap
