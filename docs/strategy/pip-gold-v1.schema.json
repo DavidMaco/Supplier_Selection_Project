@@ -318,7 +318,12 @@
         "total_weight": { "type": "number", "const": 100 },
         "investable_threshold": { "type": "number", "minimum": 70, "maximum": 95 },
         "red_flag_threshold": { "type": "number", "minimum": 30, "maximum": 69 },
-        "current_score": { "type": "number", "minimum": 0, "maximum": 100 },
+        "current_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Weighted average of dimension scores. Correctness is validated arithmetically by the Python validator (validate_pip_output.py), not by this schema — JSON Schema cannot perform weighted-average computation. The validator applies rounding tolerance from validator-config.json."
+        },
         "status": { "type": "string", "enum": ["Investable", "Borderline", "Red Flag"] }
       }
     },
