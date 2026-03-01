@@ -24,7 +24,8 @@
     "risk_register",
     "next_actions",
     "assumptions",
-    "data_needed"
+    "data_needed",
+    "red_team"
   ],
   "properties": {
     "meta": {
@@ -361,7 +362,23 @@
       }
     },
     "assumptions": { "type": "array", "minItems": 5, "items": { "type": "string" } },
-    "data_needed": { "type": "array", "minItems": 5, "items": { "type": "string" } }
+    "data_needed": { "type": "array", "minItems": 5, "items": { "type": "string" } },
+    "red_team": {
+      "type": "array",
+      "minItems": 5,
+      "description": "Adversarial failure arguments against the platform thesis, written as if by a hostile but fair institutional investor.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["failure_mode", "probability", "evidence_or_precedent", "rebuttal"],
+        "properties": {
+          "failure_mode": { "type": "string", "minLength": 20 },
+          "probability": { "type": "string", "enum": ["Low", "Medium", "High"] },
+          "evidence_or_precedent": { "type": "string", "minLength": 20 },
+          "rebuttal": { "type": "string", "minLength": 20 }
+        }
+      }
+    }
   },
   "$defs": {
     "capability_with_metrics": {
