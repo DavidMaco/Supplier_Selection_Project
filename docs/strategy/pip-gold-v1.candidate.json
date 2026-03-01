@@ -3,6 +3,7 @@
     "date_context": "2026-02-26",
     "target_market": "Fortune 500 global enterprises",
     "proof_horizon_months": 12,
+    "data_provenance": "synthetic",
     "compliance_anchor": [
       "ISO 27001 path",
       "SOC 2 Type II trajectory",
