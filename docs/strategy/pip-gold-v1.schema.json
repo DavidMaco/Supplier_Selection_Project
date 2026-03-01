@@ -30,11 +30,16 @@
     "meta": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["date_context", "target_market", "proof_horizon_months", "compliance_anchor", "core_edges"],
+      "required": ["date_context", "target_market", "proof_horizon_months", "compliance_anchor", "core_edges", "data_provenance"],
       "properties": {
         "date_context": { "type": "string", "const": "2026-02-26" },
         "target_market": { "type": "string", "const": "Fortune 500 global enterprises" },
         "proof_horizon_months": { "type": "integer", "const": 12 },
+        "data_provenance": {
+          "type": "string",
+          "enum": ["synthetic", "production", "mixed"],
+          "description": "Declares the origin of evidence and metrics. 'synthetic' = generated/projected data without real customer deployments; 'production' = from live enterprise deployments; 'mixed' = combination of both."
+        },
         "compliance_anchor": {
           "type": "array",
           "minItems": 3,
