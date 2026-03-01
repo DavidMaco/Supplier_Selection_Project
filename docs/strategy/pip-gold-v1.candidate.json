@@ -173,7 +173,7 @@
       ],
       "mechanism": "Copilot orchestrates retrieval, policy checks, and constrained generation to produce auditable recommendations.",
       "verification": "Human QA sampling, hallucination checks, and policy conformance tests in each release cycle.",
-      "confidence": "Medium"
+      "confidence": "Low"
     }
   },
   "financial_impact_engine": {
@@ -504,7 +504,7 @@
     "revenue_model_3y": [
       "Base case: Year 1 lighthouse pilots convert to paid enterprise programs; Year 2 expands multi-region modules; Year 3 scales benchmark monetization with disciplined gross-margin expansion.",
       "Upside case trigger: if Year 1 net revenue retention >=125% and average sales cycle <=7 months, accelerate partner-led expansion and add autonomous optimization premium tier.",
-      "Downside case trigger: if conversion <35% or sales cycle >12 months by Month 10, prioritize core classification+risk bundle, reduce high-R&D modules, and activate pricing simplification plus customer-success remediation; expected impact range: ARR -18% to -27% versus base case and gross margin -3 to -5 percentage points."
+      "Downside case trigger: if conversion <35% or sales cycle >12 months by Month 10, or if macroeconomic contraction causes enterprise budget freezes or competing ERP migration projects absorb procurement IT budgets, prioritize core classification+risk bundle, reduce high-R&D modules, and activate pricing simplification plus customer-success remediation; expected impact range: ARR -18% to -27% versus base case and gross margin -3 to -5 percentage points."
     ],
     "valuation_rationale": "Valuation anchored on ARR growth quality, gross margin durability, expansion efficiency, and defensible data moat compounding.",
     "exit_scenarios": [
@@ -935,5 +935,37 @@
     "Entity-level carbon emission factors tied to supplier and logistics legs",
     "Regional regulatory and data residency requirements for deployment jurisdictions",
     "Scorecard evidence cross-reference table: Business impact->BI-01/KPI_MART_12; Data and AI quality->DA-02/MODEL_MONITOR_04; Risk resilience->RR-03/WORKFLOW_AUDIT_06; Security and compliance->SC-04/CONTROL_EVIDENCE_11; Operational reliability->OR-05/PROGRAM_PLAN_PM_01; Adoption and UX->AX-06/PRODUCT_USAGE_03; Commercial scalability->CS-07/CRM_PIPELINE_06; Defensibility moat->DM-08/BENCHMARK_NETWORK_16"
+  ],
+  "red_team": [
+    {
+      "failure_mode": "Core AI differentiators (knowledge graph, GenAI copilot, RL optimizer) remain unimplemented and represent architectural aspirations rather than validated capabilities, creating a credibility gap during investor technical due diligence.",
+      "probability": "High",
+      "evidence_or_precedent": "Multiple procurement-tech startups (e.g., Tamr, Scoutbee) raised significant capital on AI narratives but faced multi-year delays translating research into production-grade enterprise AI, resulting in valuation compression.",
+      "rebuttal": "The 8 implemented analytics engines (MCDA, Monte Carlo, risk scoring, HHI, carbon, should-cost, working capital, scenario planning) prove execution capability on quantitative foundations. The AI/ML layer is explicitly roadmapped for Year 2 with stage-gated funding dependencies."
+    },
+    {
+      "failure_mode": "Enterprise procurement platform adoption is notoriously slow — 12-18 month sales cycles with multi-stakeholder approval chains — making the 12-month proof horizon unrealistic for demonstrating material ARR traction.",
+      "probability": "High",
+      "evidence_or_precedent": "Coupa's path to $100M ARR took ~8 years; GEP and Ivalua each required 5+ years of enterprise selling before reaching growth inflection. New procurement platforms face entrenched vendor relationships and switching-cost inertia.",
+      "rebuttal": "The platform targets analytics-layer insertion (alongside existing P2P suites) rather than full-suite replacement, which reduces switching cost and decision complexity. The 12-month horizon targets lighthouse proof-of-value, not scaled ARR."
+    },
+    {
+      "failure_mode": "All competitive proof blocks use synthetic evidence with template metrics. No real customer deployment validates the claimed savings conversion rates, risk lead-time improvements, or adoption percentages.",
+      "probability": "High",
+      "evidence_or_precedent": "Investors routinely discount platforms without referenceable customer logos. Synthetic evidence, regardless of structural quality, does not substitute for production telemetry in Series A+ diligence processes.",
+      "rebuttal": "The data_provenance field explicitly declares evidence as synthetic. The governance framework ensures that as production evidence is gathered, it will meet the same structural and freshness standards. The honest labeling itself is a trust signal."
+    },
+    {
+      "failure_mode": "Enterprise budget freezes triggered by macroeconomic contraction or competing ERP migration projects could eliminate procurement analytics spend entirely, as it is typically classified as discretionary rather than mission-critical during downturns.",
+      "probability": "Medium",
+      "evidence_or_precedent": "During the 2022-2023 enterprise software slowdown, procurement analytics vendors saw 15-30% deal slippage as CFOs prioritized cost-cutting over cost-optimization tooling. Gartner's 2025 survey shows procurement analytics remains in the 'nice-to-have' category for 58% of CFOs.",
+      "rebuttal": "The platform's CFO-grade value attribution and realized savings tracking are designed specifically to survive budget scrutiny. Stage-gated deployment with early ROI proof at Month 5 creates a defensible renewal argument. The downside revenue scenario explicitly models -18% to -27% ARR impact."
+    },
+    {
+      "failure_mode": "The TAM/SAM/SOM estimates ($28B/$9.2B/$850M) are generated without cited third-party sources and may significantly overstate the addressable market for a new entrant competing against deeply entrenched incumbents with 10-15 year head starts.",
+      "probability": "Medium",
+      "evidence_or_precedent": "Gartner estimates the total procurement software market at ~$13-18B (including transactional P2P), with the analytics-specific segment at ~$3-5B. Bottom-up models from startups consistently overestimate serviceable markets by 2-3x versus realized penetration.",
+      "rebuttal": "The SOM of $850M represents <10% of the SAM, which is a conservative capture assumption for a 3-year horizon. Market sizing methodology should be strengthened with cited Gartner/IDC benchmarks and a top-down cross-check. This is a known gap flagged in the data_needed section."
+    }
   ]
 }
