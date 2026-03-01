@@ -16,7 +16,9 @@
     "freshness_ok",
     "freshness_violations",
     "freshness_warnings",
-    "freshness_diagnostics"
+    "freshness_diagnostics",
+    "data_provenance",
+    "provenance_valid"
   ],
   "properties": {
     "schema_valid": { "type": "boolean" },
@@ -27,6 +29,8 @@
     "score_math_valid": { "type": "boolean" },
     "all_checks_valid": { "type": "boolean" },
     "validator_version": { "type": "string" },
+    "data_provenance": { "type": ["string", "null"] },
+    "provenance_valid": { "type": "boolean" },
     "computed_weighted_score": { "type": "number" },
     "declared_score": { "type": "number" },
     "traceability_ok": { "type": "boolean" },

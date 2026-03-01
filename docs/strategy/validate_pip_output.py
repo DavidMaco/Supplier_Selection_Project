@@ -4,7 +4,7 @@ import re
 from datetime import date
 from pathlib import Path
 
-VALIDATOR_VERSION = "1.7.0"
+VALIDATOR_VERSION = "1.8.0"
 
 
 def _load_json(path: Path):
@@ -318,7 +318,12 @@ def main():
     traceability_results = validate_traceability(payload, config)
 
     score_math_valid = score_results["total_weight_matches"] and score_results["score_close"] and score_results["status_matches"]
-    all_checks_valid = schema_valid and score_math_valid and traceability_results["traceability_ok"]
+
+    # Data provenance check
+    data_provenance = payload.get("meta", {}).get("data_provenance")
+    provenance_valid = data_provenance in ("synthetic", "production", "mixed")
+
+    all_checks_valid = schema_valid and score_math_valid and traceability_results["traceability_ok"] and provenance_valid
 
     result = {
         "schema_valid": schema_valid,
@@ -327,6 +332,8 @@ def main():
         "all_checks_valid": all_checks_valid,
         "validator_version": VALIDATOR_VERSION,
         "config_path": str(config_path),
+        "data_provenance": data_provenance,
+        "provenance_valid": provenance_valid,
         **score_results,
         **traceability_results,
     }
