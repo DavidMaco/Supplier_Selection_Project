@@ -25,6 +25,15 @@ Tasks:
    - Commercial model has pricing + unit economics + 3-year model.
    - Differentiation contains proof-based competitor comparisons.
    - Global compliance and data sovereignty are addressed.
+7. Validate data provenance transparency:
+   - `meta.data_provenance` is present and set to a valid value.
+   - Evidence claims are consistent with the declared provenance (synthetic evidence should not be presented as production-validated).
+8. Assess adversarial rigor (Red Team):
+   - `red_team` section contains >= 5 failure arguments.
+   - At least one argument challenges the core differentiation.
+   - At least one argument addresses market timing or adoption risk.
+   - Rebuttals are substantive (not dismissive or generic).
+   - Probability assessments are honest (not uniformly Low).
 
 ## Output Format (strict)
 Return valid JSON only:
@@ -37,12 +46,18 @@ Return valid JSON only:
   "computed_weighted_score": 0,
   "declared_score": 0,
   "status_consistency": "pass",
+  "data_provenance": "synthetic",
+  "provenance_consistent": true,
+  "red_team_present": true,
+  "red_team_count": 5,
+  "red_team_quality": "substantive",
   "quality_checks": {
     "metric_mechanism_verification_present": true,
     "realized_vs_forecast_separated": true,
     "stage_gates_present": true,
     "investor_pack_complete": true,
-    "global_compliance_complete": true
+    "global_compliance_complete": true,
+    "adversarial_rigor_adequate": true
   },
   "critical_gaps": [""],
   "top_5_fixes": [""],
@@ -56,6 +71,8 @@ Return valid JSON only:
   - `schema_valid = true`
   - `score_math_valid = true`
   - `status_consistency = pass`
+  - `provenance_consistent = true`
+  - `red_team_present = true` with `red_team_count >= 5`
   - no critical missing section
   - weighted score >= investable threshold
 - Otherwise return `NO_GO` and prioritize top fixes by impact on investability.
