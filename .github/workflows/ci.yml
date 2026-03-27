@@ -189,6 +189,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install test dependencies
+        run: pip install pytest
+
       - name: Run strategy summary title prefix guard
         id: summary_title_guard
         continue-on-error: true
