@@ -160,6 +160,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install test dependencies
+        run: pip install pytest
+
       - name: Run strategy policy unit tests
         run: python -m pytest tests/test_strategy_validator.py -v --tb=short
 
