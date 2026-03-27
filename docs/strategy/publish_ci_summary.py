@@ -83,7 +83,7 @@ def _read_json_with_fallback(path: Path) -> dict:
     for encoding in encodings:
         try:
             return json.loads(path.read_text(encoding=encoding))
-        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        except (UnicodeError, json.JSONDecodeError) as exc:
             last_error = exc
     raise ValueError(f"Unable to parse JSON report at {path}: {last_error}")
 
